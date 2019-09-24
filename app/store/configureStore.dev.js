@@ -4,14 +4,14 @@ import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createRootReducer from '../reducers';
-import * as counterActions from '../actions/counter';
-import type { counterStateType } from '../reducers/types';
+import * as counterActions from '../actions/todos';
+import type { todosStateType } from '../reducers/types';
 
 const history = createHashHistory();
 
 const rootReducer = createRootReducer(history);
 
-const configureStore = (initialState?: counterStateType) => {
+const configureStore = (initialState?: todosStateType) => {
   // Redux Configuration
   const middleware = [];
   const enhancers = [];

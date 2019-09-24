@@ -1,14 +1,23 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-export type counterStateType = {
-  +counter: number
+// new fields here
+export type Todo = {
+  +id: number,
+  +title: string,
+  +priority: number,
+  +done: Boolean
+};
+
+export type todosStateType = {
+  +todos: Todo[]
 };
 
 export type Action = {
-  +type: string
+  +type: string,
+  +data: any
 };
 
-export type GetState = () => counterStateType;
+export type GetState = () => todosStateType;
 
 export type Dispatch = ReduxDispatch<Action>;
 

@@ -1,0 +1,57 @@
+.List {
+  overflow: scroll;
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: 80px;
+  bottom: 0;
+}
+
+.TodoItem {
+  display: block;
+  height: 28px;
+  line-height: 28px;
+  font-size: 16px;
+  padding-left: 40px;
+  cursor: default;
+  position: relative;
+  color: #afc1e4;
+}
+
+.TodoItem--selected {
+  background-color: #dee7f122;
+  padding-left: 37px;
+  border-left: 3px solid #fff;
+}
+
+.TodoItem--priority-1::before,
+.TodoItem--priority-2::before,
+.TodoItem--priority-2::after {
+  content: ' ';
+  width: 6px;
+  height: 6px;
+  top: 11px;
+  left: 14px;
+  border-radius: 50%;
+  display: block;
+  position: absolute;
+  background: yellow;
+}
+.TodoItem--selected.TodoItem--priority-2::before {
+  left: 11px;
+}
+
+.TodoItem--priority-1::before {
+  left: 18px;
+}
+.TodoItem--selected.TodoItem--priority-1::before {
+  left: 15px;
+}
+
+.TodoItem--priority-2::after {
+  left: 22px;
+}
+
+.TodoItem--selected.TodoItem--priority-2::after {
+  left: 19px;
+}
