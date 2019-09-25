@@ -1,11 +1,20 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function AddTodo({ initTodo, onUpdate }) {
+import styles from './EditTodo.css';
+
+export default function AddTodo({ initTodo, onUpdate, helpOpen }) {
   const titleRef = useRef();
   const priorityRef = useRef();
   const tagsRef = useRef();
 
-  const [todo, setTodo] = useState(initTodo);
+  const defaultTodo = initTodo || {
+    title: '',
+    priority: 0,
+    done: false,
+    tags: []
+  };
+
+  const [todo, setTodo] = useState(defaultTodo);
 
   useEffect(() => {
     titleRef.current.focus();
@@ -17,24 +26,27 @@ export default function AddTodo({ initTodo, onUpdate }) {
     onUpdate(newTodo);
   };
 
+  const classes = [styles.EditTodo];
+  if (helpOpen) classes.push(styles['EditTodo--help-open']);
+
   return (
-    <>
-      [esc] Cancel
-      <br />
-      [enter] Add
-      <br />
-      <br />
+    <div className={classes.join(' ')}>
+      <div className={styles.Header}>
+        <span>{initTodo ? 'Edit Todo' : 'Create Todo'}</span>
+      </div>
+      <span className={styles.Label}>Title:</span>
       <input
         ref={titleRef}
-        className="mousetrap"
+        className={['mousetrap', styles.TextInput].join(' ')}
         type="text"
-        defaultValue={initTodo.title}
+        defaultValue={defaultTodo.title}
         onChange={() => updateData('title', titleRef.current.value)}
       />
-      <br />
+
+      <span className={styles.Label}>Priority:</span>
       <input
         ref={priorityRef}
-        className="mousetrap"
+        className={['mousetrap', styles.Number].join(' ')}
         type="number"
         defaultValue={0}
         step={1}
@@ -57,7 +69,7 @@ export default function AddTodo({ initTodo, onUpdate }) {
             updateData('priority', newV);
           }
         }}
-        defaultValue={initTodo.priority}
+        defaultValue={defaultTodo.priority}
         onChange={() => {
           let v = parseInt(priorityRef.current.value);
           if (v !== v || typeof v !== 'number') v = 0;
@@ -67,11 +79,12 @@ export default function AddTodo({ initTodo, onUpdate }) {
           updateData('priority', v);
         }}
       />
-      <br />
+
+      <span className={styles.Label}>Tags:</span>
       <textarea
         ref={tagsRef}
-        className="mousetrap"
-        defaultValue={initTodo.tags ? initTodo.tags.join('\n') : ''}
+        className={['mousetrap', styles.TextArea].join(' ')}
+        defaultValue={defaultTodo.tags ? defaultTodo.tags.join('\n') : ''}
         rows={3}
         onChange={() => {
           const v = tagsRef.current.value;
@@ -85,6 +98,6 @@ export default function AddTodo({ initTodo, onUpdate }) {
           updateData('tags', tags);
         }}
       />
-    </>
+    </div>
   );
 }

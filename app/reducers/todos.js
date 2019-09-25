@@ -10,8 +10,6 @@ export default function todos(state: Todo[] = [], action: Action) {
     case DELETE_TODO:
       return state.filter(t => t.id !== action.data.id);
     case EDIT_TODO:
-      // TODO: do this
-      console.log('state', state);
       const idx = state.findIndex(t => t.id === action.data.todo.id);
       if (idx === -1) return state;
 

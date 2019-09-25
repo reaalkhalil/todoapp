@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -69,7 +69,7 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 800,
+    width: 900,
     height: 600,
     titleBarStyle: 'hidden'
   });
@@ -88,6 +88,16 @@ app.on('ready', async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+  });
+
+  ipcMain.on('openSideBar', function(e) {
+    const [x, y] = mainWindow.getSize();
+    mainWindow.setSize(x + 250, y);
+  });
+
+  ipcMain.on('closeSideBar', function(e) {
+    const [x, y] = mainWindow.getSize();
+    mainWindow.setSize(Math.max(x - 250, 800), y);
   });
 
   mainWindow.on('closed', () => {

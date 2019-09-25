@@ -2,9 +2,14 @@
   overflow: scroll;
   display: block;
   position: absolute;
-  width: 100%;
+  right: 0;
+  left: 0;
   top: 80px;
   bottom: 0;
+}
+
+.List--help-open {
+  right: 250px;
 }
 
 .TodoItem {
@@ -12,46 +17,85 @@
   height: 28px;
   line-height: 28px;
   font-size: 16px;
-  padding-left: 40px;
   cursor: default;
   position: relative;
   color: #afc1e4;
 }
 
-.TodoItem--selected {
-  background-color: #dee7f122;
-  padding-left: 37px;
-  border-left: 3px solid #fff;
+.TodoItem__Done {
+  position: absolute;
+  right: 20px;
 }
 
-.TodoItem--priority-1::before,
-.TodoItem--priority-2::before,
-.TodoItem--priority-2::after {
+.TodoItem__Flags {
+  position: absolute;
+  left: 0;
+}
+
+.TodoItem__Title {
+  position: absolute;
+  left: 40px;
+  color: #afc1e4;
+}
+
+.TodoItem__Tags {
+  position: absolute;
+  left: 500px;
+}
+
+.TodoItem__Tags span {
+  font-size: 12px;
+  line-height: 28px;
+  background-color: #afc1e4;
+  border-radius: 5px;
+  padding: 2px;
+  margin-left: 4px;
+  color: black;
+}
+
+.TodoItem--done .TodoItem__Tags span {
+  opacity: 0.6;
+}
+
+.TodoItem--selected {
+  background-color: #dee7f122;
+}
+
+.TodoItem__highlight {
+  position: absolute;
+  display: block;
+  width: 3px;
+  height: 28px;
+  background-color: white;
+}
+
+.TodoItem--done .TodoItem__Title {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.TodoItem__Priority--priority-2 {
+  float: left;
+}
+
+.TodoItem__Priority--priority-1::before,
+.TodoItem__Priority--priority-2::before,
+.TodoItem__Priority--priority-2::after {
   content: ' ';
   width: 6px;
   height: 6px;
-  top: 11px;
-  left: 14px;
+  margin-top: 11px;
+  margin-left: 14px;
   border-radius: 50%;
   display: block;
-  position: absolute;
   background: yellow;
-}
-.TodoItem--selected.TodoItem--priority-2::before {
-  left: 11px;
+  float: left;
 }
 
-.TodoItem--priority-1::before {
-  left: 18px;
-}
-.TodoItem--selected.TodoItem--priority-1::before {
-  left: 15px;
+.TodoItem__Priority--priority-1::before {
+  margin-left: 18px;
 }
 
-.TodoItem--priority-2::after {
-  left: 22px;
-}
-
-.TodoItem--selected.TodoItem--priority-2::after {
-  left: 19px;
+.TodoItem__Priority--priority-2::after {
+  margin-left: 2px;
 }

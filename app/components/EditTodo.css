@@ -1,0 +1,62 @@
+.TextInput,
+.TextArea {
+  margin: 10px 30px;
+  line-height: 20px;
+  font-size: 18px;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  padding: 5px 8px;
+  border-radius: 5px;
+  width: calc(100% - 90px);
+  background-color: #fff1;
+  border: 2px solid #fff3;
+  color: #fffb;
+  outline: none;
+}
+
+.EditTodo--help-open .TextInput {
+  width: calc(100% - 330px);
+}
+
+.Number {
+  margin: 10px 30px;
+  line-height: 20px;
+  font-size: 18px;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  padding: 5px 8px;
+  border-radius: 5px;
+  width: 40px;
+  background-color: #fff1;
+  border: 2px solid #fff3;
+  color: #fffb;
+  outline: none;
+}
+
+.TextArea {
+  width: 300px;
+}
+
+.TextInput:focus,
+.TextArea:focus {
+  color: white;
+}
+
+.Label {
+  display: block;
+  margin: 20px 10px 0 30px;
+  color: white;
+}
+
+.Header {
+  display: block;
+  line-height: 50px;
+  padding-left: 30px;
+}
+
+.Header span {
+  color: #00ffc8;
+  padding-bottom: 2px;
+  margin-right: 25px;
+  border-bottom: 2px solid #00ffc8;
+}

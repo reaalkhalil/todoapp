@@ -1,0 +1,62 @@
+.Help {
+  position: absolute;
+  width: 220px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 10px;
+  padding-left: 20px;
+  overflow: scroll;
+  opacity: 0;
+  transition: 0ms;
+  background-color: #b4b2ce12;
+}
+
+.Help--show {
+  transition: 100ms;
+  opacity: 1;
+}
+
+.Header {
+  color: #afc1e4;
+  margin-top: 20px;
+  line-height: 30px;
+}
+
+.Key {
+  height: 30px;
+  display: block;
+  width: 100%;
+}
+
+.Key__Button {
+  background: white;
+  border: 1px solid #bbb;
+  box-shadow: 0 3px 0 #bbb;
+  color: #333;
+  padding: 1px 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-left: -6px;
+}
+
+.Key__Button:first-of-type {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.Key__Label {
+  color: white;
+}
+
+.Link {
+  display: inline-block;
+  padding-bottom: 2px;
+  margin: 6px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.Link:hover {
+  border-bottom: 2px solid white;
+}

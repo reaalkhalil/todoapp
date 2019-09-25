@@ -5,6 +5,7 @@ export const EQUAL = 'EQUAL';
 export const NOT_EQUAL = 'NOT_EQUAL';
 export const CONTAINS = 'CONTAINS';
 export const NOT_CONTAINS = 'NOT_CONTAINS';
+export const MATCHES = 'MATCHES';
 
 const FILTERS = {
   [EQUAL]: (tt, f, v) => tt.filter(t => t[f] === v),
@@ -20,7 +21,7 @@ const FILTERS = {
 
 export type Filter = {
   field: string,
-  op: EQUAL | NOT_EQUAL | CONTAINS | NOT_CONTAINS,
+  op: EQUAL | NOT_EQUAL | CONTAINS | NOT_CONTAINS | MATCHES,
   value: any
 };
 
