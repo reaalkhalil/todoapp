@@ -10,9 +10,11 @@
   opacity: 0;
   transition: 0ms;
   background-color: #b4b2ce12;
+  pointer-events: none;
 }
 
 .Help--show {
+  pointer-events: auto;
   transition: 100ms;
   opacity: 1;
 }

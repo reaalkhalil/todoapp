@@ -64,7 +64,9 @@ export default function Help({ show }) {
           {s.keys.map((k, i) => (
             <div className={styles.Key} key={i}>
               {k[0].map(k => (
-                <span className={styles.Key__Button}>{k}</span>
+                <span key={k} className={styles.Key__Button}>
+                  {k}
+                </span>
               ))}
               <span className={styles.Key__Label}>{k[1]}</span>
             </div>

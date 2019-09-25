@@ -88,13 +88,16 @@ export default function AddTodo({ initTodo, onUpdate, helpOpen }) {
         rows={3}
         onChange={() => {
           const v = tagsRef.current.value;
-          const addNewLine = v.endsWith('\n');
+          const endWhiteSpace =
+            v.length > 0 && ['\n', '\t', ' '].indexOf(v[v.length - 1]) !== -1
+              ? v[v.length - 1]
+              : '';
 
           const tags = v
             .split('\n')
             .map(t => t.trim())
             .filter(t => t.length > 0);
-          tagsRef.current.value = tags.join('\n') + (addNewLine ? '\n' : '');
+          tagsRef.current.value = tags.join('\n') + endWhiteSpace;
           updateData('tags', tags);
         }}
       />

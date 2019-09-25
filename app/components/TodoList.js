@@ -66,7 +66,7 @@ export default function TodoList({
 
     if (todos.length > 1) {
       let idx = todos.findIndex(t => t.id === selectedId) + 1;
-      if (idx >= todos.length) idx = todos.length - 2;
+      if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
       setSelectedId(todos[idx].id);
     } else {
       setSelectedId(null);

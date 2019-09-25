@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -90,14 +90,29 @@ app.on('ready', async () => {
     }
   });
 
+  const dontResizeForSideBar = sbW => {
+    const [x, y] = mainWindow.getPosition();
+    const [w, h] = mainWindow.getSize();
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    return x + w + sbW >= width;
+  };
+
   ipcMain.on('openSideBar', function(e) {
-    const [x, y] = mainWindow.getSize();
-    mainWindow.setSize(x + 250, y);
+    const [w, h] = mainWindow.getSize();
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+    if (dontResizeForSideBar(250)) return;
+
+    mainWindow.setSize(Math.min(width, w + 250), h);
   });
 
   ipcMain.on('closeSideBar', function(e) {
-    const [x, y] = mainWindow.getSize();
-    mainWindow.setSize(Math.max(x - 250, 800), y);
+    const [w, h] = mainWindow.getSize();
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+    if (dontResizeForSideBar(0)) return;
+
+    mainWindow.setSize(Math.max(w - 250, 800), h);
   });
 
   mainWindow.on('closed', () => {
