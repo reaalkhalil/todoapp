@@ -2,6 +2,7 @@
   display: block;
   line-height: 50px;
   padding-left: 30px;
+  user-select: none;
 }
 
 .Split {

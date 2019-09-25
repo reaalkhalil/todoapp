@@ -3,14 +3,17 @@ import React, { useState, useEffect } from 'react';
 import styles from './Splits.css';
 
 export default function Splits({ splits, selectedSplit }) {
+  const selectedSplitPosition = splits[selectedSplit].position;
+  const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
   return (
     <div className={styles.Splits}>
-      {splits.map((s, i) => {
+      {sortedSplits.map(s => {
         const classes = [styles.Split];
-        if (i === selectedSplit) classes.push(styles['Split--selected']);
+        if (s.position === selectedSplitPosition)
+          classes.push(styles['Split--selected']);
 
         return (
-          <span className={classes.join(' ')} key={i}>
+          <span className={classes.join(' ')} key={s.position}>
             {s.title}
           </span>
         );

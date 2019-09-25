@@ -35,3 +35,30 @@ export function apply(todos: Todo[], ...filters: Filter[]) {
 
   return ts;
 }
+
+type Split = {
+  position: number,
+  title: String,
+  filters: Filter[]
+};
+
+function minus(all: Todo[], sub: Todo[]) {
+  return all.filter(t => !sub.find(s => s.id === t.id));
+}
+
+export function applySplits(
+  todos: Todo[],
+  splits: Splits[],
+  currentSplit: number
+) {
+  let filteredOut = null;
+  for (let i = 0; i <= currentSplit; i++) {
+    filteredOut = apply(todos, ...splits[i].filters);
+    todos = minus(todos, filteredOut);
+  }
+  return filteredOut;
+}
+
+export function sort(todos: Todo[]) {
+  return todos;
+}

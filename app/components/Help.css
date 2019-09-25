@@ -11,6 +11,7 @@
   transition: 0ms;
   background-color: #b4b2ce12;
   pointer-events: none;
+  user-select: none;
 }
 
 .Help--show {

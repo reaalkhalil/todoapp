@@ -19,13 +19,15 @@ export default function TodoList({
   editTodo,
   todos,
   splits,
-  onHelp
+  onHelp,
+  onSettings,
+  helpOpen
 }) {
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
 
   if (searchQuery === null) {
-    todos = filter.apply(todos, ...splits[selectedSplit].filters);
+    todos = filter.applySplits(todos, splits, selectedSplit);
   } else {
     todos = filter.apply(todos, {
       field: 'title',
@@ -42,12 +44,12 @@ export default function TodoList({
   const [editModal, setEditModal] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
-  const [helpModal, setHelpModal] = useState(false);
+  const [helpModal, setHelpModal] = useState(helpOpen);
 
-  useEffect(() => {
-    if (helpModal) ipcRenderer.send('openSideBar');
-    else ipcRenderer.send('closeSideBar');
-  }, [helpModal]);
+  //   useEffect(() => {
+  //     if (helpModal) ipcRenderer.send('openSideBar');
+  //     else ipcRenderer.send('closeSideBar');
+  //   }, [helpModal]);
 
   if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
   if (
@@ -169,6 +171,8 @@ export default function TodoList({
         const h = !helpModal;
         setHelpModal(h);
         onHelp(h);
+        if (h) ipcRenderer.send('openSideBar');
+        else ipcRenderer.send('closeSideBar');
       },
       up: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       down: () => onMoveSelectDown(todos, selectedId, setSelectedId),
@@ -179,6 +183,8 @@ export default function TodoList({
       esc: e => {
         if (searchModal) onExitSearch();
       },
+
+      'command+,': e => onSettings(true),
       '/': e => {
         setSearchFocus(true);
         if (searchModal) return;

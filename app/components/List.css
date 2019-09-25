@@ -13,6 +13,7 @@
 }
 
 .TodoItem {
+  user-select: none;
   display: block;
   height: 28px;
   line-height: 28px;

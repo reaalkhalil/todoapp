@@ -1,0 +1,38 @@
+.Settings {
+}
+
+.Settings__TextArea {
+  tab-size: 4;
+  margin: 10px 30px;
+  line-height: 20px;
+  font-size: 18px;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  padding: 5px 8px;
+  border-radius: 5px;
+  width: calc(100% - 90px);
+  min-height: calc(100vh - 125px);
+  resize: none;
+  background-color: #fff1;
+  border: 2px solid #fff3;
+  color: #fffb;
+  outline: none;
+}
+
+.Settings--help-open .Settings__TextArea {
+  width: calc(100% - 330px);
+}
+
+.Header {
+  user-select: none;
+  display: block;
+  line-height: 50px;
+  padding-left: 30px;
+}
+
+.Header span {
+  color: #00ffc8;
+  padding-bottom: 2px;
+  margin-right: 25px;
+  border-bottom: 2px solid #00ffc8;
+}
