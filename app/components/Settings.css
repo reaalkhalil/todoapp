@@ -2,10 +2,11 @@
 }
 
 .Settings__TextArea {
-  tab-size: 4;
+  tab-size: 3;
   margin: 10px 30px;
-  line-height: 20px;
-  font-size: 18px;
+  line-height: 16px;
+  font-size: 14px;
+  font-weight: 300;
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
   padding: 5px 8px;

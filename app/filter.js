@@ -39,6 +39,7 @@ export function apply(todos: Todo[], ...filters: Filter[]) {
 type Split = {
   position: number,
   title: String,
+  shortcut: String,
   filters: Filter[]
 };
 
@@ -52,7 +53,9 @@ export function applySplits(
   currentSplit: number
 ) {
   let filteredOut = null;
-  for (let i = 0; i <= currentSplit; i++) {
+
+  const currentSplitIndex = splits.findIndex(s => s.position === currentSplit);
+  for (let i = 0; i <= currentSplitIndex; i++) {
     filteredOut = apply(todos, ...splits[i].filters);
     todos = minus(todos, filteredOut);
   }

@@ -59,12 +59,15 @@ export default function TodoList({
   )
     setSelectedId(todos[0].id);
 
-  const onMarkDoneTodo = (todos, selectedId, setSelectedId) => {
-    let toDoneStatus = true;
-    // console.log('e', selectedId);
+  const onMarkDoneTodo = (todos, selectedId, setSelectedId, toDoneStatus) => {
     if (todos.length == 0) return;
-    if ((todos.find(t => t.id === selectedId) || { done: true }).done)
-      toDoneStatus = false;
+    let ret = false;
+
+    if (
+      (todos.find(t => t.id === selectedId) || { done: toDoneStatus }).done ===
+      toDoneStatus
+    )
+      ret = true;
 
     if (todos.length > 1) {
       let idx = todos.findIndex(t => t.id === selectedId) + 1;
@@ -73,6 +76,8 @@ export default function TodoList({
     } else {
       setSelectedId(null);
     }
+
+    if (ret) return;
 
     const t = todos.find(t => t.id === selectedId);
     if (!t) return;
@@ -143,16 +148,17 @@ export default function TodoList({
       enter: () => setSearchFocus(false)
     });
   } else {
+    const shortcuts = {};
+    splits.forEach(s => {
+      if (s.shortcut)
+        shortcuts['g ' + s.shortcut] = () => setSelectedSplit(s.position);
+    });
     KeyBoard.bind({
+      ...shortcuts,
       tab: () => setSelectedSplit((selectedSplit + 1) % splits.length),
       'shift+tab': () =>
         setSelectedSplit((splits.length + selectedSplit - 1) % splits.length),
-      'g t': () => {
-        setSelectedSplit(0);
-      },
-      'g d': () => {
-        setSelectedSplit(splits.length - 1);
-      },
+
       c: e => {
         setAddModal(true);
         e.preventDefault();
@@ -163,7 +169,8 @@ export default function TodoList({
         if (!t) return;
         editTodo({ todo: { ...t, priority: (t.priority + 1) % 3 } });
       },
-      e: () => onMarkDoneTodo(todos, selectedId, setSelectedId),
+      e: () => onMarkDoneTodo(todos, selectedId, setSelectedId, true),
+      E: () => onMarkDoneTodo(todos, selectedId, setSelectedId, false),
       d: () => onDeleteTodo(todos, selectedId, setSelectedId),
       k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
@@ -182,6 +189,7 @@ export default function TodoList({
       },
       esc: e => {
         if (searchModal) onExitSearch();
+        if (selectedSplit !== 0) setSelectedSplit(0);
       },
 
       'command+,': e => onSettings(true),

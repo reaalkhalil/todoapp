@@ -8,24 +8,25 @@ const sections = [
     keys: [
       [['?'], 'Toggle Help'],
       [['tab'], 'Next Split'],
-      [['shift+tab'], 'Prev Split'],
-      [['g', 't'], 'Goto Todos'],
-      [['g', 'd'], 'Goto Done'],
+      [['shift', 'tab'], 'Prev Split'],
+      [['g', 'then', '_'], 'Split Shortcut'],
       [['c'], 'Create'],
-      [['e'], '(Un)Mark Done'],
+      [['e'], 'Mark Done'],
+      [['E'], 'Unmark Done'],
       [['d'], 'Delete'],
       [['p'], 'Edit Priority'],
       [['enter'], 'Edit'],
       [['k'], 'Up'],
       [['j'], 'Down'],
-      [['/'], 'Search']
+      [['/'], 'Search'],
+      [['cmd', ','], 'Preferences']
     ]
   },
   {
     header: 'Create Todo',
     keys: [
       [['tab'], 'Next Field'],
-      [['shift+tab'], 'Prev Field'],
+      [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Create'],
       [['esc'], 'Cancel Create']
     ]
@@ -34,7 +35,7 @@ const sections = [
     header: 'Edit Todo',
     keys: [
       [['tab'], 'Next Field'],
-      [['shift+tab'], 'Prev Field'],
+      [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Edit'],
       [['esc'], 'Cancel Edit']
     ]
@@ -46,6 +47,10 @@ const sections = [
       [['/'], 'Focus to Search'],
       [['esc'], 'Cancel Search']
     ]
+  },
+  {
+    header: 'Preferences',
+    keys: [[['cmd', 's'], 'Save Preferences'], [['esc'], 'Cancel']]
   }
 ];
 
@@ -63,12 +68,20 @@ export default function Help({ show }) {
           <br />
           {s.keys.map((k, i) => (
             <div className={styles.Key} key={i}>
-              {k[0].map(k => (
-                <span key={k} className={styles.Key__Button}>
-                  {k}
-                </span>
-              ))}
               <span className={styles.Key__Label}>{k[1]}</span>
+              <span className={styles.Key__Buttons}>
+                {k[0].map((k, j) =>
+                  k === 'then' ? (
+                    <span key={j} className={styles.Key__Then}>
+                      {k}
+                    </span>
+                  ) : (
+                    <span key={j} className={styles.Key__Button}>
+                      {k}
+                    </span>
+                  )
+                )}
+              </span>
             </div>
           ))}
         </>

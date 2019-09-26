@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import styles from './EditTodo.css';
 
-export default function AddTodo({ initTodo, onUpdate, helpOpen }) {
+export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
   const titleRef = useRef();
   const priorityRef = useRef();
   const tagsRef = useRef();
@@ -13,6 +13,8 @@ export default function AddTodo({ initTodo, onUpdate, helpOpen }) {
     done: false,
     tags: []
   };
+
+  useEffect(() => onUpdate(defaultTodo), []);
 
   const [todo, setTodo] = useState(defaultTodo);
 

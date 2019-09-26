@@ -1,6 +1,5 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-// new fields here
 export type Todo = {
   +id: number,
   +title: string,
@@ -8,8 +7,31 @@ export type Todo = {
   +done: Boolean
 };
 
-export type todosStateType = {
-  +todos: Todo[]
+export type Todo = {
+  +id: number,
+  +title: string,
+  +priority: number,
+  +done: Boolean
+};
+
+type Filter = {
+  field: string,
+  op: string,
+  value: any
+};
+
+export type Settings = {
+  +splits: {
+    +title: string,
+    +shortcut: string,
+    +position: number,
+    +filters: Filter[]
+  }[]
+};
+
+export type StateType = {
+  +todos: Todo[],
+  +settings: Settings
 };
 
 export type Action = {
@@ -17,7 +39,7 @@ export type Action = {
   +data: any
 };
 
-export type GetState = () => todosStateType;
+export type GetState = () => StateType;
 
 export type Dispatch = ReduxDispatch<Action>;
 

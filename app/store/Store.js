@@ -1,6 +1,5 @@
 const eStore = require('electron-store');
 
-// new fields here
 const schema = {
   todos: {
     type: 'array',
@@ -12,6 +11,33 @@ const schema = {
         priority: { type: 'number' },
         done: { type: 'boolean' },
         tags: { type: 'array', items: { type: 'string' } }
+      }
+    }
+  },
+  settings: {
+    type: 'object',
+    properties: {
+      splits: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            position: { type: 'number' },
+            title: { type: 'string' },
+            shortcut: { type: 'string' },
+            filters: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  field: { type: 'string' },
+                  op: { type: 'string' },
+                  value: { type: ['string', 'number', 'boolean'] }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -29,62 +55,15 @@ export default class Store {
   getTodos() {
     return this.store.get('todos', []);
   }
+
+  saveSettings(settings) {
+    console.log('SAVE SETTINGS', settings);
+    this.store.set('settings', settings);
+  }
+
+  getSettings() {
+    const a = this.store.get('settings', {});
+    console.log('getSettings() => ', a);
+    return a;
+  }
 }
-
-// const schema = {
-//   todos: {
-//     type: 'array',
-//     items: {
-//       type: 'object',
-//       properties: {
-//         id: { type: 'number' },
-//         done: { type: 'boolean' },
-//         title: { type: 'string' },
-//         prioriry: { type: 'number' },
-//         labels: {
-//           type: 'array',
-//           items: { type: 'string' }
-//         },
-//         due: { type: 'Date' }
-//       }
-//     }
-//   },
-//   splits: {
-//     type: 'array',
-//     items: {
-//       type: 'object',
-//       properties: {
-//         name: { type: 'string' },
-//         filter: { type: 'string' }
-//       }
-//     }
-//   }
-// };
-
-// export default class Store {
-//   constructor() {
-//     this.store = new eStore({ schema });
-//     this.todos = this.store.get('todos', []);
-//     this.splits = this.store.get('splits', []);
-//   }
-
-//   saveTodos() {
-//     this.store.set('todos', this.todos);
-//   }
-
-//   saveSplits() {
-//     this.store.set('splits', this.splits);
-//   }
-
-//   getTodos() {
-//     return this.todos;
-//   }
-//   addTodo(todo) {
-//     this.todos.push(todo);
-//     this.saveTodos();
-//   }
-//   removeTodo(id) {
-//     this.todos = this.todos.filter(t => t.id !== id);
-//     this.saveTodos();
-//   }
-// }

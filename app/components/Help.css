@@ -32,6 +32,10 @@
   width: 100%;
 }
 
+.Key__Buttons {
+  float: right;
+}
+
 .Key__Button {
   background: white;
   border: 1px solid #bbb;
@@ -42,6 +46,7 @@
   border-radius: 5px;
   margin-right: 10px;
   margin-left: -6px;
+  font-size: 14px;
 }
 
 .Key__Button:first-of-type {
@@ -50,7 +55,16 @@
 }
 
 .Key__Label {
+  font-size: 14px;
   color: white;
+}
+
+.Key__Then {
+  font-size: 12px;
+  color: white;
+  margin-left: -8px;
+  margin-right: 8px;
+  vertical-align: sub;
 }
 
 .Link {

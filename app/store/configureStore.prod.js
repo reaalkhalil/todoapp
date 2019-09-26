@@ -4,7 +4,6 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
-import type { todosStateType } from '../reducers/types';
 
 import Store from './Store';
 
@@ -21,16 +20,24 @@ function configureStore() {
       const returnValue = next(action);
       const state = getState();
       s.saveTodos(state.todos);
+      s.saveSettings(state.settings);
 
       return returnValue;
     };
   };
 
   const todos = s.getTodos();
+  const settings = s.getSettings();
+
+  console.log('todos', todos);
+  console.log('settings', settings);
 
   return createStore(
     rootReducer,
-    { todos },
+    {
+      todos,
+      settings
+    },
     compose(applyMiddleware(thunk, persistent))
   );
 }
