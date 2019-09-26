@@ -25,10 +25,15 @@
 
 .TodoItem__Done {
   position: absolute;
-  right: 20px;
+  right: 15px;
 }
 
-.TodoItem__Flags {
+.TodoItem__HasContent {
+  position: absolute;
+  right: 45px;
+}
+
+.TodoItem__Priority {
   position: absolute;
   left: 0;
 }
@@ -36,12 +41,17 @@
 .TodoItem__Title {
   position: absolute;
   left: 40px;
+  max-width: 50%;
+  height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: #afc1e4;
 }
 
 .TodoItem__Tags {
   position: absolute;
-  left: 500px;
+  left: calc(50% + 100px);
 }
 
 .TodoItem__Tags span {
@@ -49,9 +59,10 @@
   line-height: 28px;
   background-color: #afc1e4;
   border-radius: 5px;
-  padding: 2px;
+  padding: 1px 4px;
   margin-left: 4px;
   color: black;
+  font-weight: 600;
 }
 
 .TodoItem--done .TodoItem__Tags span {
@@ -75,13 +86,13 @@
   opacity: 0.6;
 }
 
-.TodoItem__Priority--priority-2 {
+.TodoItem__PriorityDots--priority-2 {
   float: left;
 }
 
-.TodoItem__Priority--priority-1::before,
-.TodoItem__Priority--priority-2::before,
-.TodoItem__Priority--priority-2::after {
+.TodoItem__PriorityDots--priority-1::before,
+.TodoItem__PriorityDots--priority-2::before,
+.TodoItem__PriorityDots--priority-2::after {
   content: ' ';
   width: 6px;
   height: 6px;
@@ -93,10 +104,10 @@
   float: left;
 }
 
-.TodoItem__Priority--priority-1::before {
+.TodoItem__PriorityDots--priority-1::before {
   margin-left: 18px;
 }
 
-.TodoItem__Priority--priority-2::after {
+.TodoItem__PriorityDots--priority-2::after {
   margin-left: 2px;
 }

@@ -1,6 +1,6 @@
 .Search {
   height: 60px;
-  width: 100%;
+  width: calc(100% - 80px);
   margin: 15px 0;
   position: relative;
 }
@@ -9,23 +9,24 @@
   margin: -2px 30px;
   line-height: 20px;
   font-size: 18px;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
   padding: 5px 8px;
   border-radius: 5px;
-  width: calc(100% - 80px);
+  width: calc(100%);
   background-color: #fff1;
   border: 2px solid #fff3;
+  font-weight: 300;
   color: #fffb;
   outline: none;
   position: relative;
 }
 
-.Search--help-open .Search__Input {
+.Search--help-open {
   width: calc(100% - 330px);
 }
 
 .Search__Input:focus {
+  border: 2px solid #00ffc8ee;
   color: white;
 }
 

@@ -1,10 +1,19 @@
+.Table {
+  width: 100%;
+}
+.Table td {
+  vertical-align: top;
+  text-align: left;
+}
+
 .TextInput,
 .TextArea {
-  margin: 10px 30px;
-  line-height: 20px;
+  resize: none;
+  margin: 0 30px;
+  margin-top: 10px;
+  line-height: 24px;
   font-size: 18px;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
   padding: 5px 8px;
   border-radius: 5px;
   width: calc(100% - 90px);
@@ -12,9 +21,15 @@
   border: 2px solid #fff3;
   color: #fffb;
   outline: none;
+  font-weight: 300;
 }
 
-.EditTodo--help-open .TextInput {
+.TextArea.Content {
+  width: calc(100% - 90px);
+}
+
+.EditTodo--help-open .TextInput,
+.EditTodo--help-open .TextArea.Content {
   width: calc(100% - 330px);
 }
 
@@ -22,8 +37,7 @@
   margin: 10px 30px;
   line-height: 20px;
   font-size: 18px;
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
   padding: 5px 8px;
   border-radius: 5px;
   width: 40px;
@@ -31,14 +45,17 @@
   border: 2px solid #fff3;
   color: #fffb;
   outline: none;
+  font-weight: 300;
 }
 
 .TextArea {
   width: 300px;
 }
 
+.Number:focus,
 .TextInput:focus,
 .TextArea:focus {
+  border: 2px solid #00ffc8ee;
   color: white;
 }
 
@@ -46,7 +63,8 @@
   user-select: none;
   display: block;
   margin: 20px 10px 0 30px;
-  color: white;
+  font-size: 16px;
+  color: #fffc;
 }
 
 .Header {

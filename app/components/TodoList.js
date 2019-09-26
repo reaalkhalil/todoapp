@@ -13,6 +13,74 @@ import KeyBoard from '../keyboard';
 
 import { ipcRenderer } from 'electron';
 
+const onMarkDoneTodo = (
+  todos,
+  selectedId,
+  setSelectedId,
+  toDoneStatus,
+  editTodo,
+  searchModal
+) => {
+  if (todos.length == 0) return;
+  let ret = false;
+
+  if (
+    (todos.find(t => t.id === selectedId) || { done: toDoneStatus }).done ===
+    toDoneStatus
+  )
+    ret = true;
+
+  if (todos.length > 1) {
+    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
+    setSelectedId(todos[idx].id);
+  } else {
+    setSelectedId(null);
+  }
+
+  if (ret) return;
+
+  const t = todos.find(t => t.id === selectedId);
+  if (!t) return;
+
+  editTodo({
+    todo: {
+      ...t,
+      done: toDoneStatus,
+      done_at: toDoneStatus ? new Date().getTime() : null
+    }
+  });
+};
+
+const onDeleteTodo = (todos, selectedId, setSelectedId) => {
+  if (todos.length == 0) return;
+  if (todos.length > 1) {
+    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    if (idx >= todos.length) idx = todos.length - 2;
+    setSelectedId(todos[idx].id);
+  } else {
+    setSelectedId(null);
+  }
+
+  deleteTodo({ id: selectedId });
+};
+
+const onMoveSelectUp = (todos, selectedId, setSelectedId) => {
+  if (todos.length > 1) {
+    let idx = todos.findIndex(t => t.id === selectedId) - 1;
+    if (idx < 0) idx = 0;
+    setSelectedId(todos[idx].id);
+  }
+};
+
+const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
+  if (todos.length > 1) {
+    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    if (idx >= todos.length) idx = todos.length - 1;
+    setSelectedId(todos[idx].id);
+  }
+};
+
 export default function TodoList({
   addTodo,
   deleteTodo,
@@ -46,11 +114,6 @@ export default function TodoList({
   const [searchFocus, setSearchFocus] = useState(false);
   const [helpModal, setHelpModal] = useState(helpOpen);
 
-  //   useEffect(() => {
-  //     if (helpModal) ipcRenderer.send('openSideBar');
-  //     else ipcRenderer.send('closeSideBar');
-  //   }, [helpModal]);
-
   if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
   if (
     todos &&
@@ -58,61 +121,6 @@ export default function TodoList({
     (selectedId === null || todos.filter(t => t.id === selectedId).length === 0)
   )
     setSelectedId(todos[0].id);
-
-  const onMarkDoneTodo = (todos, selectedId, setSelectedId, toDoneStatus) => {
-    if (todos.length == 0) return;
-    let ret = false;
-
-    if (
-      (todos.find(t => t.id === selectedId) || { done: toDoneStatus }).done ===
-      toDoneStatus
-    )
-      ret = true;
-
-    if (todos.length > 1) {
-      let idx = todos.findIndex(t => t.id === selectedId) + 1;
-      if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
-      setSelectedId(todos[idx].id);
-    } else {
-      setSelectedId(null);
-    }
-
-    if (ret) return;
-
-    const t = todos.find(t => t.id === selectedId);
-    if (!t) return;
-
-    editTodo({ todo: { ...t, done: toDoneStatus } });
-  };
-
-  const onDeleteTodo = (todos, selectedId, setSelectedId) => {
-    if (todos.length == 0) return;
-    if (todos.length > 1) {
-      let idx = todos.findIndex(t => t.id === selectedId) + 1;
-      if (idx >= todos.length) idx = todos.length - 2;
-      setSelectedId(todos[idx].id);
-    } else {
-      setSelectedId(null);
-    }
-
-    deleteTodo({ id: selectedId });
-  };
-
-  const onMoveSelectUp = (todos, selectedId, setSelectedId) => {
-    if (todos.length > 1) {
-      let idx = todos.findIndex(t => t.id === selectedId) - 1;
-      if (idx < 0) idx = 0;
-      setSelectedId(todos[idx].id);
-    }
-  };
-
-  const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
-    if (todos.length > 1) {
-      let idx = todos.findIndex(t => t.id === selectedId) + 1;
-      if (idx >= todos.length) idx = todos.length - 1;
-      setSelectedId(todos[idx].id);
-    }
-  };
 
   const onExitSearch = () => {
     setSearchModal(false);
@@ -169,8 +177,24 @@ export default function TodoList({
         if (!t) return;
         editTodo({ todo: { ...t, priority: (t.priority + 1) % 3 } });
       },
-      e: () => onMarkDoneTodo(todos, selectedId, setSelectedId, true),
-      E: () => onMarkDoneTodo(todos, selectedId, setSelectedId, false),
+      e: () =>
+        onMarkDoneTodo(
+          todos,
+          selectedId,
+          setSelectedId,
+          true,
+          editTodo,
+          searchModal
+        ),
+      E: () =>
+        onMarkDoneTodo(
+          todos,
+          selectedId,
+          setSelectedId,
+          false,
+          editTodo,
+          searchModal
+        ),
       d: () => onDeleteTodo(todos, selectedId, setSelectedId),
       k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
@@ -178,8 +202,8 @@ export default function TodoList({
         const h = !helpModal;
         setHelpModal(h);
         onHelp(h);
-        if (h) ipcRenderer.send('openSideBar');
-        else ipcRenderer.send('closeSideBar');
+        //   if (h) ipcRenderer.send('openSideBar');
+        //   else ipcRenderer.send('closeSideBar');
       },
       up: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       down: () => onMoveSelectDown(todos, selectedId, setSelectedId),
@@ -234,9 +258,7 @@ export default function TodoList({
           hasFocus={searchFocus}
         />
       ) : (
-        <div className={styles.btnGroup}>
-          {<Splits splits={splits} selectedSplit={selectedSplit} />}
-        </div>
+        <Splits splits={splits} selectedSplit={selectedSplit} />
       )}
 
       <List

@@ -1,9 +1,14 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
+// ADDFIELDS:
 export type Todo = {
   +id: number,
   +title: string,
+  +content: string,
   +priority: number,
+  +created_at: number,
+  +done_at: number | null,
+  +due_at: number | null,
   +done: Boolean
 };
 

@@ -1,45 +1,55 @@
 const eStore = require('electron-store');
 
-const schema = {
-  todos: {
+// ADDFIELDS:
+const todoSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+    title: { type: 'string' },
+    content: { type: 'string' },
+    priority: { type: 'number' },
+    done: { type: 'boolean' },
+    created_at: { type: 'number' },
+    updated_at: { type: 'number' },
+    done_at: { type: ['number', 'null'] },
+    due_at: { type: ['number', 'null'] },
+    tags: { type: 'array', items: { type: 'string' } }
+  }
+};
+
+const settingsSchema = {
+  splits: {
     type: 'array',
     items: {
       type: 'object',
       properties: {
-        id: { type: 'number' },
+        position: { type: 'number' },
         title: { type: 'string' },
-        priority: { type: 'number' },
-        done: { type: 'boolean' },
-        tags: { type: 'array', items: { type: 'string' } }
-      }
-    }
-  },
-  settings: {
-    type: 'object',
-    properties: {
-      splits: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            position: { type: 'number' },
-            title: { type: 'string' },
-            shortcut: { type: 'string' },
-            filters: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  field: { type: 'string' },
-                  op: { type: 'string' },
-                  value: { type: ['string', 'number', 'boolean'] }
-                }
-              }
+        shortcut: { type: 'string' },
+        filters: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              field: { type: 'string' },
+              op: { type: 'string' },
+              value: { type: ['string', 'number', 'boolean'] }
             }
           }
         }
       }
     }
+  }
+};
+
+const schema = {
+  todos: {
+    type: 'array',
+    items: todoSchema
+  },
+  settings: {
+    type: 'object',
+    properties: settingsSchema
   }
 };
 

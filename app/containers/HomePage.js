@@ -21,19 +21,22 @@ class HomePage extends Component<Props> {
         title: 'Done',
         shortcut: 'd',
         position: 2,
-        filters: [{ field: 'done', op: 'EQUAL', value: true }]
+        filters: [{ field: 'done', op: 'EQUAL', value: true }],
+        sort: ['done_at']
       },
       {
         title: 'Reading List',
         shortcut: 'r',
         position: 1,
-        filters: [{ field: 'tags', op: 'CONTAINS', value: 'reading' }]
+        filters: [{ field: 'tags', op: 'CONTAINS', value: 'reading' }],
+        sort: ['priority', 'created_at']
       },
       {
         title: 'Todo',
         shortcut: 't',
         position: 0,
-        filters: []
+        filters: [],
+        sort: ['priority', 'created_at']
       }
     ];
 

@@ -90,30 +90,30 @@ app.on('ready', async () => {
     }
   });
 
-  const dontResizeForSideBar = sbW => {
-    const [x, y] = mainWindow.getPosition();
-    const [w, h] = mainWindow.getSize();
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    return x + w + sbW >= width;
-  };
+  //   const dontResizeForSideBar = sbW => {
+  //     const [x, y] = mainWindow.getPosition();
+  //     const [w, h] = mainWindow.getSize();
+  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  //     return x + w + sbW >= width;
+  //   };
 
-  ipcMain.on('openSideBar', function(e) {
-    const [w, h] = mainWindow.getSize();
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  //   ipcMain.on('openSideBar', function(e) {
+  //     const [w, h] = mainWindow.getSize();
+  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
-    if (dontResizeForSideBar(250)) return;
+  //     if (dontResizeForSideBar(250)) return;
 
-    mainWindow.setSize(Math.min(width, w + 250), h);
-  });
+  //     mainWindow.setSize(Math.min(width, w + 250), h);
+  //   });
 
-  ipcMain.on('closeSideBar', function(e) {
-    const [w, h] = mainWindow.getSize();
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  //   ipcMain.on('closeSideBar', function(e) {
+  //     const [w, h] = mainWindow.getSize();
+  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
-    if (dontResizeForSideBar(0)) return;
+  //     if (dontResizeForSideBar(0)) return;
 
-    mainWindow.setSize(Math.max(w - 250, 800), h);
-  });
+  //     mainWindow.setSize(Math.max(w - 250, 800), h);
+  //   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;

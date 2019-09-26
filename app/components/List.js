@@ -30,11 +30,11 @@ export default function List({
               <span className={styles.TodoItem__highlight}></span>
             ) : null}
 
-            <span className={styles.TodoItem__Flags}>
+            <span className={styles.TodoItem__Priority}>
               {t.priority > 0 ? (
                 <span
                   className={
-                    styles[`TodoItem__Priority--priority-${t.priority}`]
+                    styles[`TodoItem__PriorityDots--priority-${t.priority}`]
                   }
                 ></span>
               ) : null}
@@ -43,6 +43,12 @@ export default function List({
             {t.done ? (
               <span className={styles.TodoItem__Done}>
                 <i className="fas fa-check" />
+              </span>
+            ) : null}
+
+            {!!t.content && t.content !== '' ? (
+              <span className={styles.TodoItem__HasContent}>
+                <i className="fas fa-file-alt" />
               </span>
             ) : null}
 

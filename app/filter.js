@@ -59,9 +59,33 @@ export function applySplits(
     filteredOut = apply(todos, ...splits[i].filters);
     todos = minus(todos, filteredOut);
   }
-  return filteredOut;
+
+  const sorter = splits[currentSplitIndex].sort;
+  console.log('sorter', sorter);
+
+  return sort(filteredOut, sorter);
 }
 
-export function sort(todos: Todo[]) {
+function sort(todos: Todo[], by: string[]) {
+  if (!by || by.length === 0) return todos;
+  console.log('sort');
+
+  todos = [...todos];
+
+  todos.sort((t1, t2) => {
+    for (let i = 0; i < by.length; i++) {
+      const a = t1[by[i]];
+      const b = t2[by[i]];
+
+      if ((a == undefined && b != undefined) || a < b) return 1;
+      if ((b == undefined && a != undefined) || b < a) return -1;
+    }
+
+    if (t1.title < t2.title) return 1;
+    if (t2.title < t1.title) return -1;
+
+    return 0;
+  });
+
   return todos;
 }
