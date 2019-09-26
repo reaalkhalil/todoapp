@@ -52,6 +52,38 @@ const onMarkDoneTodo = (
   });
 };
 
+const onDueTodayTodo = (
+  todos,
+  selectedId,
+  setSelectedId,
+  editTodo,
+  searchModal,
+  endOfDay
+) => {
+  if (todos.length == 0) return;
+  let ret = false;
+
+  const t = todos.find(t => t.id === selectedId);
+  if (!t) return;
+
+  const dueToday = t.due_at !== endOfDay;
+
+  if (todos.length > 1) {
+    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
+    setSelectedId(todos[idx].id);
+  } else {
+    setSelectedId(null);
+  }
+
+  editTodo({
+    todo: {
+      ...t,
+      due_at: dueToday ? endOfDay : null
+    }
+  });
+};
+
 const onDeleteTodo = (todos, selectedId, setSelectedId) => {
   if (todos.length == 0) return;
   if (todos.length > 1) {
@@ -91,6 +123,12 @@ export default function TodoList({
   onSettings,
   helpOpen
 }) {
+  const endOfDay = (function() {
+    const a = new Date();
+    a.setHours(23, 59, 59, 999);
+    return a.getTime();
+  })();
+
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
 
@@ -176,6 +214,16 @@ export default function TodoList({
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
         editTodo({ todo: { ...t, priority: (t.priority + 1) % 3 } });
+      },
+      'shift+t': () => {
+        onDueTodayTodo(
+          todos,
+          selectedId,
+          setSelectedId,
+          editTodo,
+          searchModal,
+          endOfDay
+        );
       },
       e: () =>
         onMarkDoneTodo(

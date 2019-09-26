@@ -1,7 +1,7 @@
 const eStore = require('electron-store');
 
 // ADDFIELDS:
-const todoSchema = {
+const TodoSchema = {
   type: 'object',
   properties: {
     id: { type: 'number' },
@@ -17,23 +17,27 @@ const todoSchema = {
   }
 };
 
-const settingsSchema = {
-  splits: {
-    type: 'array',
-    items: {
-      type: 'object',
-      properties: {
-        position: { type: 'number' },
-        title: { type: 'string' },
-        shortcut: { type: 'string' },
-        filters: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              field: { type: 'string' },
-              op: { type: 'string' },
-              value: { type: ['string', 'number', 'boolean'] }
+export const SettingsSchema = {
+  type: 'object',
+  properties: {
+    splits: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: { type: 'number' },
+          title: { type: 'string' },
+          shortcut: { type: 'string' },
+          sort: { type: 'array', items: { type: 'string' } },
+          filters: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                field: { type: 'string' },
+                op: { type: 'string' },
+                value: { type: ['string', 'number', 'boolean'] }
+              }
             }
           }
         }
@@ -45,12 +49,9 @@ const settingsSchema = {
 const schema = {
   todos: {
     type: 'array',
-    items: todoSchema
+    items: TodoSchema
   },
-  settings: {
-    type: 'object',
-    properties: settingsSchema
-  }
+  settings: SettingsSchema
 };
 
 export default class Store {

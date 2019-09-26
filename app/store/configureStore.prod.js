@@ -22,6 +22,9 @@ function configureStore() {
       const returnValue = next(action);
       const state = getState();
 
+      console.log('todos', todos);
+      console.log('settings', settings);
+
       if (action.type in settingsActions) {
         s.saveSettings(state.settings);
       } else if (action.type in todosActions) {
@@ -34,9 +37,6 @@ function configureStore() {
 
   const todos = s.getTodos();
   const settings = s.getSettings();
-
-  console.log('todos', todos);
-  console.log('settings', settings);
 
   return createStore(
     rootReducer,

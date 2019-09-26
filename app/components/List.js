@@ -8,12 +8,21 @@ export default function List({
   onHover,
   helpOpen
 }) {
+  const [now, endOfDay] = (function() {
+    const a = new Date();
+    const b = new Date();
+    b.setHours(23, 59, 59, 999);
+    return [a.getTime(), b.getTime()];
+  })();
+
   const [hoverId, setHoverId] = useState(null);
   const todoList = todos
     ? todos.map(t => {
         const classes = [styles.TodoItem];
         if (t.id === selectedId) classes.push(styles['TodoItem--selected']);
         if (t.done) classes.push(styles['TodoItem--done']);
+        if (!!t.due_at && t.due_at < now && !t.done)
+          classes.push(styles['TodoItem--overdue']);
 
         return (
           <div
@@ -49,6 +58,12 @@ export default function List({
             {!!t.content && t.content !== '' ? (
               <span className={styles.TodoItem__HasContent}>
                 <i className="fas fa-file-alt" />
+              </span>
+            ) : null}
+
+            {!!t.due_at && (t.due_at < now || t.due_at === endOfDay) ? (
+              <span className={styles.TodoItem__DueToday}>
+                <i className="far fa-calendar" />
               </span>
             ) : null}
 

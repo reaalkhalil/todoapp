@@ -106,7 +106,7 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
               <input
                 type="text"
                 ref={tagsRef}
-                className={['mousetrap', styles.TextArea].join(' ')}
+                className={['mousetrap', styles.Input].join(' ')}
                 defaultValue={
                   defaultTodo.tags ? defaultTodo.tags.join(' ') : ''
                 }

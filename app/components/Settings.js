@@ -1,11 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from './Settings.css';
 import KeyBoard from '../keyboard';
-
+import { connect } from 'react-redux';
 import * as filter from '../filter';
+import { SettingsSchema } from '../store/Store';
 
-export default function Settings({ save, onCancel, helpOpen, defaultValue }) {
+import { Validator } from 'jsonschema';
+
+function Settings({ save, onCancel, helpOpen, defaultValue }) {
   const settingsRef = useRef();
+
+  const validator = new Validator();
 
   const [validSettings, setValidSettings] = useState(defaultValue || {});
   const [error, setError] = useState(false);
@@ -14,9 +19,11 @@ export default function Settings({ save, onCancel, helpOpen, defaultValue }) {
     esc: onCancel,
     'command+,': onCancel,
     'command+s': () => {
-      if (error || !validSettings || Object.keys(validSettings).length < 1) {
+      if (error || !validSettings) {
         console.error('ERROR saving');
       } else {
+        console.info('saving');
+
         save({ settings: validSettings });
         settingsRef.current.value = JSON.stringify(validSettings, '\n', '\t');
       }
@@ -31,10 +38,21 @@ export default function Settings({ save, onCancel, helpOpen, defaultValue }) {
        return null
       `)();
 
-      console.log('res', res);
-      setValidSettings(res);
+      const v = validator.validate(res, SettingsSchema);
+      const errors =
+        v.errors && v.errors.length > 0
+          ? v.errors.map(e => `${e.instance} ${e.message}`)
+          : null;
+
+      if (errors && errors.length > 0) {
+        setError(errors[0]);
+      } else {
+        setError(null);
+
+        setValidSettings(res);
+      }
     } catch (e) {
-      console.log('err');
+      setError('Not valid JSON');
     }
   };
 
@@ -45,7 +63,19 @@ export default function Settings({ save, onCancel, helpOpen, defaultValue }) {
     <div className={classes.join(' ')}>
       <div className={styles.Header}>
         <span>Preferences</span>
+        {error ? (
+          <div className={styles.Settings__Error}>
+            {error}
+            <i className="fas fa-times-circle"></i>
+          </div>
+        ) : validSettings ? (
+          <div className={styles.Settings__Success}>
+            {error}
+            <i className="fas fa-check-circle"></i>
+          </div>
+        ) : null}
       </div>
+
       <textarea
         autoFocus={true}
         defaultValue={
@@ -132,3 +162,7 @@ export default function Settings({ save, onCancel, helpOpen, defaultValue }) {
     </div>
   );
 }
+
+export default connect(state => ({
+  errors: state.errors
+}))(Settings);

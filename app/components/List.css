@@ -22,7 +22,9 @@
   position: relative;
   color: #afc1e4;
 }
-
+.TodoItem i {
+  font-size: 14px;
+}
 .TodoItem__Done {
   position: absolute;
   right: 15px;
@@ -30,7 +32,12 @@
 
 .TodoItem__HasContent {
   position: absolute;
-  right: 45px;
+  right: 35px;
+}
+
+.TodoItem__DueToday {
+  position: absolute;
+  right: 55px;
 }
 
 .TodoItem__Priority {
@@ -41,7 +48,7 @@
 .TodoItem__Title {
   position: absolute;
   left: 40px;
-  max-width: 50%;
+  max-width: calc(50% - 30px);
   height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -51,7 +58,7 @@
 
 .TodoItem__Tags {
   position: absolute;
-  left: calc(50% + 100px);
+  left: calc(50% + 20px);
 }
 
 .TodoItem__Tags span {
@@ -67,6 +74,20 @@
 
 .TodoItem--done .TodoItem__Tags span {
   opacity: 0.6;
+}
+
+.TodoItem--overdue::before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #a004;
+}
+.TodoItem--overdue .TodoItem__Title {
+  color: #cbd5e9;
 }
 
 .TodoItem--selected {

@@ -6,6 +6,8 @@ export const NOT_EQUAL = 'NOT_EQUAL';
 export const CONTAINS = 'CONTAINS';
 export const NOT_CONTAINS = 'NOT_CONTAINS';
 export const MATCHES = 'MATCHES';
+export const BEFORE_EOD = 'BEFORE_EOD';
+export const AFTER_EOD = 'AFTER_EOD';
 
 const FILTERS = {
   [EQUAL]: (tt, f, v) => tt.filter(t => t[f] === v),
@@ -16,7 +18,21 @@ const FILTERS = {
     tt.filter(t => (!t[f] ? false : t[f].indexOf(v) !== -1)),
 
   [NOT_CONTAINS]: (tt, f, v) =>
-    tt.filter(t => (!t[f] ? false : t[f].indexOf(v) === -1))
+    tt.filter(t => (!t[f] ? false : t[f].indexOf(v) === -1)),
+
+  [BEFORE_EOD]: (tt, f, v) => {
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return tt.filter(t => !!t[f] && t[f] <= endOfDay);
+  },
+
+  [AFTER_EOD]: (tt, f, v) => {
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return tt.filter(t => !!t[f] && t[f] > endOfDay);
+  }
 };
 
 export type Filter = {
@@ -40,7 +56,8 @@ type Split = {
   position: number,
   title: String,
   shortcut: String,
-  filters: Filter[]
+  filters: Filter[],
+  sort: String[]
 };
 
 function minus(all: Todo[], sub: Todo[]) {
@@ -63,7 +80,7 @@ export function applySplits(
   const sorter = splits[currentSplitIndex].sort;
   console.log('sorter', sorter);
 
-  return sort(filteredOut, sorter);
+  return sorter ? sort(filteredOut, sorter) : filteredOut;
 }
 
 function sort(todos: Todo[], by: string[]) {
