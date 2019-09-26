@@ -4,6 +4,8 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
+import * as settingsActions from '../actions/settings';
+import * as todosActions from '../actions/todos';
 
 import Store from './Store';
 
@@ -19,8 +21,12 @@ function configureStore() {
     return next => action => {
       const returnValue = next(action);
       const state = getState();
-      s.saveTodos(state.todos);
-      s.saveSettings(state.settings);
+
+      if (action.type in settingsActions) {
+        s.saveSettings(state.settings);
+      } else if (action.type in todosActions) {
+        s.saveTodos(state.todos);
+      }
 
       return returnValue;
     };
