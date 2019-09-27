@@ -70,7 +70,7 @@
   user-select: none;
   display: block;
   margin: 20px 10px 0 30px;
-  font-size: 16px;
+  font-size: 14px;
   color: #fffc;
 }
 
@@ -93,6 +93,6 @@
   bottom: 10px;
   left: 10px;
   font-size: 12px;
-  color: white;
+  color: #fffc;
   font-weight: 400;
 }

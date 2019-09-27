@@ -45,7 +45,7 @@
   position: absolute;
   left: 40px;
   font-size: 12px;
-  max-width: calc(50% - 30px);
+  max-width: calc(80% - 140px);
   height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -55,8 +55,9 @@
 
 .TodoItem__Tags {
   position: relative;
-  margin-left: calc(50% + 20px);
-  width: auto;
+  left: 0;
+  margin-left: auto;
+  width: calc(100px + 20%);
   right: 0;
   font-size: 0;
 }

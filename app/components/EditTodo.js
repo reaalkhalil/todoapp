@@ -137,7 +137,9 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
                 ref={tagsRef}
                 className={['mousetrap', styles.TextInput].join(' ')}
                 defaultValue={
-                  defaultTodo.tags ? defaultTodo.tags.join(' ') + ' ' : ''
+                  defaultTodo.tags && defaultTodo.tags.length
+                    ? defaultTodo.tags.join(' ') + ' '
+                    : ''
                 }
                 rows={3}
                 onChange={() => {
