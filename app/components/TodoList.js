@@ -270,10 +270,26 @@ export default function TodoList({
     });
   }
 
-  if (addModal)
+  if (addModal) {
+    let initTodo = null;
+
+    if (splits) {
+      const s = splits.find(s => s.position === selectedSplit);
+      if (s) initTodo = s.default || initTodo;
+      console.log(initTodo);
+    }
+
+    console.log(initTodo);
+
     return (
-      <EditTodo helpOpen={helpModal} initTodo={null} onUpdate={setTodoToAdd} />
+      <EditTodo
+        helpOpen={helpModal}
+        create={true}
+        initTodo={initTodo}
+        onUpdate={setTodoToAdd}
+      />
     );
+  }
 
   if (editModal)
     return (

@@ -28,7 +28,10 @@ class HomePage extends Component<Props> {
             value: true
           }
         ],
-        sort: ['done_at DESC']
+        sort: ['done_at DESC'],
+        default: {
+          done: true
+        }
       },
       {
         title: 'Reading List',
@@ -41,7 +44,10 @@ class HomePage extends Component<Props> {
             value: 'reading'
           }
         ],
-        sort: ['priority DESC', 'due_at', 'created_at']
+        sort: ['priority DESC', 'due_at', 'created_at'],
+        default: {
+          tags: ['reading']
+        }
       },
       {
         title: 'Today',
@@ -53,13 +59,17 @@ class HomePage extends Component<Props> {
             op: 'BEFORE_EOD'
           }
         ],
-        sort: ['due_at', 'priority DESC', 'created_at']
+        sort: ['due_at', 'priority DESC', 'created_at'],
+        default: {
+          due_at: 0
+        }
       },
       {
         title: 'Backlog',
         position: 1,
         filters: [],
-        sort: ['priority DESC', 'due_at', 'created_at']
+        sort: ['priority DESC', 'due_at', 'created_at'],
+        default: {}
       }
     ];
 

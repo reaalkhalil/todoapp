@@ -2,11 +2,23 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import styles from './EditTodo.css';
 
-export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
+export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
   const titleRef = useRef();
   const priorityRef = useRef();
   const tagsRef = useRef();
   const descRef = useRef();
+
+  const endOfDay = (function() {
+    const a = new Date();
+    a.setHours(23, 59, 59, 999);
+    return a.getTime();
+  })();
+
+  if (initTodo) {
+    initTodo = { ...initTodo };
+    if (initTodo.due_at === 0) initTodo.due_at = endOfDay;
+    initTodo.created_at = new Date().getTime();
+  }
 
   // ADDFIELDS:
   const defaultTodo = initTodo || {
@@ -14,14 +26,19 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
     content: '',
     priority: 0,
     done: false,
-    created_at: new Date().getTime(),
-    updated_at: new Date().getTime(),
+    created_at: 0,
+    updated_at: 0,
     done_at: null,
     due_at: null,
     tags: []
   };
 
-  useEffect(() => onUpdate(defaultTodo), []);
+  useEffect(() => {
+    onUpdate({
+      ...defaultTodo,
+      updated_at: new Date().getTime()
+    });
+  }, []);
 
   const [todo, setTodo] = useState(defaultTodo);
 
@@ -46,7 +63,7 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
   return (
     <div className={classes.join(' ')}>
       <div className={styles.Header}>
-        <span>{initTodo ? 'Edit Todo' : 'Create Todo'}</span>
+        <span>{create ? 'Create Todo' : 'Edit Todo'}</span>
       </div>
       <table className={styles.Table}>
         <tbody>
@@ -108,7 +125,7 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
                 ref={tagsRef}
                 className={['mousetrap', styles.TextInput].join(' ')}
                 defaultValue={
-                  defaultTodo.tags ? defaultTodo.tags.join(' ') : ''
+                  defaultTodo.tags ? defaultTodo.tags.join(' ') + ' ' : ''
                 }
                 rows={3}
                 onChange={() => {
