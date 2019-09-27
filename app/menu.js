@@ -48,14 +48,14 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About Todo App',
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Hide Todo App',
           accelerator: 'Command+H',
           selector: 'hide:'
         },

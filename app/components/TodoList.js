@@ -211,7 +211,7 @@ export default function TodoList({
         if (!t) return;
         editTodo({ todo: { ...t, priority: (t.priority + 1) % 3 } });
       },
-      'shift+t': () => {
+      T: () => {
         onDueTodayTodo(
           todos,
           selectedId,

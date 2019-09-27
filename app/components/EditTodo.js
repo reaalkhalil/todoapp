@@ -14,14 +14,8 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
     return a.getTime();
   })();
 
-  if (initTodo) {
-    initTodo = { ...initTodo };
-    if (initTodo.due_at === 0) initTodo.due_at = endOfDay;
-    initTodo.created_at = new Date().getTime();
-  }
-
   // ADDFIELDS:
-  const defaultTodo = initTodo || {
+  let defaultTodo = {
     title: '',
     content: '',
     priority: 0,
@@ -31,7 +25,21 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
     done_at: null,
     due_at: null,
     tags: []
+    //  ...initTodo,
+    //  due_at: initTodo.due_at === 0 ? endOfDay : null,
+    //  created_at: initTodo.created_at || new Date().getTime(),
+    //  done_at: initTodo.done?
   };
+
+  if (initTodo) defaultTodo = { ...defaultTodo, ...initTodo };
+
+  if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay;
+  if (initTodo.created_at) {
+    defaultTodo.created_at = initTodo.created_at;
+  } else {
+    defaultTodo.created_at = new Date().getTime();
+  }
+  if (!initTodo.done) defaultTodo.done_at = null;
 
   useEffect(() => {
     onUpdate({
@@ -162,12 +170,30 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
           </tr>
         </tbody>
       </table>
-      <br />
-      Created: {new Date(todo.created_at).toDateString()}
-      <br />
-      Last Edit: {new Date(todo.updated_at).toDateString()}
-      <br />
-      Done: {new Date(todo.done_at).toDateString()}
+      <div className={styles.Times}>
+        <table>
+          <tbody>
+            {todo.created_at ? (
+              <tr>
+                <td>Created: </td>
+                <td>{new Date(todo.created_at).toDateString()}</td>
+              </tr>
+            ) : null}
+            {todo.updated_at ? (
+              <tr>
+                <td>Last Edit:</td>
+                <td>{new Date(todo.updated_at).toDateString()}</td>
+              </tr>
+            ) : null}
+            {todo.done_at ? (
+              <tr>
+                <td>Done:</td>
+                <td>{new Date(todo.done_at).toDateString()}</td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
