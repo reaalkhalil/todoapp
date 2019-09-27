@@ -1,4 +1,5 @@
 .Settings {
+  min-width: 500px;
 }
 
 .Settings__TextArea {

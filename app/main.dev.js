@@ -71,6 +71,8 @@ app.on('ready', async () => {
     show: false,
     width: 900,
     height: 600,
+    minHeight: 500,
+    minWidth: 500,
     titleBarStyle: 'hidden'
   });
 

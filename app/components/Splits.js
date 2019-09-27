@@ -1,18 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useWindowDimensions from '../window';
 
 import styles from './Splits.css';
 
-export default function Splits({ splits, selectedSplit }) {
+export default function Splits({ splits, selectedSplit, helpOpen }) {
   const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
-  return (
-    <div className={styles.Splits}>
-      {sortedSplits.map(s => {
-        const classes = [styles.Split];
-        if (s.position === selectedSplit)
-          classes.push(styles['Split--selected']);
 
+  const classes = [styles.Splits];
+  if (helpOpen) classes.push(styles['Splits--helpOpen']);
+
+  const splitsRef = useRef();
+  const splitRef = useRef();
+  const lastSplitRef = useRef();
+
+  const [squeezed, setSqueezed] = useState();
+
+  const { width } = useWindowDimensions();
+
+  useEffect(() => {
+    const last = (
+      lastSplitRef.current || splitRef.current
+    ).getBoundingClientRect();
+
+    setSqueezed(last.x + last.width > width - 30);
+  }, [width]);
+
+  let hitSelected = false;
+
+  return (
+    <div className={classes.join(' ')} ref={splitsRef}>
+      {sortedSplits.map((s, i) => {
+        const classes = [styles.Split];
+        if (s.position === selectedSplit) {
+          hitSelected = true;
+          classes.push(styles['Split--selected']);
+        }
+
+        if (squeezed && !hitSelected) return null;
+
+        const last = i === sortedSplits.length - 1;
         return (
-          <span className={classes.join(' ')} key={s.position}>
+          <span
+            className={classes.join(' ')}
+            key={s.position}
+            ref={
+              s.position === selectedSplit
+                ? splitRef
+                : last
+                ? lastSplitRef
+                : null
+            }
+          >
             {s.title}
           </span>
         );

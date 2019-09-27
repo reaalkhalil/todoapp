@@ -1,3 +1,10 @@
+.EditTodo {
+  position: relative;
+  display: block;
+  min-width: 500px;
+  height: calc(100% - 24px);
+}
+
 .Table {
   width: 100%;
 }

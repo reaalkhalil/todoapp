@@ -1,8 +1,18 @@
 .Splits {
   display: block;
   line-height: 50px;
+  height: 30px;
+  margin-bottom: 30px;
   padding-left: 30px;
   user-select: none;
+  left: 0;
+  right: 0;
+  padding-right: 50px;
+  white-space: nowrap;
+}
+
+.Splits--helpOpen {
+  right: 250px;
 }
 
 .Split {
@@ -18,7 +28,5 @@
 
 .Split--selected {
   color: #00ffc8;
-  /* color: yellow; */
   border-bottom: 2px solid #00ffc8;
-  /* border-bottom: 2px solid yellow; */
 }

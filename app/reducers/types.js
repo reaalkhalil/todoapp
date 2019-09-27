@@ -12,13 +12,6 @@ export type Todo = {
   +done: Boolean
 };
 
-export type Todo = {
-  +id: number,
-  +title: string,
-  +priority: number,
-  +done: Boolean
-};
-
 type Filter = {
   field: string,
   op: string,

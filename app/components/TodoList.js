@@ -209,7 +209,7 @@ export default function TodoList({
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
-        editTodo({ todo: { ...t, priority: (t.priority + 1) % 3 } });
+        editTodo({ todo: { ...t, priority: ((t.priority || 0) + 1) % 3 } });
       },
       T: () => {
         onDueTodayTodo(
@@ -316,7 +316,11 @@ export default function TodoList({
           hasFocus={searchFocus}
         />
       ) : (
-        <Splits splits={splits} selectedSplit={selectedSplit} />
+        <Splits
+          helpOpen={helpModal}
+          splits={splits}
+          selectedSplit={selectedSplit}
+        />
       )}
 
       <List

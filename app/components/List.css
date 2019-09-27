@@ -1,11 +1,7 @@
 .List {
   overflow: scroll;
   display: block;
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 80px;
-  bottom: 0;
+  height: calc(100% - 80px);
 }
 
 .List--help-open {
@@ -48,28 +44,35 @@
 .TodoItem__Title {
   position: absolute;
   left: 40px;
+  font-size: 12px;
   max-width: calc(50% - 30px);
   height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #afc1e4;
+  color: #cad4e7;
 }
 
 .TodoItem__Tags {
-  position: absolute;
-  left: calc(50% + 20px);
+  position: relative;
+  margin-left: calc(50% + 20px);
+  width: auto;
+  right: 0;
+  font-size: 0;
 }
 
 .TodoItem__Tags span {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 28px;
-  background-color: #afc1e4;
+  background-color: #cad4e7;
   border-radius: 5px;
   padding: 1px 4px;
   margin-left: 4px;
   color: black;
-  font-weight: 600;
+  font-weight: 500;
+}
+.TodoItem__Tags span:first-of-type {
+  margin-left: 0;
 }
 
 .TodoItem--done .TodoItem__Tags span {

@@ -25,21 +25,19 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
     done_at: null,
     due_at: null,
     tags: []
-    //  ...initTodo,
-    //  due_at: initTodo.due_at === 0 ? endOfDay : null,
-    //  created_at: initTodo.created_at || new Date().getTime(),
-    //  done_at: initTodo.done?
   };
 
-  if (initTodo) defaultTodo = { ...defaultTodo, ...initTodo };
+  if (initTodo) {
+    defaultTodo = { ...defaultTodo, ...initTodo };
 
-  if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay;
-  if (initTodo.created_at) {
-    defaultTodo.created_at = initTodo.created_at;
-  } else {
-    defaultTodo.created_at = new Date().getTime();
+    if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay;
+    if (initTodo.created_at) {
+      defaultTodo.created_at = initTodo.created_at;
+    } else {
+      defaultTodo.created_at = new Date().getTime();
+    }
+    if (!initTodo.done) defaultTodo.done_at = null;
   }
-  if (!initTodo.done) defaultTodo.done_at = null;
 
   useEffect(() => {
     onUpdate({
@@ -84,6 +82,12 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
                 type="text"
                 defaultValue={defaultTodo.title}
                 onChange={() => updateData('title', titleRef.current.value)}
+                onKeyDown={e => {
+                  if (e.keyCode === 9 && event.shiftKey) {
+                    descRef.current.focus();
+                    e.preventDefault();
+                  }
+                }}
               />
             </td>
           </tr>
@@ -164,6 +168,12 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
                 rows={4}
                 onChange={() => {
                   updateData('content', descRef.current.value);
+                }}
+                onKeyDown={e => {
+                  if (e.keyCode === 9 && !event.shiftKey) {
+                    titleRef.current.focus();
+                    e.preventDefault();
+                  }
                 }}
               />
             </td>
