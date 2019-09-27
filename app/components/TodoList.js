@@ -84,7 +84,7 @@ const onDueTodayTodo = (
   });
 };
 
-const onDeleteTodo = (todos, selectedId, setSelectedId) => {
+const onDeleteTodo = (todos, selectedId, setSelectedId, deleteTodo) => {
   if (todos.length == 0) return;
   if (todos.length > 1) {
     let idx = todos.findIndex(t => t.id === selectedId) + 1;
@@ -135,11 +135,7 @@ export default function TodoList({
   if (searchQuery === null) {
     todos = filter.applySplits(todos, splits, selectedSplit);
   } else {
-    todos = filter.apply(todos, {
-      field: 'title',
-      op: 'CONTAINS',
-      value: searchQuery
-    });
+    todos = filter.search(todos, searchQuery);
   }
 
   const [selectedId, setSelectedId] = useState(
@@ -209,7 +205,7 @@ export default function TodoList({
         setAddModal(true);
         e.preventDefault();
       },
-      p: () => {
+      s: () => {
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
@@ -243,15 +239,13 @@ export default function TodoList({
           editTodo,
           searchModal
         ),
-      d: () => onDeleteTodo(todos, selectedId, setSelectedId),
+      'd d': () => onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo),
       k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
       '?': () => {
         const h = !helpModal;
         setHelpModal(h);
         onHelp(h);
-        //   if (h) ipcRenderer.send('openSideBar');
-        //   else ipcRenderer.send('closeSideBar');
       },
       up: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       down: () => onMoveSelectDown(todos, selectedId, setSelectedId),

@@ -20,23 +20,46 @@ class HomePage extends Component<Props> {
       {
         title: 'Done',
         shortcut: 'd',
-        position: 2,
-        filters: [{ field: 'done', op: 'EQUAL', value: true }],
-        sort: ['done_at']
+        position: 3,
+        filters: [
+          {
+            field: 'done',
+            op: 'EQUAL',
+            value: true
+          }
+        ],
+        sort: ['done_at DESC']
       },
       {
         title: 'Reading List',
         shortcut: 'r',
-        position: 1,
-        filters: [{ field: 'tags', op: 'CONTAINS', value: 'reading' }],
-        sort: ['priority', 'created_at']
+        position: 2,
+        filters: [
+          {
+            field: 'tags',
+            op: 'CONTAINS',
+            value: 'reading'
+          }
+        ],
+        sort: ['priority DESC', 'due_at', 'created_at']
       },
       {
-        title: 'Todo',
-        shortcut: 't',
+        title: 'Today',
+        shortcut: 'g',
         position: 0,
+        filters: [
+          {
+            field: 'due_at',
+            op: 'BEFORE_EOD'
+          }
+        ],
+        sort: ['due_at', 'priority DESC', 'created_at']
+      },
+      {
+        title: 'Backlog',
+        position: 1,
         filters: [],
-        sort: ['priority', 'created_at']
+        sort: ['priority DESC', 'due_at', 'created_at']
       }
     ];
 

@@ -9,12 +9,13 @@ const sections = [
       [['?'], 'Toggle Help'],
       [['tab'], 'Next Split'],
       [['shift', 'tab'], 'Prev Split'],
-      [['g', 'then', '_'], 'Split Shortcut'],
+      [['g', '!then split shortcut'], 'Goto Split'],
       [['c'], 'Create'],
+      [['T'], 'Set Due Today'],
       [['e'], 'Mark Done'],
       [['E'], 'Unmark Done'],
-      [['d'], 'Delete'],
-      [['p'], 'Edit Priority'],
+      [['d', '!twice'], 'Delete'],
+      [['s'], 'Toggle Priority'],
       [['enter'], 'Edit'],
       [['k'], 'Up'],
       [['j'], 'Down'],
@@ -71,9 +72,9 @@ export default function Help({ show }) {
               <span className={styles.Key__Label}>{k[1]}</span>
               <span className={styles.Key__Buttons}>
                 {k[0].map((k, j) =>
-                  k === 'then' ? (
-                    <span key={j} className={styles.Key__Then}>
-                      {k}
+                  k[0] === '!' ? (
+                    <span key={j} className={styles.Key__KeyHelper}>
+                      {k.slice(1)}
                     </span>
                   ) : (
                     <span key={j} className={styles.Key__Button}>
@@ -94,7 +95,7 @@ export default function Help({ show }) {
         Refer to a Friend
       </a>
       <br />
-      <a className={styles.Link} onClick={() => {}}>
+      <a className={styles.Link} href="mailto:reaalkhalil@gmail.com">
         Submit Feedback
       </a>
     </div>

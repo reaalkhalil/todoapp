@@ -62,15 +62,14 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
   return (
     <div className={classes.join(' ')}>
       <div className={styles.Header}>
-        <span>Preferences</span>
+        <span className={styles.Title}>Preferences</span>
         {error ? (
           <div className={styles.Settings__Error}>
-            {error}
+            <span className={styles.Settings__ErrorMessage}>{error}</span>
             <i className="fas fa-times-circle"></i>
           </div>
         ) : validSettings ? (
           <div className={styles.Settings__Success}>
-            {error}
             <i className="fas fa-check-circle"></i>
           </div>
         ) : null}

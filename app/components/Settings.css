@@ -35,7 +35,7 @@
   padding-left: 30px;
 }
 
-.Header span {
+.Title {
   color: #00ffc8;
   padding-bottom: 2px;
   margin-right: 25px;
@@ -46,7 +46,11 @@
 .Settings__Error {
   float: right;
   margin-right: 40px;
+}
+
+.Settings__Error .Settings__ErrorMessage {
   color: white;
+  font-size: 14px;
 }
 
 .Settings__Success i,

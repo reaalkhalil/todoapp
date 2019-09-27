@@ -106,7 +106,7 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
               <input
                 type="text"
                 ref={tagsRef}
-                className={['mousetrap', styles.Input].join(' ')}
+                className={['mousetrap', styles.TextInput].join(' ')}
                 defaultValue={
                   defaultTodo.tags ? defaultTodo.tags.join(' ') : ''
                 }
@@ -149,6 +149,8 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen }) {
       Created: {new Date(todo.created_at).toDateString()}
       <br />
       Last Edit: {new Date(todo.updated_at).toDateString()}
+      <br />
+      Done: {new Date(todo.done_at).toDateString()}
     </div>
   );
 }

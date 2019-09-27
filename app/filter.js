@@ -85,17 +85,24 @@ export function applySplits(
 
 function sort(todos: Todo[], by: string[]) {
   if (!by || by.length === 0) return todos;
-  console.log('sort');
 
   todos = [...todos];
 
   todos.sort((t1, t2) => {
     for (let i = 0; i < by.length; i++) {
-      const a = t1[by[i]];
-      const b = t2[by[i]];
+      const [field, order] = by[i].split(' ');
 
-      if ((a == undefined && b != undefined) || a < b) return 1;
-      if ((b == undefined && a != undefined) || b < a) return -1;
+      const a = t1[field];
+      const b = t2[field];
+
+      const asc = order
+        ? order.toLowerCase().startsWith('desc')
+          ? 1
+          : -1
+        : -1;
+
+      if ((a == undefined && b != undefined) || a < b) return asc;
+      if ((b == undefined && a != undefined) || b < a) return -asc;
     }
 
     if (t1.title < t2.title) return 1;
@@ -105,4 +112,9 @@ function sort(todos: Todo[], by: string[]) {
   });
 
   return todos;
+}
+
+export function search(todos: Todos[], q: String) {
+  const res = todos.filter(t => (t.title ? t.title.indexOf(q) > -1 : false));
+  return sort(res, ['created_at desc']);
 }

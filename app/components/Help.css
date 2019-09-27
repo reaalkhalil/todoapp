@@ -59,21 +59,24 @@
   color: white;
 }
 
-.Key__Then {
+.Key__KeyHelper {
   font-size: 12px;
+  line-height: 10px;
   color: white;
-  margin-left: -8px;
+  margin-left: -3px;
   margin-right: 8px;
-  vertical-align: sub;
+  margin-top: 2px;
+  font-weight: 400;
+  float: right;
+  max-width: 80px;
 }
 
 .Link {
   display: inline-block;
   padding-bottom: 2px;
   margin: 6px 0;
-  border-bottom: 2px solid transparent;
 }
 
 .Link:hover {
-  border-bottom: 2px solid white;
+  color: #fff;
 }
