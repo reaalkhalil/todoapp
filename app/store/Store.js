@@ -72,13 +72,11 @@ export default class Store {
   }
 
   saveSettings(settings) {
-    console.log('SAVE SETTINGS', settings);
     this.store.set('settings', settings);
   }
 
   getSettings() {
     const a = this.store.get('settings', {});
-    console.log('getSettings() => ', a);
     return a;
   }
 

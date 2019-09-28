@@ -39,8 +39,8 @@
 .Title {
   padding-bottom: 2px;
   margin-right: 25px;
-  color: black;
-  border-bottom: 2px solid black;
+  color: rgb(34, 26, 85);
+  border-bottom: 2px solid rgb(34, 26, 85);
 }
 
 .Settings__Success,

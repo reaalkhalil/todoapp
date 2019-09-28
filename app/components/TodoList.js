@@ -276,10 +276,7 @@ export default function TodoList({
     if (splits) {
       const s = splits.find(s => s.position === selectedSplit);
       if (s) initTodo = s.default || initTodo;
-      console.log(initTodo);
     }
-
-    console.log(initTodo);
 
     return (
       <EditTodo

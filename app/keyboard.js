@@ -9,7 +9,7 @@ class KB {
         const split = k.split('|');
         if (split.length > 1) {
           Mousetrap.bind(split, handlers[k]);
-          return;
+          continue;
         }
 
         Mousetrap.bind(k, handlers[k]);

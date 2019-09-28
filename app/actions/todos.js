@@ -33,8 +33,6 @@ export function deleteTodo(data) {
 }
 
 export function editTodo(data) {
-  console.log('editTodo', data);
-
   return {
     type: EDIT_TODO,
     data

@@ -134,6 +134,20 @@
         float: left;
         line-height: 46px;
       }
+      .button.download {
+        padding-right: 50px;
+        position: relative;
+      }
+      .button.download::after {
+        content: ' ';
+        display: block;
+        background-image: url('assets/arrow.svg');
+        width: 32px;
+        height: 32px;
+        right: 16px;
+        top: 8px;
+        position: absolute;
+      }
       .button svg {
         margin: 7px;
         margin-right: 0;
@@ -231,32 +245,11 @@
         </div>
 
         <a
-          class="button"
+          class="button download"
           href="assets/TodoApp.dmg"
           onclick="gtag('event', 'Download App', {'event_category': 'User Interaction'})"
         >
-          <span>Download for MacOS</span>
-          <svg
-            class="arrow-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-          >
-            <g
-              fill="none"
-              stroke="#fff"
-              stroke-width="3"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-            >
-              <path
-                class="arrow-icon--arrow"
-                d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"
-                transform="rotate(90 16 16)"
-              ></path>
-            </g>
-          </svg>
+          <span>Download Beta for MacOS</span>
         </a>
       </div>
     </div>

@@ -78,10 +78,8 @@ class HomePage extends Component<Props> {
       this.props.settings.splits &&
       this.props.settings.splits.length > 0
     ) {
-      console.log('USING CUSTOM SPLITS');
       splits = this.props.settings.splits;
     }
-    console.log('this.props.settings', this.props.settings);
 
     return (
       <>
@@ -90,7 +88,6 @@ class HomePage extends Component<Props> {
             defaultValue={{ ...this.props.settings, splits: splits }}
             helpOpen={this.state.helpOpen}
             onCancel={() => this.setState({ settingsOpen: false })}
-            onSave={d => console.log(d)}
           />
         ) : (
           <TodoPage

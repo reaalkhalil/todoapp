@@ -22,9 +22,6 @@ function configureStore() {
       const returnValue = next(action);
       const state = getState();
 
-      console.log('todos', todos);
-      console.log('settings', settings);
-
       if (action.type in settingsActions) {
         s.saveSettings(state.settings);
       } else if (action.type in todosActions) {

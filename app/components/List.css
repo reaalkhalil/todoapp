@@ -17,8 +17,7 @@
   font-size: 16px;
   cursor: default;
   position: relative;
-  color: #3e3d6b;
-  transition: 50ms;
+  color: rgb(34, 26, 85);
 }
 .TodoItem i {
   font-size: 14px;
@@ -67,13 +66,13 @@
 .TodoItem__Tags span {
   font-size: 10px;
   line-height: 28px;
-  background-color: #cedfff;
-  border: 1px solid #aecaff;
+  background-color: rgb(56, 48, 99);
+  border: 1px solid rgb(34, 26, 85);
   border-radius: 5px;
-  padding: 0px 3px;
+  padding: 0 3px;
   margin-left: 4px;
-  color: black;
-  font-weight: 400;
+  color: #fff;
+  font-weight: 300;
 }
 .TodoItem__Tags span:first-of-type {
   margin-left: 0;
@@ -98,7 +97,6 @@
 }
 
 .TodoItem--selected {
-  transition: 50ms;
   background-color: #e9f3ff;
 }
 

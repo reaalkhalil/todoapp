@@ -167,7 +167,6 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
                   ' '
                 )}
                 defaultValue={defaultTodo.content || ''}
-                rows={4}
                 onChange={() => {
                   updateData('content', descRef.current.value);
                 }}

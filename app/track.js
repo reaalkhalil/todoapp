@@ -17,7 +17,6 @@ export const Actions = {
 const usr = ua(code, uid);
 
 export function trackEvent(category, action, label, value) {
-  console.log('TRACK EVENT', category, action);
   usr
     .event({
       ec: category,

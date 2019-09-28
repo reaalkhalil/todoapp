@@ -78,7 +78,6 @@ export function applySplits(
   }
 
   const sorter = splits[currentSplitIndex].sort;
-  console.log('sorter', sorter);
 
   return sorter ? sort(filteredOut, sorter) : filteredOut;
 }

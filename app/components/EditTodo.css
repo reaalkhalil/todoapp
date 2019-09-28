@@ -33,6 +33,7 @@
 
 .TextArea.Content {
   width: calc(100% - 90px);
+  height: calc(100vh - 420px);
 }
 
 .EditTodo--help-open .TextInput,
@@ -82,10 +83,10 @@
 }
 
 .Header span {
-  color: black;
+  color: rgb(34, 26, 85);
   padding-bottom: 2px;
   margin-right: 25px;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid rgb(34, 26, 85);
 }
 
 .Times {
