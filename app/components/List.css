@@ -1,5 +1,6 @@
 .List {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   display: block;
   height: calc(100% - 84px);
 }
@@ -17,6 +18,7 @@
   cursor: default;
   position: relative;
   color: #3e3d6b;
+  transition: 50ms;
 }
 .TodoItem i {
   font-size: 14px;
@@ -96,6 +98,7 @@
 }
 
 .TodoItem--selected {
+  transition: 50ms;
   background-color: #e9f3ff;
 }
 

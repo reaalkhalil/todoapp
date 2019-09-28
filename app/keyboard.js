@@ -5,8 +5,15 @@ class KB {
     Mousetrap.reset();
 
     for (let k of Object.keys(handlers))
-      if (typeof k === 'string' && typeof handlers[k] === 'function')
+      if (typeof k === 'string' && typeof handlers[k] === 'function') {
+        const split = k.split('|');
+        if (split.length > 1) {
+          Mousetrap.bind(split, handlers[k]);
+          return;
+        }
+
         Mousetrap.bind(k, handlers[k]);
+      }
   }
 
   reset() {

@@ -258,7 +258,7 @@ export default function TodoList({
         if (selectedSplit !== 0) setSelectedSplit(0);
       },
 
-      'command+,': e => onSettings(true),
+      'command+,|ctrl+,': e => onSettings(true),
       '/': e => {
         setSearchFocus(true);
         if (searchModal) return;

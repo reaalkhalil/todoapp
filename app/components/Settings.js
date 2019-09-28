@@ -17,8 +17,8 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
 
   KeyBoard.bind({
     esc: onCancel,
-    'command+,': onCancel,
-    'command+s': () => {
+    'command+,|ctrl+,': onCancel,
+    'command+s|ctrl+s': () => {
       if (error || !validSettings) {
         console.error('ERROR saving');
       } else {

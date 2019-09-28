@@ -1,7 +1,7 @@
 <html>
   <head>
     <script>
-      if (location.protocol != 'https:') {
+      if (location.protocol != 'https:' && location.href.indexOf(':') === -1) {
         location.href =
           'https:' +
           window.location.href.substring(window.location.protocol.length);
@@ -116,6 +116,7 @@
         font-weight: 400;
         margin: 50px 0 30px 30px;
         font-size: 48px;
+        line-height: 48px;
         height: 48px;
       }
 
@@ -170,7 +171,7 @@
       }
 
       .right {
-        background-image: url('assets/scrn.png');
+        background-image: url('assets/todo.gif');
         background-size: calc(300px + 50%) auto;
         background-position: 0 calc(50% + 20px);
         background-repeat: no-repeat;
@@ -200,7 +201,22 @@
           min-height: 90vw;
         }
       }
+
+      @media screen and (max-width: 450px) {
+        h1 {
+          font-weight: 400;
+          margin: 30px 0 20px 20px;
+          font-size: 48px;
+        }
+        .right {
+          background-size: contain;
+          background-position: 50% calc(50% + 20px);
+          margin-top: calc(80px - 20vw);
+          min-height: 100vw;
+        }
+      }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <h1>Get shit done.</h1>
