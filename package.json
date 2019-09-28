@@ -274,7 +274,9 @@
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.9",
     "typeface-roboto": "0.0.75",
-    "typeface-roboto-mono": "0.0.75"
+    "typeface-roboto-mono": "0.0.75",
+    "universal-analytics": "^0.4.20",
+    "uuid": "^3.3.3"
   },
   "devEngines": {
     "node": ">=7.x",

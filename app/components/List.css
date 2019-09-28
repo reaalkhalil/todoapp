@@ -5,7 +5,7 @@
 }
 
 .List--help-open {
-  right: 250px;
+  width: calc(100% - 250px);
 }
 
 .TodoItem {

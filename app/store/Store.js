@@ -1,4 +1,5 @@
 const eStore = require('electron-store');
+const uuid = require('uuid/v4');
 
 // ADDFIELDS:
 const TodoSchema = {
@@ -47,6 +48,9 @@ export const SettingsSchema = {
 };
 
 const schema = {
+  user_id: {
+    type: 'string'
+  },
   todos: {
     type: 'array',
     items: TodoSchema
@@ -76,5 +80,11 @@ export default class Store {
     const a = this.store.get('settings', {});
     console.log('getSettings() => ', a);
     return a;
+  }
+
+  getUserId() {
+    let uid = this.store.get('user_id') || uuid();
+    this.store.set('user_id', uid);
+    return uid;
   }
 }

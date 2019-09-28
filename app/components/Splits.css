@@ -9,10 +9,12 @@
   right: 0;
   padding-right: 50px;
   white-space: nowrap;
+  z-index: 0;
 }
 
 .Splits--helpOpen {
   right: 250px;
+  width: calc(100% - 330px);
 }
 
 .Split {

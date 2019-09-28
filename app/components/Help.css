@@ -9,7 +9,7 @@
   overflow: scroll;
   opacity: 0;
   transition: 0ms;
-  background-color: #b4b2ce12;
+  background-color: #212838;
   pointer-events: none;
   user-select: none;
 }
@@ -75,6 +75,7 @@
   display: inline-block;
   padding-bottom: 2px;
   margin: 6px 0;
+  outline: none;
 }
 
 .Link:hover {

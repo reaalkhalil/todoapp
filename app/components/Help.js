@@ -91,13 +91,23 @@ export default function Help({ show }) {
       <br />
       <br />
 
-      {/* <a className={styles.Link} onClick={() => {}}>
+      <a
+        tabIndex={-1}
+        className={styles.Link}
+        href="mailto:?subject=Todo App&body=Try this out!%0Ahttps://rea.al/todoapp/"
+      >
         Refer to a Friend
       </a>
-      <br /> */}
-      <a className={styles.Link} href="mailto:reaalkhalil@gmail.com">
+      <br />
+      <a
+        tabIndex={-1}
+        className={styles.Link}
+        href="mailto:reaalkhalil@gmail.com"
+      >
         Submit Feedback
       </a>
+      <br />
+      <br />
     </div>
   );
 }
