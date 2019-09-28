@@ -32,6 +32,7 @@ export default function Search({
 
   return (
     <div className={classes.join(' ')}>
+      <i className={['fas fa-search', styles.Search__Icon].join(' ')}></i>
       <input
         ref={searchRef}
         className={['mousetrap', styles.Search__Input].join(' ')}

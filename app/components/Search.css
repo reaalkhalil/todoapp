@@ -12,14 +12,26 @@
   font-size: 16px;
   font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
   padding: 5px 8px;
+  padding-right: 33px;
   border-radius: 5px;
-  width: calc(100%);
+  width: calc(100% - 25px);
   background-color: #fff1;
   border: 2px solid #fff3;
   font-weight: 300;
   color: #fffb;
   outline: none;
   position: relative;
+}
+
+.Search__Icon {
+  color: #fff6;
+  position: absolute;
+  right: -40px;
+  top: 7px;
+}
+
+.Search--focus .Search__Icon {
+  color: #00ffc8ee;
 }
 
 .Search--help-open {

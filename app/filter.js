@@ -116,5 +116,5 @@ function sort(todos: Todo[], by: string[]) {
 
 export function search(todos: Todos[], q: String) {
   const res = todos.filter(t => (t.title ? t.title.indexOf(q) > -1 : false));
-  return sort(res, ['created_at desc']);
+  return sort(res, ['done', 'due_at desc', 'created_at desc']);
 }
