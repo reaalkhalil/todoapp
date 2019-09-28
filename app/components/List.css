@@ -1,7 +1,7 @@
 .List {
   overflow: scroll;
   display: block;
-  height: calc(100% - 80px);
+  height: calc(100% - 84px);
 }
 
 .List--help-open {
@@ -16,7 +16,7 @@
   font-size: 16px;
   cursor: default;
   position: relative;
-  color: #afc1e4;
+  color: #3e3d6b;
 }
 .TodoItem i {
   font-size: 14px;
@@ -50,7 +50,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #cad4e7;
+  color: black;
 }
 
 .TodoItem__Tags {
@@ -65,12 +65,13 @@
 .TodoItem__Tags span {
   font-size: 10px;
   line-height: 28px;
-  background-color: #cad4e7;
+  background-color: #cedfff;
+  border: 1px solid #aecaff;
   border-radius: 5px;
-  padding: 1px 4px;
+  padding: 0px 3px;
   margin-left: 4px;
   color: black;
-  font-weight: 500;
+  font-weight: 400;
 }
 .TodoItem__Tags span:first-of-type {
   margin-left: 0;
@@ -91,19 +92,19 @@
   background-color: #f004;
 }
 .TodoItem--overdue .TodoItem__Title {
-  color: #cbd5e9;
+  color: black;
 }
 
 .TodoItem--selected {
-  background-color: #dee7f122;
+  background-color: #e9f3ff;
 }
 
 .TodoItem__highlight {
   position: absolute;
   display: block;
-  width: 3px;
+  width: 4px;
   height: 28px;
-  background-color: white;
+  background-color: #00b8ff;
 }
 
 .TodoItem--done .TodoItem__Title {
@@ -125,10 +126,15 @@
   margin-left: 14px;
   border-radius: 50%;
   display: block;
-  background: yellow;
+  background: #fc0;
   float: left;
 }
 
+.TodoItem--overdue .TodoItem__PriorityDots--priority-1::before,
+.TodoItem--overdue .TodoItem__PriorityDots--priority-2::before,
+.TodoItem--overdue .TodoItem__PriorityDots--priority-2::after {
+  background: #f70;
+}
 .TodoItem__PriorityDots--priority-1::before {
   margin-left: 18px;
 }

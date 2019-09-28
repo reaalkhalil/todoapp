@@ -98,15 +98,13 @@ export default function Help({ show }) {
       >
         Refer to a Friend
       </a>
-      <br />
       <a
         tabIndex={-1}
         className={styles.Link}
-        href="mailto:reaalkhalil@gmail.com"
+        href="mailto:reaalkhalil@gmail.com?subject=Todo App Feedback"
       >
         Submit Feedback
       </a>
-      <br />
       <br />
     </div>
   );

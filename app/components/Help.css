@@ -9,7 +9,8 @@
   overflow: scroll;
   opacity: 0;
   transition: 0ms;
-  background-color: #212838;
+  background-color: #f8f8fa;
+  border-left: 1px solid #ddd;
   pointer-events: none;
   user-select: none;
 }
@@ -21,7 +22,8 @@
 }
 
 .Header {
-  color: #afc1e4;
+  font-weight: 600;
+  color: #000b;
   margin-top: 20px;
   line-height: 30px;
 }
@@ -56,13 +58,13 @@
 
 .Key__Label {
   font-size: 14px;
-  color: white;
+  color: #000b;
 }
 
 .Key__KeyHelper {
   font-size: 12px;
   line-height: 10px;
-  color: white;
+  color: #000b;
   margin-left: -3px;
   margin-right: 8px;
   margin-top: 2px;
@@ -72,12 +74,21 @@
 }
 
 .Link {
-  display: inline-block;
-  padding-bottom: 2px;
-  margin: 6px 0;
+  font-size: 14px;
+  opacity: 1;
+  display: block;
+  margin: 0;
+  margin-bottom: 8px;
   outline: none;
+  color: black;
+  background-color: #00b8ff99;
+  border: 1px solid #00b8ff;
+  padding: 4px;
+  text-align: center;
+  border-radius: 5px;
+  width: calc(100% - 18px);
 }
 
 .Link:hover {
-  color: #fff;
+  background-color: #00b8ffcc;
 }

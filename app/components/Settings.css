@@ -7,7 +7,6 @@
   margin: 10px 30px;
   line-height: 16px;
   font-size: 14px;
-  font-weight: 300;
   font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
   padding: 5px 8px;
   border-radius: 5px;
@@ -15,14 +14,15 @@
   min-height: calc(100vh - 125px);
   resize: none;
   background-color: #fff1;
-  border: 2px solid #fff3;
-  color: #fffb;
+  border: 2px solid #8787af46;
+  color: #000b;
   outline: none;
+  font-weight: 400;
 }
 
 .Settings__TextArea:focus {
-  border: 2px solid #00ffc8ee;
-  color: white;
+  border: 2px solid #00b8ffee;
+  color: black;
 }
 
 .Settings--help-open .Settings__TextArea {
@@ -37,10 +37,10 @@
 }
 
 .Title {
-  color: #00ffc8;
   padding-bottom: 2px;
   margin-right: 25px;
-  border-bottom: 2px solid #00ffc8;
+  color: black;
+  border-bottom: 2px solid black;
 }
 
 .Settings__Success,
@@ -50,7 +50,7 @@
 }
 
 .Settings__Error .Settings__ErrorMessage {
-  color: white;
+  color: black;
   font-size: 14px;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .Settings__Success i {
-  color: black;
+  color: #2f0;
 }
 
 .Settings--help-open .Settings__Error {

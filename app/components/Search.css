@@ -15,23 +15,23 @@
   padding-right: 33px;
   border-radius: 5px;
   width: calc(100% - 25px);
-  background-color: #fff1;
-  border: 2px solid #fff3;
+  border: 2px solid #8787af46;
   font-weight: 300;
-  color: #fffb;
+  color: #000b;
   outline: none;
   position: relative;
 }
 
 .Search__Icon {
-  color: #fff6;
+  color: #8787af60;
   position: absolute;
+  z-index: 1;
   right: -40px;
   top: 7px;
 }
 
 .Search--focus .Search__Icon {
-  color: #00ffc8ee;
+  color: #00b8ffee;
 }
 
 .Search--help-open {
@@ -39,17 +39,17 @@
 }
 
 .Search__Input:focus {
-  border: 2px solid #00ffc8ee;
-  color: white;
+  border: 2px solid #00b8ffee;
+  color: black;
 }
 
 .Search--focus::after {
   content: ' ';
   position: absolute;
   display: block;
-  width: 3px;
+  width: 4px;
   height: 28px;
   left: 0;
   top: 0;
-  background-color: white;
+  background-color: #00b8ff;
 }

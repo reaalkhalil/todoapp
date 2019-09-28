@@ -18,7 +18,8 @@
 }
 
 .Split {
-  color: white;
+  color: #8787af88;
+  font-weight: 400;
   padding-bottom: 2px;
   margin-right: 25px;
 }
@@ -29,6 +30,6 @@
 }
 
 .Split--selected {
-  color: #00ffc8;
-  border-bottom: 2px solid #00ffc8;
+  color: black;
+  border-bottom: 2px solid black;
 }
