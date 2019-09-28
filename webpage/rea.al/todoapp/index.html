@@ -1,0 +1,248 @@
+<html>
+  <head>
+    <script>
+      if (location.protocol != 'https:') {
+        location.href =
+          'https:' +
+          window.location.href.substring(window.location.protocol.length);
+      }
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-148911079-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-148911079-2');
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>
+      TodoApp
+    </title>
+
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="assets/icons/apple-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="assets/icons/apple-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="assets/icons/apple-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="assets/icons/apple-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="assets/icons/apple-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="assets/icons/apple-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="assets/icons/apple-icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="assets/icons/apple-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/icons/apple-icon-180x180.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="assets/icons/android-icon-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="assets/icons/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="assets/icons/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <style>
+      html,
+      body {
+        font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New',
+          monospace;
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-weight: 400;
+        margin: 50px 0 30px 30px;
+        font-size: 48px;
+        height: 48px;
+      }
+
+      .button {
+        height: 46px;
+        background: black;
+        color: white;
+        text-decoration: none;
+        padding: 0 32px;
+        border-radius: 10px;
+        display: inline-block;
+      }
+      span {
+        display: block;
+        float: left;
+        line-height: 46px;
+      }
+      .button svg {
+        margin: 7px;
+        margin-right: 0;
+        display: block;
+        float: right;
+      }
+      .middle {
+        position: absolute;
+        top: calc(50% - 200px);
+        right: 50px;
+      }
+      .logo {
+        margin-bottom: 50px;
+      }
+      .logo img {
+        width: 128px;
+        height: 128px;
+      }
+      .logo h2 {
+        margin: 32px 0 32px 10px;
+        padding: 0;
+        height: 64px;
+        display: inline-block;
+        font-size: 32px;
+        line-height: 32px;
+        vertical-align: top;
+      }
+
+      .left {
+        float: left;
+        width: 40%;
+        height: calc(100% - 128px);
+        text-align: center;
+        position: relative;
+      }
+
+      .right {
+        background-image: url('assets/scrn.png');
+        background-size: calc(300px + 50%) auto;
+        background-position: 0 calc(50% + 20px);
+        background-repeat: no-repeat;
+        float: right;
+        margin-top: -128px;
+        width: 60%;
+        height: calc(100%);
+        text-align: center;
+      }
+
+      @media screen and (max-width: 950px) {
+        .left,
+        .right {
+          float: none;
+          width: 100%;
+        }
+        .left {
+          height: 300px;
+        }
+        .middle {
+          position: initial;
+        }
+        .right {
+          background-position: 50% calc(50% + 20px);
+          margin-top: calc(80px - 20vw);
+          height: calc(100vw - 250px);
+          min-height: 90vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Get shit done.</h1>
+    <div class="right"></div>
+
+    <div class="left">
+      <div class="middle">
+        <div class="logo">
+          <img src="assets/icon.png" />
+          <h2>Reaal's <br />Todo App</h2>
+          <br class="clear:both" />
+        </div>
+
+        <a
+          class="button"
+          href="assets/TodoApp.dmg"
+          onclick="gtag('event', 'Download App', {'event_category': 'User Interaction'})"
+        >
+          <span>Download for MacOS</span>
+          <svg
+            class="arrow-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+          >
+            <g
+              fill="none"
+              stroke="#fff"
+              stroke-width="3"
+              stroke-linejoin="round"
+              stroke-miterlimit="10"
+            >
+              <path
+                class="arrow-icon--arrow"
+                d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"
+                transform="rotate(90 16 16)"
+              ></path>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
