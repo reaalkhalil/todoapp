@@ -106,12 +106,3 @@ export const initialSettings = {
     }
   ]
 };
-
-/*
-,
-				{
-					"field": "due_at",
-					"op": "AFTER_EOD",
-					"value": -86400000
-				}
-*/

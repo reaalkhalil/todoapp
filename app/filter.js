@@ -120,14 +120,17 @@ function sort(todos: Todo[], by: string[]) {
       const a = t1[field];
       const b = t2[field];
 
+      if (a == undefined && b != undefined) return 1;
+      if (b == undefined && a != undefined) return -1;
+
       const asc = order
         ? order.toLowerCase().startsWith('desc')
           ? 1
           : -1
         : -1;
 
-      if ((a == undefined && b != undefined) || a < b) return asc;
-      if ((b == undefined && a != undefined) || b < a) return -asc;
+      if (a < b) return asc;
+      if (b < a) return -asc;
     }
 
     if (t1.title < t2.title) return 1;
@@ -141,5 +144,5 @@ function sort(todos: Todo[], by: string[]) {
 
 export function search(todos: Todos[], q: String) {
   const res = todos.filter(t => (t.title ? t.title.indexOf(q) > -1 : false));
-  return sort(res, ['done', 'due_at desc', 'created_at desc']);
+  return sort(res, ['done', 'due_at', 'created_at desc']);
 }
