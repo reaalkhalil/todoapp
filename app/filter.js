@@ -9,6 +9,13 @@ export const MATCHES = 'MATCHES';
 export const BEFORE_EOD = 'BEFORE_EOD';
 export const AFTER_EOD = 'AFTER_EOD';
 
+function eod(offset) {
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  return endOfDay.getTime() + (typeof offset === 'number' ? offset : 0);
+}
+
 const FILTERS = {
   [EQUAL]: (tt, f, v) => tt.filter(t => t[f] === v),
 
@@ -21,17 +28,11 @@ const FILTERS = {
     tt.filter(t => (!t[f] ? false : t[f].indexOf(v) === -1)),
 
   [BEFORE_EOD]: (tt, f, v) => {
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return tt.filter(t => !!t[f] && t[f] <= endOfDay);
+    return tt.filter(t => !!t[f] && t[f] <= eod(v));
   },
 
   [AFTER_EOD]: (tt, f, v) => {
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return tt.filter(t => !!t[f] && t[f] > endOfDay);
+    return tt.filter(t => !!t[f] && t[f] > eod(v));
   }
 };
 
@@ -72,14 +73,39 @@ export function applySplits(
   let filteredOut = null;
 
   const currentSplitIndex = splits.findIndex(s => s.position === currentSplit);
+
   for (let i = 0; i <= currentSplitIndex; i++) {
-    filteredOut = apply(todos, ...splits[i].filters);
+    if (splits[i].position < 0) continue;
+    filteredOut = apply(
+      todos,
+      {
+        field: 'done',
+        op: EQUAL,
+        value: false
+      },
+      ...splits[i].filters
+    );
     todos = minus(todos, filteredOut);
   }
 
   const sorter = splits[currentSplitIndex].sort;
 
   return sorter ? sort(filteredOut, sorter) : filteredOut;
+}
+
+type Page = {
+  title: String,
+  shortcut: String,
+  filters: Filter[],
+  sort: String[]
+};
+export function applyPage(todos: Todo[], pages: Pages[], currentPage: string) {
+  const page = pages.find(p => p.shortcut === currentPage);
+  if (!page) return [];
+
+  const res = apply(todos, ...page.filters);
+
+  return page.sort ? sort(res, page.sort) : res;
 }
 
 function sort(todos: Todo[], by: string[]) {

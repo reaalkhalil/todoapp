@@ -63,7 +63,12 @@ export default function List({
 
             {!!t.due_at && (t.due_at < now || t.due_at === endOfDay) ? (
               <span className={styles.TodoItem__DueToday}>
-                <i className="far fa-calendar" />
+                <i
+                  className={
+                    'fas ' +
+                    (t.due_at < now ? 'fa-hourglass-end' : 'fa-hourglass-half')
+                  }
+                />
               </span>
             ) : null}
 

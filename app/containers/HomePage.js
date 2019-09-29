@@ -16,76 +16,19 @@ class HomePage extends Component<Props> {
   }
 
   render() {
-    let splits = [
-      {
-        title: 'Done',
-        shortcut: 'd',
-        position: 3,
-        filters: [
-          {
-            field: 'done',
-            op: 'EQUAL',
-            value: true
-          }
-        ],
-        sort: ['done_at DESC'],
-        default: {
-          done: true
-        }
-      },
-      {
-        title: 'Reading List',
-        shortcut: 'r',
-        position: 2,
-        filters: [
-          {
-            field: 'tags',
-            op: 'CONTAINS',
-            value: 'reading'
-          }
-        ],
-        sort: ['priority DESC', 'due_at', 'created_at'],
-        default: {
-          tags: ['reading']
-        }
-      },
-      {
-        title: 'Today',
-        shortcut: 'g',
-        position: 0,
-        filters: [
-          {
-            field: 'due_at',
-            op: 'BEFORE_EOD'
-          }
-        ],
-        sort: ['due_at', 'priority DESC', 'created_at'],
-        default: {
-          due_at: 0
-        }
-      },
-      {
-        title: 'Backlog',
-        position: 1,
-        filters: [],
-        sort: ['priority DESC', 'due_at', 'created_at'],
-        default: {}
-      }
-    ];
-
-    if (
-      this.props.settings &&
-      this.props.settings.splits &&
-      this.props.settings.splits.length > 0
-    ) {
-      splits = this.props.settings.splits;
-    }
+    //  if (
+    //    this.props.settings &&
+    //    this.props.settings.splits &&
+    //    this.props.settings.splits.length > 0
+    //  ) {
+    //    splits = this.props.settings.splits;
+    //  }
 
     return (
       <>
         {this.state.settingsOpen ? (
           <SettingsPage
-            defaultValue={{ ...this.props.settings, splits: splits }}
+            defaultValue={{ ...this.props.settings }}
             helpOpen={this.state.helpOpen}
             onCancel={() => this.setState({ settingsOpen: false })}
           />
@@ -94,7 +37,8 @@ class HomePage extends Component<Props> {
             helpOpen={this.state.helpOpen}
             onHelp={h => this.setState({ helpOpen: h })}
             onSettings={s => this.setState({ settingsOpen: s })}
-            splits={splits}
+            splits={this.props.settings.splits}
+            pages={this.props.settings.pages}
           />
         )}
         <Help show={this.state.helpOpen} />

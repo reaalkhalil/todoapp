@@ -4,6 +4,7 @@ import KeyBoard from '../keyboard';
 import { connect } from 'react-redux';
 import * as filter from '../filter';
 import { SettingsSchema } from '../store/Store';
+import { initialSettings } from '../store/initial';
 
 import { Validator } from 'jsonschema';
 
@@ -20,7 +21,17 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
     'command+,|ctrl+,': onCancel,
     'command+s|ctrl+s': () => {
       if (error || !validSettings) {
-        console.error('ERROR saving');
+        if (settingsRef.current.value === '') {
+          settingsRef.current.value = JSON.stringify(
+            initialSettings,
+            '\n',
+            '\t'
+          );
+
+          save({ settings: initialSettings });
+          setValidSettings(initialSettings);
+          setError(null);
+        }
       } else {
         console.info('saving');
 

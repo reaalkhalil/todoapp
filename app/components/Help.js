@@ -62,10 +62,8 @@ export default function Help({ show }) {
   return (
     <div className={classes.join(' ')}>
       {sections.map(s => (
-        <>
-          <div className={styles.Header} key={s.header}>
-            {s.header}
-          </div>
+        <div key={s.header}>
+          <div className={styles.Header}>{s.header}</div>
           <br />
           {s.keys.map((k, i) => (
             <div className={styles.Key} key={i}>
@@ -85,7 +83,7 @@ export default function Help({ show }) {
               </span>
             </div>
           ))}
-        </>
+        </div>
       ))}
       <br />
       <br />

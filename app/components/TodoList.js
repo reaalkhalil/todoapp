@@ -5,7 +5,7 @@ import styles from './TodoList.css';
 
 import Search from './Search';
 import EditTodo from './EditTodo';
-import Splits from './Splits';
+import { Splits, Page } from './Splits';
 import List from './List';
 import * as filter from '../filter';
 
@@ -119,6 +119,7 @@ export default function TodoList({
   editTodo,
   todos,
   splits,
+  pages,
   onHelp,
   onSettings,
   helpOpen
@@ -131,9 +132,14 @@ export default function TodoList({
 
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
+  const [selectedPage, setSelectedPage] = useState('');
 
   if (searchQuery === null) {
-    todos = filter.applySplits(todos, splits, selectedSplit);
+    if (!selectedPage) {
+      todos = filter.applySplits(todos, splits, selectedSplit);
+    } else {
+      todos = filter.applyPage(todos, pages, selectedPage);
+    }
   } else {
     todos = filter.search(todos, searchQuery);
   }
@@ -190,16 +196,28 @@ export default function TodoList({
       enter: () => setSearchFocus(false)
     });
   } else {
+    // TODO: if user enters "|" in shortcut it'll mess this up
     const shortcuts = {};
     splits.forEach(s => {
       if (s.shortcut)
         shortcuts['g ' + s.shortcut] = () => setSelectedSplit(s.position);
     });
+
+    pages.forEach(p => {
+      if (p.shortcut)
+        shortcuts['g ' + p.shortcut] = () => setSelectedPage(p.shortcut);
+    });
     KeyBoard.bind({
       ...shortcuts,
-      tab: () => setSelectedSplit((selectedSplit + 1) % splits.length),
+      tab: () =>
+        setSelectedSplit(
+          (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
+        ),
       'shift+tab': () =>
-        setSelectedSplit((splits.length + selectedSplit - 1) % splits.length),
+        setSelectedSplit(
+          (splits.filter(s => s.position >= 0).length + selectedSplit - 1) %
+            splits.filter(s => s.position >= 0).length
+        ),
 
       c: e => {
         setAddModal(true);
@@ -256,6 +274,7 @@ export default function TodoList({
       esc: e => {
         if (searchModal) onExitSearch();
         if (selectedSplit !== 0) setSelectedSplit(0);
+        if (selectedPage !== '') setSelectedPage('');
       },
 
       'command+,|ctrl+,': e => onSettings(true),
@@ -276,6 +295,13 @@ export default function TodoList({
     if (splits) {
       const s = splits.find(s => s.position === selectedSplit);
       if (s) initTodo = s.default || initTodo;
+    }
+
+    if (selectedPage !== '') {
+      const page = pages.find(p => p.shortcut === selectedPage);
+      if (page && page.default) {
+        initTodo = page.default;
+      }
     }
 
     return (
@@ -312,6 +338,8 @@ export default function TodoList({
           onUpdateFocus={f => setSearchFocus(f)}
           hasFocus={searchFocus}
         />
+      ) : selectedPage ? (
+        <Page pages={pages} selectedPage={selectedPage} />
       ) : (
         <Splits
           helpOpen={helpModal}
