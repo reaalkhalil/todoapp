@@ -195,6 +195,11 @@
         height: calc(100%);
         text-align: center;
       }
+      #version {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
 
       @media screen and (max-width: 950px) {
         .left,
@@ -244,7 +249,9 @@
           <br class="clear:both" />
         </div>
 
+        <span id="version"></span>
         <a
+          id="download-button"
           class="button download"
           href="assets/TodoApp.dmg"
           onclick="gtag('event', 'Download App', {'event_category': 'User Interaction'})"
@@ -253,5 +260,35 @@
         </a>
       </div>
     </div>
+
+    <script>
+      const fail = () => {
+        document.getElementById('version').innerText =
+          'Failed to get latest download link';
+      };
+
+      fetch('https://api.github.com/repos/reaalkhalil/todo/releases/latest')
+        .then(res => {
+          res
+            .json()
+            .then(data => {
+              const a = data.assets.find(
+                a => a.browser_download_url.indexOf('.dmg') !== -1
+              );
+
+              if (!a) {
+                fail();
+                return;
+              }
+
+              document.getElementById('version').innerText =
+                'Latest Version: ' + data.tag_name;
+              document.getElementById('download-button').href =
+                a.browser_download_url;
+            })
+            .catch(fail);
+        })
+        .catch(fail);
+    </script>
   </body>
 </html>
