@@ -99,7 +99,7 @@ export const initialSettings = {
           value: -172800000
         }
       ],
-      sort: ['done_at DESC'],
+      sort: ['priority DESC', 'due_at', 'created_at'],
       default: {
         done: true
       }

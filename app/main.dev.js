@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain, screen } from 'electron';
+import { app, BrowserWindow, ipcMain, screen, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -19,6 +19,29 @@ export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+
+    autoUpdater.setFeedURL({
+      provider: 'github',
+      owner: 'reaalkhalil',
+      repo: 'todo',
+      vPrefixedTagName: false
+    });
+
+    autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+      const dialogOpts = {
+        type: 'info',
+        buttons: ['Restart', 'Later'],
+        title: 'Application Update',
+        message: process.platform === 'win32' ? releaseNotes : releaseName,
+        detail:
+          'A new version has been downloaded. Restart the application to apply the updates.'
+      };
+
+      dialog.showMessageBox(dialogOpts, response => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
+    });
+
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -126,5 +149,15 @@ app.on('ready', async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  let retry = 0;
+
+  function createUpdater() {
+    try {
+      new AppUpdater();
+    } catch (e) {
+      if (retry++ > 100) return;
+      setTimeout(createUpdater, Math.pow(2, retry) * 10000);
+    }
+  }
+  createUpdater();
 });

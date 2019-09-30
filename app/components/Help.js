@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { app } from 'electron';
 
 import styles from './Help.css';
 
@@ -9,7 +10,7 @@ const sections = [
       [['?'], 'Toggle Help'],
       [['tab'], 'Next Split'],
       [['shift', 'tab'], 'Prev Split'],
-      [['g', '!then split shortcut'], 'Goto Split'],
+      [['g', '!then shortcut'], 'Goto Split/Page'],
       [['c'], 'Create'],
       [['T'], 'Set Due Today'],
       [['e'], 'Mark Done'],
@@ -88,13 +89,12 @@ export default function Help({ show }) {
       <br />
       <br />
       <br />
-
       <a
         tabIndex={-1}
         className={styles.Link}
         href="mailto:?subject=Todo App&body=Try this out!%0Ahttps://rea.al/todoapp/"
       >
-        Refer to a Friend
+        Share with a Friend
       </a>
       <a
         tabIndex={-1}
@@ -103,7 +103,6 @@ export default function Help({ show }) {
       >
         Submit Feedback
       </a>
-      <br />
     </div>
   );
 }

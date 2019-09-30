@@ -30,7 +30,7 @@
 }
 
 .Key {
-  height: 30px;
+  height: 36px;
   display: block;
   width: 100%;
 }
@@ -58,7 +58,7 @@
 }
 
 .Key__Label {
-  font-size: 14px;
+  font-size: 13px;
   color: #000b;
 }
 
@@ -66,12 +66,12 @@
   font-size: 12px;
   line-height: 10px;
   color: #000b;
-  margin-left: -3px;
+  margin-left: -6px;
   margin-right: 8px;
   margin-top: 2px;
   font-weight: 400;
   float: right;
-  max-width: 80px;
+  max-width: 60px;
 }
 
 .Link {
@@ -92,4 +92,9 @@
 
 .Link:hover {
   background-color: #00b8ffcc;
+}
+
+.Version {
+  color: #333;
+  font-size: 12px;
 }

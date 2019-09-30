@@ -12,6 +12,7 @@ import * as filter from '../filter';
 import KeyBoard from '../keyboard';
 
 import { ipcRenderer } from 'electron';
+import ViewTodo from './ViewTodo';
 
 const onMarkDoneTodo = (
   todos,
@@ -152,6 +153,7 @@ export default function TodoList({
   const [editModal, setEditModal] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
+  const [viewTodo, setViewTodo] = useState(false);
   const [helpModal, setHelpModal] = useState(helpOpen);
 
   if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
@@ -177,6 +179,7 @@ export default function TodoList({
       enter: () => {
         addTodo({ todo: todoToAdd });
         setAddModal(false);
+        // TODO: setSelectedId()   need to get ID of todo just created
       }
     });
   } else if (editModal) {
@@ -209,20 +212,31 @@ export default function TodoList({
     });
     KeyBoard.bind({
       ...shortcuts,
-      tab: () =>
+      tab: () => {
+        if (selectedPage) {
+          setSelectedPage('');
+          return;
+        }
         setSelectedSplit(
           (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
-        ),
-      'shift+tab': () =>
+        );
+      },
+      'shift+tab': () => {
+        if (selectedPage) {
+          setSelectedPage('');
+          return;
+        }
         setSelectedSplit(
           (splits.filter(s => s.position >= 0).length + selectedSplit - 1) %
             splits.filter(s => s.position >= 0).length
-        ),
+        );
+      },
 
       c: e => {
         setAddModal(true);
         e.preventDefault();
       },
+      // space: () => setViewTodo(!viewTodo),
       s: () => {
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
@@ -347,6 +361,12 @@ export default function TodoList({
           selectedSplit={selectedSplit}
         />
       )}
+
+      {/* <ViewTodo
+        todo={todos.find(t => t.id === selectedId)}
+        helpOpen={helpOpen}
+        show={viewTodo}
+      /> */}
 
       <List
         helpOpen={helpModal}
