@@ -18,18 +18,15 @@ const onMarkDoneTodo = (
   todos,
   selectedId,
   setSelectedId,
-  toDoneStatus,
   editTodo,
   searchModal
 ) => {
   if (todos.length == 0) return;
-  let ret = false;
 
-  if (
-    (todos.find(t => t.id === selectedId) || { done: toDoneStatus }).done ===
-    toDoneStatus
-  )
-    ret = true;
+  const t = todos.find(a => a.id === selectedId);
+  if (!t) return;
+
+  const toDoneStatus = !t.done;
 
   if (todos.length > 1) {
     let idx = todos.findIndex(t => t.id === selectedId) + 1;
@@ -38,11 +35,6 @@ const onMarkDoneTodo = (
   } else {
     setSelectedId(null);
   }
-
-  if (ret) return;
-
-  const t = todos.find(t => t.id === selectedId);
-  if (!t) return;
 
   editTodo({
     todo: {
@@ -114,11 +106,11 @@ const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
   }
 };
 
-const endOfDay = (function() {
+const endOfDay = function() {
   const a = new Date();
   a.setHours(23, 59, 59, 999);
   return a.getTime();
-})();
+};
 
 export default function TodoList({
   addTodo,
@@ -157,11 +149,15 @@ export default function TodoList({
   const [helpModal, setHelpModal] = useState(helpOpen);
 
   useEffect(() => {
-    ipcRenderer.on('createTodo', () => {
-      if (!editModal) {
-        setAddModal(!addModal);
-      }
-    });
+    const f = () => {
+      if (!editModal) setAddModal(!addModal);
+    };
+
+    ipcRenderer.addListener('createTodo', f);
+
+    return () => {
+      ipcRenderer.removeListener('createTodo', f);
+    };
   }, []);
 
   if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
@@ -208,16 +204,21 @@ export default function TodoList({
     });
   } else {
     // TODO: if user enters "|" in shortcut it'll mess this up
+
     const shortcuts = {};
     splits.forEach(s => {
       if (s.shortcut)
-        shortcuts['g ' + s.shortcut] = () => setSelectedSplit(s.position);
+        shortcuts['g ' + s.shortcut] = () => {
+          setSelectedPage('');
+          setSelectedSplit(s.position);
+        };
     });
 
     pages.forEach(p => {
       if (p.shortcut)
         shortcuts['g ' + p.shortcut] = () => setSelectedPage(p.shortcut);
     });
+
     KeyBoard.bind({
       ...shortcuts,
       tab: () => {
@@ -258,27 +259,11 @@ export default function TodoList({
           setSelectedId,
           editTodo,
           searchModal,
-          endOfDay
+          endOfDay()
         );
       },
       e: () =>
-        onMarkDoneTodo(
-          todos,
-          selectedId,
-          setSelectedId,
-          true,
-          editTodo,
-          searchModal
-        ),
-      E: () =>
-        onMarkDoneTodo(
-          todos,
-          selectedId,
-          setSelectedId,
-          false,
-          editTodo,
-          searchModal
-        ),
+        onMarkDoneTodo(todos, selectedId, setSelectedId, editTodo, searchModal),
       'd d': () => onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo),
       k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
