@@ -25,6 +25,10 @@ const sections = [
     ]
   },
   {
+    header: 'Global Shortcuts',
+    keys: [[['ctrl', 'space'], 'Create Todo']]
+  },
+  {
     header: 'Create Todo',
     keys: [
       [['tab'], 'Next Field'],

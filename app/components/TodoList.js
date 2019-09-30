@@ -114,6 +114,12 @@ const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
   }
 };
 
+const endOfDay = (function() {
+  const a = new Date();
+  a.setHours(23, 59, 59, 999);
+  return a.getTime();
+})();
+
 export default function TodoList({
   addTodo,
   deleteTodo,
@@ -125,12 +131,6 @@ export default function TodoList({
   onSettings,
   helpOpen
 }) {
-  const endOfDay = (function() {
-    const a = new Date();
-    a.setHours(23, 59, 59, 999);
-    return a.getTime();
-  })();
-
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
@@ -155,6 +155,14 @@ export default function TodoList({
   const [searchFocus, setSearchFocus] = useState(false);
   const [viewTodo, setViewTodo] = useState(false);
   const [helpModal, setHelpModal] = useState(helpOpen);
+
+  useEffect(() => {
+    ipcRenderer.on('createTodo', () => {
+      if (!editModal) {
+        setAddModal(!addModal);
+      }
+    });
+  }, []);
 
   if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
   if (

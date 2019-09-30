@@ -10,7 +10,15 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain, screen, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  dialog,
+  globalShortcut,
+  shell
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -115,30 +123,14 @@ app.on('ready', async () => {
     }
   });
 
-  //   const dontResizeForSideBar = sbW => {
-  //     const [x, y] = mainWindow.getPosition();
-  //     const [w, h] = mainWindow.getSize();
-  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  //     return x + w + sbW >= width;
-  //   };
+  const ret = globalShortcut.register('Control+Space', () => {
+    mainWindow.webContents.send('createTodo');
+    mainWindow.show();
+  });
 
-  //   ipcMain.on('openSideBar', function(e) {
-  //     const [w, h] = mainWindow.getSize();
-  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
-  //     if (dontResizeForSideBar(250)) return;
-
-  //     mainWindow.setSize(Math.min(width, w + 250), h);
-  //   });
-
-  //   ipcMain.on('closeSideBar', function(e) {
-  //     const [w, h] = mainWindow.getSize();
-  //     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
-  //     if (dontResizeForSideBar(0)) return;
-
-  //     mainWindow.setSize(Math.max(w - 250, 800), h);
-  //   });
+  if (!ret) {
+    console.log('registration failed');
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -160,4 +152,8 @@ app.on('ready', async () => {
     }
   }
   createUpdater();
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });
