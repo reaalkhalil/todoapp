@@ -8,11 +8,11 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
   const tagsRef = useRef();
   const descRef = useRef();
 
-  const endOfDay = (function() {
+  const endOfDay = function() {
     const a = new Date();
     a.setHours(23, 59, 59, 999);
     return a.getTime();
-  })();
+  };
 
   // ADDFIELDS:
   let defaultTodo = {
@@ -30,7 +30,7 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
   if (initTodo) {
     defaultTodo = { ...defaultTodo, ...initTodo };
 
-    if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay;
+    if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay();
     if (initTodo.created_at) {
       defaultTodo.created_at = initTodo.created_at;
     } else {
