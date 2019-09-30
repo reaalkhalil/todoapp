@@ -32,6 +32,11 @@ export const initialSettings = {
           field: 'due_at',
           op: 'BEFORE_EOD',
           value: 0
+        },
+        {
+          field: 'done',
+          op: 'EQUAL',
+          value: false
         }
       ],
       sort: ['due_at', 'priority DESC', 'created_at'],
@@ -48,6 +53,11 @@ export const initialSettings = {
           field: 'tags',
           op: 'CONTAINS',
           value: 'reading'
+        },
+        {
+          field: 'done',
+          op: 'EQUAL',
+          value: false
         }
       ],
       sort: ['priority DESC', 'due_at', 'created_at'],
@@ -58,7 +68,13 @@ export const initialSettings = {
     {
       title: 'Backlog',
       position: 1,
-      filters: [],
+      filters: [
+        {
+          field: 'done',
+          op: 'EQUAL',
+          value: false
+        }
+      ],
       sort: ['priority DESC', 'due_at', 'created_at'],
       default: {}
     }

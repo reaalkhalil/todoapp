@@ -76,15 +76,7 @@ export function applySplits(
 
   for (let i = 0; i <= currentSplitIndex; i++) {
     if (splits[i].position < 0) continue;
-    filteredOut = apply(
-      todos,
-      {
-        field: 'done',
-        op: EQUAL,
-        value: false
-      },
-      ...splits[i].filters
-    );
+    filteredOut = apply(todos, ...splits[i].filters);
     todos = minus(todos, filteredOut);
   }
 
