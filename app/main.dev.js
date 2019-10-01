@@ -90,7 +90,14 @@ app.on('window-all-closed', () => {
   }
 });
 
-function createWindow() {
+app.on('ready', async () => {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    await installExtensions();
+  }
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 900,
@@ -124,17 +131,6 @@ function createWindow() {
       mainWindow.hide();
     }
   });
-}
-
-app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
-  createWindow();
 
   // TODO: not sure if any of:
   //     globalShortcut.register   new MenuBuilder   createUpdater

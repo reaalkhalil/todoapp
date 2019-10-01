@@ -119,8 +119,8 @@ export default function List({
 
             <span
               className={titleClasses.join(' ')}
-              onClick={() => {
-                if (isLink) shell.openExternal(t.title);
+              onClick={e => {
+                if (e.metaKey && isLink) shell.openExternal(t.title);
               }}
             >
               {t.title}
