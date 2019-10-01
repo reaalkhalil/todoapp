@@ -245,7 +245,7 @@ export default function TodoList({
         setAddModal(true);
         e.preventDefault();
       },
-      // space: () => setViewTodo(!viewTodo),
+      space: () => setViewTodo(!viewTodo),
       s: () => {
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
@@ -279,9 +279,22 @@ export default function TodoList({
         e.preventDefault();
       },
       esc: e => {
-        if (searchModal) onExitSearch();
+        if (viewTodo) {
+          setViewTodo(false);
+          return;
+        }
+
+        if (searchModal) {
+          onExitSearch();
+          return;
+        }
+
+        if (selectedPage !== '') {
+          setSelectedPage('');
+          return;
+        }
+
         if (selectedSplit !== 0) setSelectedSplit(0);
-        if (selectedPage !== '') setSelectedPage('');
       },
 
       'command+,|ctrl+,': e => onSettings(true),
@@ -355,11 +368,11 @@ export default function TodoList({
         />
       )}
 
-      {/* <ViewTodo
+      <ViewTodo
         todo={todos.find(t => t.id === selectedId)}
         helpOpen={helpOpen}
         show={viewTodo}
-      /> */}
+      />
 
       <List
         helpOpen={helpModal}

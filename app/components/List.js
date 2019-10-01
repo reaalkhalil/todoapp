@@ -1,5 +1,20 @@
 import React, { Component, useState } from 'react';
+import { ipcRenderer } from 'electron';
+
 import styles from './List.css';
+
+function validURL(str) {
+  var pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  ); // fragment locator
+  return !!pattern.test(str);
+}
 
 export default function List({
   todos,
@@ -23,6 +38,10 @@ export default function List({
         if (t.done) classes.push(styles['TodoItem--done']);
         if (!!t.due_at && t.due_at < now && !t.done)
           classes.push(styles['TodoItem--overdue']);
+
+        const titleClasses = [styles.TodoItem__Title];
+        const isLink = validURL(t.title);
+        if (isLink) titleClasses.push(styles['TodoItem__Title--link']);
 
         return (
           <div
@@ -72,7 +91,15 @@ export default function List({
               </span>
             ) : null}
 
-            <span className={styles.TodoItem__Title}>{t.title}</span>
+            <span
+              className={titleClasses.join(' ')}
+              onClick={() => {
+                console.log(t.title);
+                if (isLink) ipcRenderer.emit('openURL', t.title);
+              }}
+            >
+              {t.title}
+            </span>
 
             {t.tags ? (
               <div className={styles.TodoItem__Tags}>

@@ -17,7 +17,7 @@
   font-size: 16px;
   cursor: default;
   position: relative;
-  color: rgb(34, 26, 85);
+  color: rgb(56, 48, 99);
 }
 
 .TodoItem--overdue.TodoItem {
@@ -50,7 +50,8 @@
 .TodoItem__Title {
   position: absolute;
   left: 40px;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 300;
   max-width: calc(80% - 140px);
   height: 28px;
   overflow: hidden;
@@ -59,33 +60,43 @@
   color: black;
 }
 
+/*
+.TodoItem__Title--link {
+   color: #006eff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+*/
+
 .TodoItem__Tags {
   position: relative;
-  left: 0;
   margin-left: auto;
+  overflow: hidden;
+  z-index: 100;
   width: calc(100px + 20%);
-  right: 0;
+  max-width: calc(20px + 20%);
+  right: 75px;
   font-size: 0;
 }
 
 .TodoItem__Tags span {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 28px;
-  background-color: rgb(56, 48, 99);
-  border: 1px solid rgb(34, 26, 85);
+  background-color: rgba(205, 212, 252);
+  border: 1px solid rgba(34, 26, 85, 0.315);
   border-radius: 5px;
   padding: 0 3px;
   margin-left: 4px;
-  color: #fff;
-  font-weight: 300;
+  color: rgb(56, 48, 99);
+  font-weight: 400;
 }
 .TodoItem__Tags span:first-of-type {
   margin-left: 0;
 }
 
 .TodoItem--overdue .TodoItem__Tags span {
-  background-color: #500;
-  border: 1px solid #400;
+  background-color: rgba(255, 115, 115, 0.445);
+  border: 1px solid rgba(138, 27, 27, 0.445);
 }
 
 .TodoItem--done .TodoItem__Tags span {

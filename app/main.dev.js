@@ -132,6 +132,10 @@ app.on('ready', async () => {
     console.log('registration failed');
   }
 
+  //   ipcMain.on('openURL', (e, url) => {
+  //     shell.openExternal('https://doist.com/blog/complete-guide-to-deep-work/');
+  //   });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
