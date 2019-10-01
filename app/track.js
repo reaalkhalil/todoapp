@@ -26,6 +26,7 @@ export function trackEvent(category, action, label, value) {
       label,
       value
     });
+    return;
   }
   usr
     .event({
