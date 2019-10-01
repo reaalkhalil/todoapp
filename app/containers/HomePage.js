@@ -41,7 +41,7 @@ class HomePage extends Component<Props> {
             pages={this.props.settings.pages}
           />
         )}
-        <Help show={this.state.helpOpen} />
+        <Help settings={this.props.settings} show={this.state.helpOpen} />
       </>
     );
   }

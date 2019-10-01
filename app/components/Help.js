@@ -10,12 +10,11 @@ const sections = [
       [['?'], 'Toggle Help'],
       [['tab'], 'Next Split'],
       [['shift', 'tab'], 'Prev Split'],
-      [['g', '!then shortcut'], 'Goto Split/Page'],
       [['space'], 'View Todo'],
       [['c'], 'Create'],
       [['t'], '(Un)Set Due Today'],
       [['e'], '(Un)Mark Done'],
-      [['d', '!twice'], 'Delete'],
+      [['d', 'd'], 'Delete'],
       [['s'], 'Toggle Priority'],
       [['enter'], 'Edit'],
       [['k'], 'Up'],
@@ -62,13 +61,33 @@ const sections = [
   }
 ];
 
-export default function Help({ show }) {
+export default function Help({ show, settings }) {
   const classes = [styles.Help];
   if (show) classes.push(styles['Help--show']);
 
+  console.log(settings.splits, settings.pages);
+  let ss = [
+    {
+      header: 'Split Shortcuts',
+      keys: settings.splits
+        .filter(s => !!s.shortcut)
+        .map(s => [['g', s.shortcut], s.title]) // [[[s.shortcut], s.title]]
+    },
+    {
+      header: 'Page Shortcuts',
+      keys: settings.pages
+        .filter(p => !!p.shortcut)
+        .map(p => [['g', p.shortcut], p.title]) // [[[p.shortcut], p.title]]
+    }
+  ];
+
+  if (sections.length >= 1) {
+    console.log('sections', sections);
+    ss = [sections[0], ...ss, ...sections.filter((_, i) => i > 0)];
+  }
   return (
     <div className={classes.join(' ')}>
-      {sections.map(s => (
+      {ss.map(s => (
         <div key={s.header}>
           <div className={styles.Header}>{s.header}</div>
           <br />
@@ -76,17 +95,18 @@ export default function Help({ show }) {
             <div className={styles.Key} key={i}>
               <span className={styles.Key__Label}>{k[1]}</span>
               <span className={styles.Key__Buttons}>
-                {k[0].map((k, j) =>
-                  k[0] === '!' ? (
-                    <span key={j} className={styles.Key__KeyHelper}>
-                      {k.slice(1)}
-                    </span>
-                  ) : (
-                    <span key={j} className={styles.Key__Button}>
-                      {k}
-                    </span>
-                  )
-                )}
+                {k &&
+                  k[0].map((k, j) =>
+                    k[0] === '!' ? (
+                      <span key={j} className={styles.Key__KeyHelper}>
+                        {k.slice(1)}
+                      </span>
+                    ) : (
+                      <span key={j} className={styles.Key__Button}>
+                        {k}
+                      </span>
+                    )
+                  )}
               </span>
             </div>
           ))}
