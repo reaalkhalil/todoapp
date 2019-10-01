@@ -169,6 +169,10 @@ export default function TodoList({
     setSelectedId(todos[0].id);
 
   const onExitSearch = () => {
+    if (viewTodo) {
+      setViewTodo(false);
+      return;
+    }
     setSearchModal(false);
     setSearchFocus(false);
     setSearchQuery(null);
@@ -221,7 +225,12 @@ export default function TodoList({
 
     KeyBoard.bind({
       ...shortcuts,
-      tab: () => {
+      tab: e => {
+        if (searchModal) {
+          setSearchFocus(true);
+          e.preventDefault();
+          return;
+        }
         if (selectedPage) {
           setSelectedPage('');
           return;
@@ -230,7 +239,13 @@ export default function TodoList({
           (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
         );
       },
-      'shift+tab': () => {
+      'shift+tab': e => {
+        if (searchModal) {
+          setSearchFocus(true);
+          e.preventDefault();
+          return;
+        }
+
         if (selectedPage) {
           setSelectedPage('');
           return;

@@ -60,13 +60,11 @@
   color: black;
 }
 
-/*
 .TodoItem__Title--link {
-   color: #006eff;
+  color: #006eff;
   text-decoration: underline;
   cursor: pointer;
 }
-*/
 
 .TodoItem__Tags {
   position: relative;

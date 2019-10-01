@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 
 import styles from './List.css';
 
@@ -94,8 +94,7 @@ export default function List({
             <span
               className={titleClasses.join(' ')}
               onClick={() => {
-                console.log(t.title);
-                if (isLink) ipcRenderer.emit('openURL', t.title);
+                if (isLink) shell.openExternal(t.title);
               }}
             >
               {t.title}

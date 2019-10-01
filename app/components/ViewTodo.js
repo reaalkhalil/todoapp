@@ -12,8 +12,8 @@ export default function ViewTodo({ todo, show }) {
 
   return (
     <>
-      <div className={bgClasses.join(' ')}></div>
-      <div className={todoClasses.join(' ')}>
+      <div key="bg" className={bgClasses.join(' ')}></div>
+      <div key="todo" className={todoClasses.join(' ')}>
         {todo ? (
           <>
             <span className={styles.Todo__Content}>

@@ -132,10 +132,6 @@ app.on('ready', async () => {
     console.log('registration failed');
   }
 
-  //   ipcMain.on('openURL', (e, url) => {
-  //     shell.openExternal('https://doist.com/blog/complete-guide-to-deep-work/');
-  //   });
-
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -143,8 +139,6 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
   let retry = 0;
 
   function createUpdater() {
