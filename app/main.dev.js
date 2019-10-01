@@ -90,14 +90,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
+function createWindow() {
   mainWindow = new BrowserWindow({
     show: false,
     width: 900,
@@ -123,18 +116,39 @@ app.on('ready', async () => {
     }
   });
 
+  mainWindow.on('close', event => {
+    if (app.quitting) {
+      win = null;
+    } else {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+}
+
+app.on('ready', async () => {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    await installExtensions();
+  }
+
+  createWindow();
+
+  // TODO: not sure if any of:
+  //     globalShortcut.register   new MenuBuilder   createUpdater
+  //  should be done again on ready
+
   const ret = globalShortcut.register('Control+Space', () => {
     mainWindow.webContents.send('createTodo');
     mainWindow.show();
+    mainWindow.focus();
   });
 
   if (!ret) {
     console.log('registration failed');
   }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
@@ -150,6 +164,12 @@ app.on('ready', async () => {
     }
   }
   createUpdater();
+});
+
+app.on('before-quit', () => (app.quitting = true));
+
+app.on('activate', () => {
+  mainWindow.show();
 });
 
 app.on('will-quit', () => {

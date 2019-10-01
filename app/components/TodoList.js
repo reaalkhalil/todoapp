@@ -260,7 +260,10 @@ export default function TodoList({
         setAddModal(true);
         e.preventDefault();
       },
-      space: () => setViewTodo(!viewTodo),
+      space: () => {
+        if (selectedId !== 0 && !selectedId && !viewTodo) return;
+        if (selectedId) setViewTodo(!viewTodo);
+      },
       s: () => {
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
@@ -323,6 +326,8 @@ export default function TodoList({
       }
     });
   }
+
+  if (viewTodo && selectedId !== 0 && !selectedId) setViewTodo(false);
 
   if (addModal) {
     let initTodo = null;
