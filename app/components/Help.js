@@ -34,6 +34,7 @@ const sections = [
       [['tab'], 'Next Field'],
       [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Create'],
+      [['cmd', 'enter'], 'or (in Notes)'],
       [['esc'], 'Cancel Create']
     ]
   },
@@ -43,6 +44,7 @@ const sections = [
       [['tab'], 'Next Field'],
       [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Edit'],
+      [['cmd', 'enter'], 'or (in Notes)'],
       [['esc'], 'Cancel Edit']
     ]
   },

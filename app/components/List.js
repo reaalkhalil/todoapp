@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import { ipcRenderer, shell } from 'electron';
 
 import styles from './List.css';
@@ -16,6 +16,16 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 
+function now() {
+  return new Date().getTime();
+}
+
+function endOfDay() {
+  const a = new Date();
+  a.setHours(23, 59, 59, 999);
+  return a.getTime();
+}
+
 export default function List({
   todos,
   startIndex,
@@ -23,12 +33,25 @@ export default function List({
   onHover,
   helpOpen
 }) {
-  const [now, endOfDay] = (function() {
-    const a = new Date();
-    const b = new Date();
-    b.setHours(23, 59, 59, 999);
-    return [a.getTime(), b.getTime()];
-  })();
+  const listRef = useRef();
+  const todoRef = useRef();
+
+  useEffect(() => {
+    if ((selectedId !== 0 && !selectedId) || !todoRef) return;
+
+    const idx = todos.findIndex(t => t.id === selectedId);
+    const l = listRef.current.getBoundingClientRect();
+    const t = todoRef.current.getBoundingClientRect();
+    if (l.bottom + 5 < t.bottom) {
+      listRef.current.scrollTop += l.height / 2;
+      return;
+    }
+
+    if (t.top + 5 < l.top) {
+      listRef.current.scrollTop -= l.height / 2;
+      return;
+    }
+  }, [selectedId, todoRef]);
 
   const [hoverId, setHoverId] = useState(null);
   const todoList = todos
@@ -36,7 +59,7 @@ export default function List({
         const classes = [styles.TodoItem];
         if (t.id === selectedId) classes.push(styles['TodoItem--selected']);
         if (t.done) classes.push(styles['TodoItem--done']);
-        if (!!t.due_at && t.due_at < now && !t.done)
+        if (!!t.due_at && t.due_at < now() && !t.done)
           classes.push(styles['TodoItem--overdue']);
 
         const titleClasses = [styles.TodoItem__Title];
@@ -45,6 +68,7 @@ export default function List({
 
         return (
           <div
+            ref={t.id === selectedId ? todoRef : null}
             key={t.id}
             className={classes.join(' ')}
             onMouseMoveCapture={() => {
@@ -80,12 +104,14 @@ export default function List({
               </span>
             ) : null}
 
-            {!!t.due_at && (t.due_at < now || t.due_at === endOfDay) ? (
+            {!!t.due_at && (t.due_at < now() || t.due_at === endOfDay()) ? (
               <span className={styles.TodoItem__DueToday}>
                 <i
                   className={
                     'fas ' +
-                    (t.due_at < now ? 'fa-hourglass-end' : 'fa-hourglass-half')
+                    (t.due_at < now()
+                      ? 'fa-hourglass-end'
+                      : 'fa-hourglass-half')
                   }
                 />
               </span>
@@ -110,10 +136,14 @@ export default function List({
           </div>
         );
       })
-    : 'todos undefined';
+    : null;
 
   const classes = [styles.List];
   if (helpOpen) classes.push(styles['List--help-open']);
 
-  return <div className={classes.join(' ')}>{todoList}</div>;
+  return (
+    <div className={classes.join(' ')} ref={listRef}>
+      {todoList}
+    </div>
+  );
 }

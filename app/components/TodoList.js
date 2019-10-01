@@ -181,6 +181,24 @@ export default function TodoList({
   const [todoToAdd, setTodoToAdd] = useState(null);
   const [todoToEdit, setTodoToEdit] = useState(null);
 
+  const triggerAddorEdit = () => {
+    if (addModal) {
+      addTodo({ todo: todoToAdd });
+      setAddModal(false);
+    } else if (editModal) {
+      editTodo({ todo: todoToEdit });
+      setEditModal(false);
+    }
+  };
+
+  const cancelAddorEdit = () => {
+    if (addModal) {
+      setAddModal(false);
+    } else if (editModal) {
+      setEditModal(false);
+    }
+  };
+
   if (addModal) {
     KeyBoard.bind({
       esc: () => setAddModal(false),
@@ -290,8 +308,14 @@ export default function TodoList({
         setHelpModal(h);
         onHelp(h);
       },
-      up: () => onMoveSelectUp(todos, selectedId, setSelectedId),
-      down: () => onMoveSelectDown(todos, selectedId, setSelectedId),
+      up: e => {
+        onMoveSelectUp(todos, selectedId, setSelectedId);
+        e.preventDefault();
+      },
+      down: e => {
+        onMoveSelectDown(todos, selectedId, setSelectedId);
+        e.preventDefault();
+      },
       enter: e => {
         setEditModal(true);
         e.preventDefault();
@@ -350,6 +374,8 @@ export default function TodoList({
         create={true}
         initTodo={initTodo}
         onUpdate={setTodoToAdd}
+        trigger={triggerAddorEdit}
+        cancel={cancelAddorEdit}
       />
     );
   }
@@ -360,6 +386,8 @@ export default function TodoList({
         helpOpen={helpModal}
         onUpdate={setTodoToEdit}
         initTodo={todos.find(t => t.id === selectedId)}
+        trigger={triggerAddorEdit}
+        cancel={cancelAddorEdit}
       />
     );
 

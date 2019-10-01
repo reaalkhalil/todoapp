@@ -1,8 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 
+import * as Mousetrap from 'mousetrap';
+
 import styles from './EditTodo.css';
 
-export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
+export default function EditTodo({
+  initTodo,
+  onUpdate,
+  helpOpen,
+  create,
+  trigger,
+  cancel
+}) {
   const titleRef = useRef();
   const priorityRef = useRef();
   const tagsRef = useRef();
@@ -160,12 +169,10 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
           </tr>
           <tr>
             <td colSpan={2}>
-              <span className={styles.Label}>Description:</span>
+              <span className={styles.Label}>Notes:</span>
               <textarea
                 ref={descRef}
-                className={['mousetrap', styles.TextArea, styles.Content].join(
-                  ' '
-                )}
+                className={[styles.TextArea, styles.Content].join(' ')}
                 defaultValue={defaultTodo.content || ''}
                 onChange={() => {
                   updateData('content', descRef.current.value);
@@ -174,6 +181,36 @@ export default function EditTodo({ initTodo, onUpdate, helpOpen, create }) {
                   if (e.keyCode === 9 && !event.shiftKey) {
                     titleRef.current.focus();
                     e.preventDefault();
+                  }
+
+                  if (e.keyCode === 27) cancel();
+
+                  if (e.keyCode === 13) {
+                    if (e.metaKey) {
+                      trigger();
+                      return;
+                    }
+                    const self = descRef.current;
+                    if (self.selectionStart == self.selectionEnd) {
+                      var sel = self.selectionStart;
+                      var text = self.value;
+                      while (sel > 0 && text[sel - 1] != '\n') sel--;
+
+                      var lineStart = sel;
+                      while (text[sel] == ' ' || text[sel] == '\t') sel++;
+
+                      if (sel > lineStart) {
+                        document.execCommand(
+                          'insertText',
+                          false,
+                          '\n' + text.substr(lineStart, sel - lineStart)
+                        );
+
+                        self.blur();
+                        self.focus();
+                        e.preventDefault();
+                      }
+                    }
                   }
                 }}
               />
