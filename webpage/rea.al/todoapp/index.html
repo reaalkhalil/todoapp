@@ -152,6 +152,10 @@
         top: 8px;
         position: absolute;
       }
+      .button.disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
       .button svg {
         margin: 7px;
         margin-right: 0;
@@ -253,11 +257,10 @@
           <br class="clear:both" />
         </div>
 
-        <span id="version"></span>
+        <span id="version">&nbsp;</span>
         <a
           id="download-button"
-          class="button download"
-          href="assets/TodoApp.dmg"
+          class="button download disabled"
           onclick="gtag('event', 'Download App', {'event_category': 'User Interaction'})"
         >
           <span>Download Beta for MacOS</span>
@@ -289,6 +292,9 @@
                 'Latest Version: ' + data.tag_name;
               document.getElementById('download-button').href =
                 a.browser_download_url;
+              document
+                .getElementById('download-button')
+                .classList.remove('disabled');
             })
             .catch(fail);
         })
