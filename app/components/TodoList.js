@@ -121,7 +121,9 @@ export default function TodoList({
   pages,
   onHelp,
   onSettings,
-  helpOpen
+  helpOpen,
+  deselectNewlyCreated,
+  newlyCreatedId
 }) {
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -138,8 +140,16 @@ export default function TodoList({
   }
 
   const [selectedId, setSelectedId] = useState(
-    todos && todos[0] ? todos[0].id : null
+    newlyCreatedId === 0 || !!newlyCreatedId
+      ? newlyCreatedId
+      : todos && todos[0]
+      ? todos[0].id
+      : null
   );
+
+  useEffect(() => {
+    if (newlyCreatedId === 0 || newlyCreatedId) setSelectedId(newlyCreatedId);
+  }, [newlyCreatedId]);
 
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);

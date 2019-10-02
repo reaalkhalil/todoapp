@@ -16,14 +16,6 @@ class HomePage extends Component<Props> {
   }
 
   render() {
-    //  if (
-    //    this.props.settings &&
-    //    this.props.settings.splits &&
-    //    this.props.settings.splits.length > 0
-    //  ) {
-    //    splits = this.props.settings.splits;
-    //  }
-
     return (
       <>
         {this.state.settingsOpen ? (

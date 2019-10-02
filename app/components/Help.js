@@ -65,7 +65,6 @@ export default function Help({ show, settings }) {
   const classes = [styles.Help];
   if (show) classes.push(styles['Help--show']);
 
-  console.log(settings.splits, settings.pages);
   let ss = [
     {
       header: 'Split Shortcuts',
@@ -82,7 +81,6 @@ export default function Help({ show, settings }) {
   ];
 
   if (sections.length >= 1) {
-    console.log('sections', sections);
     ss = [sections[0], ...ss, ...sections.filter((_, i) => i > 0)];
   }
   return (

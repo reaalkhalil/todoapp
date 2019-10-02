@@ -183,7 +183,6 @@ export default function List({
   const classes = [styles.List];
   if (helpOpen) classes.push(styles['List--help-open']);
 
-  console.log('todoList', todoList);
   return (
     <div className={classes.join(' ')} ref={listRef}>
       <div

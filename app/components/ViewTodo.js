@@ -18,16 +18,8 @@ export default function ViewTodo({ todo, show }) {
           <>
             <span className={styles.Todo__Content}>
               <span className={styles.Todo__Title}>{todo.title}</span>
-              {todo.content
-                ? todo.content.split('\n').map(s => (
-                    <>
-                      {s}
-                      <br />
-                    </>
-                  ))
-                : null}
+              {todo.content}
             </span>
-
             <div className={styles.Times}>
               <table>
                 <tbody>

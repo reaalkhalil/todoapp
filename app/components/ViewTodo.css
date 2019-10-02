@@ -57,10 +57,11 @@
   max-height: calc(80vh - 120px);
   display: block;
   overflow-y: scroll;
+  white-space: pre-wrap;
 }
 
 .Todo--show {
-  pointer-events: default;
+  pointer-events: auto;
   opacity: 1;
   transform: scale(1);
   transition: 0;
