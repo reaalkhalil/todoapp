@@ -3,6 +3,47 @@ import { ipcRenderer, shell } from 'electron';
 
 import styles from './List.css';
 
+const imageIds = [
+  104,
+  106,
+  112,
+  121,
+  118,
+  127,
+  128,
+  129,
+  134,
+  136,
+  139,
+  140,
+  142,
+  146,
+  151,
+  152,
+  153,
+  154,
+  155,
+  162,
+  164,
+  165,
+  166,
+  167,
+  170,
+  173,
+  177,
+  179,
+  184,
+  185,
+  186,
+  188,
+  190,
+  200,
+  217,
+  235,
+  236,
+  253
+];
+
 function validURL(str) {
   var pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
@@ -141,9 +182,35 @@ export default function List({
   const classes = [styles.List];
   if (helpOpen) classes.push(styles['List--help-open']);
 
+  console.log('todoList', todoList);
   return (
     <div className={classes.join(' ')} ref={listRef}>
-      {todoList}
+      <div
+        style={{
+          backgroundImage: `url(${imageURL()})`
+        }}
+        className={[
+          styles.ListBGImage,
+          todoList && todoList.length === 0 ? styles['ListBGImage--show'] : ''
+        ].join(' ')}
+      />
+
+      {todoList && todoList.length > 0 ? todoList : null}
     </div>
   );
+}
+
+function imageURL() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff =
+    now -
+    start +
+    (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const day = Math.floor(diff / oneDay);
+
+  const id = imageIds[day % imageIds.length];
+
+  return `https://picsum.photos/id/${id}/2000/2000`;
 }
