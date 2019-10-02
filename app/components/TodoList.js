@@ -423,6 +423,7 @@ export default function TodoList({
       />
 
       <List
+        showImage={!searchModal}
         helpOpen={helpModal}
         todos={todos}
         selectedId={searchFocus ? null : selectedId}

@@ -72,7 +72,8 @@ export default function List({
   startIndex,
   selectedId,
   onHover,
-  helpOpen
+  helpOpen,
+  showImage
 }) {
   const listRef = useRef();
   const todoRef = useRef();
@@ -191,7 +192,9 @@ export default function List({
         }}
         className={[
           styles.ListBGImage,
-          todoList && todoList.length === 0 ? styles['ListBGImage--show'] : ''
+          showImage && todoList && todoList.length === 0
+            ? styles['ListBGImage--show']
+            : ''
         ].join(' ')}
       />
 
