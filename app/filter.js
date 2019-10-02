@@ -125,8 +125,17 @@ function sort(todos: Todo[], by: string[]) {
       if (b < a) return -asc;
     }
 
-    if (t1.title < t2.title) return 1;
-    if (t2.title < t1.title) return -1;
+    const p1 = parseInt(t1.title);
+    const p2 = parseInt(t2.title);
+
+    if (t1.title == NaN && t2.title != NaN) return 1;
+    if (t2.title == NaN && t1.title != NaN) return -1;
+
+    if (p1 !== NaN && p2 !== NaN && p1 < p2) return -1;
+    if (p1 !== NaN && p2 !== NaN && p2 < p1) return 1;
+
+    if (t1.title < t2.title) return -1;
+    if (t2.title < t1.title) return 1;
 
     return 0;
   });
