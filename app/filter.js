@@ -5,15 +5,20 @@ export const EQUAL = 'EQUAL';
 export const NOT_EQUAL = 'NOT_EQUAL';
 export const CONTAINS = 'CONTAINS';
 export const NOT_CONTAINS = 'NOT_CONTAINS';
-export const MATCHES = 'MATCHES';
 export const BEFORE_EOD = 'BEFORE_EOD';
 export const AFTER_EOD = 'AFTER_EOD';
+export const BEFORE_NOW = 'BEFORE_NOW';
+export const AFTER_NOW = 'AFTER_NOW';
 
 function eod(offset) {
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
   return endOfDay.getTime() + (typeof offset === 'number' ? offset : 0);
+}
+
+function now(offset) {
+  return new Date().getTime() + (typeof offset === 'number' ? offset : 0);
 }
 
 const FILTERS = {
@@ -33,12 +38,28 @@ const FILTERS = {
 
   [AFTER_EOD]: (tt, f, v) => {
     return tt.filter(t => !!t[f] && t[f] > eod(v));
+  },
+
+  [BEFORE_NOW]: (tt, f, v) => {
+    return tt.filter(t => !!t[f] && t[f] <= now(v));
+  },
+
+  [AFTER_NOW]: (tt, f, v) => {
+    return tt.filter(t => !!t[f] && t[f] > now(v));
   }
 };
 
 export type Filter = {
   field: string,
-  op: EQUAL | NOT_EQUAL | CONTAINS | NOT_CONTAINS | MATCHES,
+  op:
+    | EQUAL
+    | NOT_EQUAL
+    | CONTAINS
+    | NOT_CONTAINS
+    | BEFORE_EOD
+    | AFTER_EOD
+    | BEFORE_NOW
+    | AFTER_NOW,
   value: any
 };
 

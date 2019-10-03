@@ -288,7 +288,8 @@ export default function TodoList({
         setAddModal(true);
         e.preventDefault();
       },
-      space: () => {
+      space: e => {
+        e.preventDefault();
         if (selectedId !== 0 && !selectedId && !viewTodo) return;
         if (selectedId) setViewTodo(!viewTodo);
       },
