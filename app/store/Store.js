@@ -68,6 +68,16 @@ const schema = {
   user_id: {
     type: 'string'
   },
+  integrations: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        value: { type: 'string' }
+      }
+    }
+  },
   todos: {
     type: 'array',
     items: TodoSchema
@@ -78,6 +88,11 @@ const schema = {
 export default class Store {
   constructor() {
     this.store = new eStore({ schema });
+
+    if (!this.store.get('integrations')) {
+      this.store.set('integrations', []);
+    }
+
     let uid = this.store.get('user_id');
     if (uid && uid.length === 36) return;
 
@@ -104,5 +119,13 @@ export default class Store {
 
   getUserId() {
     return this.store.get('user_id');
+  }
+
+  getIntegrations() {
+    return this.store.get('integrations');
+  }
+
+  setIntegrations(integrations) {
+    return this.store.set('integrations', integrations);
   }
 }

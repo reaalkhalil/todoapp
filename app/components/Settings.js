@@ -8,7 +8,27 @@ import { initialSettings } from '../store/initial';
 
 import { Validator } from 'jsonschema';
 
-function Settings({ save, onCancel, helpOpen, defaultValue }) {
+function Headers({ selected }) {
+  return ['Integrations', 'Advanced'].map((a, i) => {
+    const classes = [styles.Title];
+    if (i === selected) classes.push(styles['Title--selected']);
+
+    return (
+      <span className={classes.join(' ')} key={i}>
+        {a}
+      </span>
+    );
+  });
+}
+
+function AdvancedSettings({
+  save,
+  onCancel,
+  helpOpen,
+  defaultValue,
+  nextPage,
+  prevPage
+}) {
   const settingsRef = useRef();
 
   const validator = new Validator();
@@ -18,6 +38,8 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
 
   KeyBoard.bind({
     esc: onCancel,
+    tab: nextPage,
+    'shift+tab': prevPage,
     'command+,|ctrl+,': onCancel,
     'command+s|ctrl+s': () => {
       if (error || !validSettings) {
@@ -73,7 +95,7 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
   return (
     <div className={classes.join(' ')}>
       <div className={styles.Header}>
-        <span className={styles.Title}>Preferences</span>
+        <Headers selected={1} />
         {error ? (
           <div className={styles.Settings__Error}>
             <span className={styles.Settings__ErrorMessage}>{error}</span>
@@ -170,6 +192,115 @@ function Settings({ save, onCancel, helpOpen, defaultValue }) {
         }}
       />
     </div>
+  );
+}
+
+function IntegrationSettings({
+  onCancel,
+  helpOpen,
+  nextPage,
+  prevPage,
+  userId,
+  integrations,
+  verifyIntegrations
+}) {
+  KeyBoard.bind({
+    esc: onCancel,
+    tab: nextPage,
+    'shift+tab': prevPage,
+    'command+,|ctrl+,': onCancel
+  });
+
+  const classes = [styles.Settings];
+  if (helpOpen) classes.push(styles['Settings--help-open']);
+
+  const int = {
+    telegram: '<not yet verified>',
+    email: '<not yet verified>'
+  };
+
+  if (integrations) {
+    integrations.forEach(i => {
+      if (!i.name || !i.value) return;
+      int[i.name] = i.value;
+    });
+  }
+
+  return (
+    <div className={classes.join(' ')}>
+      <div className={styles.Header}>
+        <Headers selected={0} />
+      </div>
+      <div className={styles.IntegrationSettings}>
+        <div className={styles.Label}>Telegram:</div>
+        <div className={styles.Value}>{int.telegram}</div>
+        <div className={styles.Label}>Email:</div>
+        <div className={styles.Value}>{int.email}</div>
+        <div className={styles.Label}>ID:</div>
+        <textarea
+          readOnly
+          className={[styles.Selectable, 'mousetrap'].join(' ')}
+          value={userId ? `[${userId}]` : ''}
+          onMouseDown={e => {
+            e.target.setSelectionRange(0, e.target.value.length);
+            e.target.focus();
+            e.preventDefault();
+            document.execCommand('copy');
+          }}
+          onKeyDown={e => {
+            e.target.setSelectionRange(0, e.target.value.length);
+            e.target.focus();
+            e.preventDefault();
+            document.execCommand('copy');
+          }}
+          onBlur={e => {
+            window.getSelection().removeAllRanges();
+            e.preventDefault();
+          }}
+        />
+        <br />
+        <a className={styles.Link} onClick={verifyIntegrations}>
+          Verify Integrations
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function Settings({
+  save,
+  onCancel,
+  helpOpen,
+  defaultValue,
+  userId,
+  integrations,
+  verifyIntegrations
+}) {
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const changePage = () => {
+    setCurrentPage((currentPage + 1) % 2);
+  };
+
+  return currentPage === 0 ? (
+    <IntegrationSettings
+      onCancel={onCancel}
+      helpOpen={helpOpen}
+      nextPage={changePage}
+      prevPage={changePage}
+      userId={userId}
+      integrations={integrations}
+      verifyIntegrations={verifyIntegrations}
+    />
+  ) : (
+    <AdvancedSettings
+      save={save}
+      onCancel={onCancel}
+      helpOpen={helpOpen}
+      defaultValue={defaultValue}
+      nextPage={changePage}
+      prevPage={changePage}
+    />
   );
 }
 

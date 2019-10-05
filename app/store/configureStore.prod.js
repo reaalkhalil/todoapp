@@ -23,7 +23,11 @@ function configureStore() {
       const state = getState();
 
       if (action.type in settingsActions) {
-        s.saveSettings(state.settings);
+        if (action.type === settingsActions.SAVE_SETTINGS) {
+          s.saveSettings(state.settings);
+        } else if (action.type === settingsActions.ADD_INTEGRATIONS) {
+          s.setIntegrations(state.integrations);
+        }
       } else if (action.type in todosActions) {
         s.saveTodos(state.todos);
       }
@@ -34,12 +38,16 @@ function configureStore() {
 
   const todos = s.getTodos();
   const settings = s.getSettings();
+  const userId = s.getUserId();
+  const integrations = s.getIntegrations();
 
   return createStore(
     rootReducer,
     {
       todos,
-      settings
+      settings,
+      userId,
+      integrations
     },
     compose(applyMiddleware(thunk, persistent))
   );

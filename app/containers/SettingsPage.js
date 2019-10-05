@@ -5,7 +5,9 @@ import * as SettingsActions from '../actions/settings';
 
 function mapStateToProps(state) {
   return {
-    settings: state.settings
+    settings: state.settings,
+    integrations: state.integrations,
+    userId: state.userId
   };
 }
 

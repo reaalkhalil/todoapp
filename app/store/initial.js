@@ -5,7 +5,6 @@ const [now, endOfDay] = (function() {
   return [a.getTime(), b.getTime()];
 })();
 
-// TODO: create tutorial with todos
 export const initialTodos = [
   {
     id: 1,

@@ -1,5 +1,6 @@
 .Settings {
   min-width: 500px;
+  user-select: none;
 }
 
 .Settings__TextArea {
@@ -30,13 +31,25 @@
 }
 
 .Header {
-  user-select: none;
   display: block;
   line-height: 50px;
   padding-left: 30px;
 }
 
 .Title {
+  color: rgb(34, 26, 85, 0.3);
+  font-weight: 400;
+  padding-bottom: 2px;
+  margin-right: 25px;
+  position: relative;
+}
+
+.Title:last-of-type {
+  padding-bottom: 2px;
+  margin-right: 0;
+}
+
+.Title--selected {
   padding-bottom: 2px;
   margin-right: 25px;
   color: rgb(34, 26, 85);
@@ -71,4 +84,68 @@
 
 .Settings--help-open .Settings__Error {
   right: 280px;
+}
+
+.IntegrationSettings {
+  tab-size: 3;
+  margin: 10px 30px;
+  line-height: 16px;
+  padding: 5px 8px;
+  width: calc(100% - 90px);
+  min-height: calc(100vh - 125px);
+  color: black;
+  font-weight: 400;
+}
+
+.Settings--help-open .IntegrationSettings {
+  width: calc(100% - 330px);
+}
+
+.Label {
+  display: block;
+  margin: 20px 10px 5px 0;
+  font-size: 14px;
+  color: #000c;
+}
+
+.Selectable {
+  margin: 0;
+  line-height: 18px;
+  height: 18px;
+  font-size: 14px;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  padding: 5px 8px;
+  border-radius: 5px;
+  resize: none;
+  background-color: #eee5;
+  border: 2px solid #8787af46;
+  color: #000b;
+  outline: none;
+  font-weight: 400;
+  width: 350px;
+  text-align: center;
+}
+
+.Selectable:focus {
+  border: 2px solid #00b8ffee;
+  color: black;
+}
+
+.Link {
+  font-size: 14px;
+  opacity: 1;
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  outline: none;
+  color: black;
+  background-color: #00b8ff99;
+  border: 1px solid #00b8ff;
+  padding: 4px 30px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.Link:hover {
+  background-color: #00b8ffcc;
 }

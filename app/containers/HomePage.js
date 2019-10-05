@@ -1,9 +1,18 @@
 // @flow
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Help from '../components/Help';
 import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
+import * as TodoActions from '../actions/todos';
+
+import pull from '../pull';
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(TodoActions, dispatch);
+}
 
 type Props = {};
 
@@ -16,6 +25,16 @@ class HomePage extends Component<Props> {
   }
 
   render() {
+    pull.setUserId(this.props.userId);
+    pull.setIntegrations(this.props.integrations);
+    pull.setAddFunc(todo => {
+      console.log(
+        'ADD_TODO_FROM_PULL \n\n\n++++++++++++++================',
+        todo
+      );
+      this.props.addTodo({ todo });
+    });
+
     return (
       <>
         {this.state.settingsOpen ? (
@@ -41,8 +60,13 @@ class HomePage extends Component<Props> {
 
 function mapStateToProps(state) {
   return {
-    settings: state.settings
+    settings: state.settings,
+    integrations: state.integrations,
+    userId: state.userId
   };
 }
 
-export default connect(mapStateToProps)(HomePage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomePage);
