@@ -116,7 +116,7 @@ export default function Help({ show, settings }) {
       <a
         tabIndex={-1}
         className={styles.Link}
-        href="mailto:?subject=Todo App&body=Try this out!%0Ahttps://rea.al/todoapp/"
+        href="mailto:?subject=Todo App&body=Try this out!%0Ahttps://todoapp.cc/"
       >
         Share with a Friend
       </a>
