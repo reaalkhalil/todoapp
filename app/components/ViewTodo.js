@@ -13,7 +13,7 @@ export default function ViewTodo({ todo, show }) {
   }
 
   const titleClasses = [styles.Todo__Title];
-  const isLink = validURL(todo.title);
+  const isLink = todo && todo.title && validURL(todo.title);
   if (isLink) {
     titleClasses.push(styles['Todo__Title--link']);
   }
