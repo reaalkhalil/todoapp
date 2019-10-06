@@ -1,10 +1,14 @@
+const initInterval = 60 * 1000;
+const maxInterval = 3600 * 1000;
+
 class TodoPuller {
-  constructor(interval = 60 * 1000) {
+  constructor(delay = initInterval) {
     console.log('new TodoPuller');
     this.userId = '';
     this.integrations = [];
     this.addFunc = () => {};
-    this.interval = setInterval(() => this.checkForTodos(), interval);
+    this.delay = delay;
+    this.interval = setInterval(() => this.checkForTodos(), delay);
   }
 
   setUserId(id) {
@@ -12,6 +16,7 @@ class TodoPuller {
   }
 
   setIntegrations(integrations) {
+    if (integrations.length > this.integrations.length) this.clearBackOff();
     this.integrations = integrations;
   }
 
@@ -35,6 +40,26 @@ class TodoPuller {
     });
   }
 
+  backOff() {
+    console.log('backOff()', this.delay);
+
+    if (this.delay >= maxInterval) return;
+    this.delay = Math.round(this.delay * 1.5);
+
+    clearInterval(this.interval);
+    this.interval = setInterval(() => this.checkForTodos(), this.delay);
+  }
+
+  clearBackOff() {
+    console.log('clearBackOff()', this.delay);
+
+    if (this.delay === initInterval) return;
+    this.delay = initInterval;
+
+    clearInterval(this.interval);
+    this.interval = setInterval(() => this.checkForTodos(), this.delay);
+  }
+
   checkForTodos() {
     if (
       !this.userId ||
@@ -44,16 +69,16 @@ class TodoPuller {
     )
       return;
 
-    console.log('checkForTodos()');
-
     fetch('https://todoapp.cc/server/pull/' + this.userId)
       .then(r => {
         r.json().then(d => {
-          console.log(d);
+          console.log('checkForTodos()', d);
+
+          this.clearBackOff();
           if (d.todos && d.todos.length > 0) this.addTodos(d.todos);
         });
       })
-      .catch(e => console.log(e));
+      .catch(e => this.backOff());
   }
 }
 

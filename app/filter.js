@@ -165,6 +165,9 @@ function sort(todos: Todo[], by: string[]) {
 }
 
 export function search(todos: Todos[], q: String) {
-  const res = todos.filter(t => (t.title ? t.title.indexOf(q) > -1 : false));
+  const res = todos.filter(t =>
+    t.title ? t.title.toLowerCase().indexOf(q.toLowerCase()) > -1 : false
+  );
+
   return sort(res, ['done', 'due_at', 'created_at desc']);
 }
