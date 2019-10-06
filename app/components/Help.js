@@ -20,7 +20,9 @@ const sections = [
       [['k'], 'Up'],
       [['j'], 'Down'],
       [['/'], 'Search'],
-      [['cmd', ','], 'Preferences']
+      [['cmd', ','], 'Preferences'],
+      [['cmd', 'c'], 'Copy Todo'],
+      [['cmd', 'shift', 'c'], 'Copy List']
     ]
   },
   {

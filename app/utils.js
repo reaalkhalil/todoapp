@@ -26,3 +26,13 @@ export function previewText(title) {
 
   return title.slice(0, prevLength) + (title.length > prevLength ? '...' : '');
 }
+
+export function todoToText(todo) {
+  let res = '';
+  res += (todo.done ? '+' : '-') + ' ';
+  const p = new Array(todo.priority ? todo.priority : 0).fill('!').join('');
+  res += p ? p + ' ' : '';
+  res += todo.title;
+
+  return res;
+}

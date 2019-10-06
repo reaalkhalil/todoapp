@@ -10,10 +10,21 @@ import List from './List';
 import * as filter from '../filter';
 
 import KeyBoard from '../keyboard';
-import { previewText, endOfDay } from '../utils';
+import { previewText, endOfDay, todoToText } from '../utils';
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, clipboard } from 'electron';
 import ViewTodo from './ViewTodo';
+
+const copyTodosToClipboard = todos => {
+  if (!todos || todos.length === 0) return;
+  const text = todos.map(t => todoToText(t)).join('\n');
+  clipboard.writeText(text);
+};
+
+const copyTodoToClipboard = todo => {
+  if (!todo) return;
+  clipboard.writeText(todoToText(todo));
+};
 
 const onMarkDoneTodo = (
   todos,
@@ -266,6 +277,9 @@ export default function TodoList({
 
     KeyBoard.bind({
       ...shortcuts,
+      'command+c': () =>
+        copyTodoToClipboard(todos.find(t => t.id === selectedId)),
+      'command+shift+c': () => copyTodosToClipboard(todos),
       tab: e => {
         if (searchModal) {
           setSearchFocus(true);
