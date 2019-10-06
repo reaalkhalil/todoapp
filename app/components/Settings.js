@@ -28,7 +28,8 @@ function AdvancedSettings({
   helpOpen,
   defaultValue,
   nextPage,
-  prevPage
+  prevPage,
+  setLastAction
 }) {
   const settingsRef = useRef();
 
@@ -52,6 +53,7 @@ function AdvancedSettings({
           );
 
           save({ settings: initialSettings });
+          setLastAction('Settings Reset to Default');
           setValidSettings(initialSettings);
           setError(null);
         }
@@ -59,6 +61,7 @@ function AdvancedSettings({
         console.info('saving');
 
         save({ settings: validSettings });
+        setLastAction('Settings Saved');
         settingsRef.current.value = JSON.stringify(validSettings, '\n', '\t');
       }
     }
@@ -233,11 +236,31 @@ function IntegrationSettings({
         <Headers selected={0} />
       </div>
       <div className={styles.IntegrationSettings}>
-        <div className={styles.Label}>Telegram:</div>
-        <div className={styles.Value}>{int.telegram}</div>
-        <div className={styles.Label}>Email:</div>
-        <div className={styles.Value}>{int.email}</div>
+        <br />
+        <table className={styles.Table}>
+          <tbody>
+            <tr>
+              <td>
+                <div className={styles.Label}>Telegram:</div>
+              </td>
+              <td>
+                <div className={styles.Value}>{int.telegram}</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div className={styles.Label}>Email:</div>
+              </td>
+              <td>
+                <div className={styles.Value}>{int.email}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+
         <div className={styles.Label}>ID:</div>
+
         <textarea
           readOnly
           className={[styles.Selectable, 'mousetrap'].join(' ')}
@@ -261,8 +284,11 @@ function IntegrationSettings({
         />
         <br />
         <div className={styles.Note}>
-          To verify your telegram / email accounts:
-          <br />
+          {int.telegram[0] === '<' ? (
+            <i className="far fa-square"></i>
+          ) : (
+            <i className="far fa-check-square"></i>
+          )}{' '}
           Send a telegram message of your ID to{' '}
           <a
             className={styles.SelectLink}
@@ -273,6 +299,12 @@ function IntegrationSettings({
             https://telegram.me/ReaalsTodoAppBot
           </a>
           <br />
+          <br />
+          {int.email[0] === '<' ? (
+            <i className="far fa-square"></i>
+          ) : (
+            <i className="far fa-check-square"></i>
+          )}{' '}
           Send an email with your ID in the subject line to{' '}
           <a
             onClick={() =>
@@ -306,7 +338,8 @@ function Settings({
   defaultValue,
   userId,
   integrations,
-  verifyIntegrations
+  verifyIntegrations,
+  setLastAction
 }) {
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -332,6 +365,7 @@ function Settings({
       defaultValue={defaultValue}
       nextPage={changePage}
       prevPage={changePage}
+      setLastAction={setLastAction}
     />
   );
 }

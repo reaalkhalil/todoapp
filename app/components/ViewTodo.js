@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { shell } from 'electron';
+import { validURL } from '../utils';
 
 import styles from './ViewTodo.css';
 
@@ -10,6 +12,12 @@ export default function ViewTodo({ todo, show }) {
     bgClasses.push(styles['Todo__BG--show']);
   }
 
+  const titleClasses = [styles.Todo__Title];
+  const isLink = validURL(todo.title);
+  if (isLink) {
+    titleClasses.push(styles['Todo__Title--link']);
+  }
+
   return (
     <>
       <div key="bg" className={bgClasses.join(' ')}></div>
@@ -17,7 +25,14 @@ export default function ViewTodo({ todo, show }) {
         {todo ? (
           <>
             <span className={styles.Todo__Content}>
-              <span className={styles.Todo__Title}>{todo.title}</span>
+              <span
+                className={titleClasses.join(' ')}
+                onClick={() => {
+                  if (isLink) shell.openExternal(todo.title);
+                }}
+              >
+                {todo.title}
+              </span>
               {todo.content}
             </span>
             <div className={styles.Times}>

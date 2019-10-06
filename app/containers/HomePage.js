@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Help from '../components/Help';
+import LastAction from '../components/LastAction';
 import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
 import * as TodoActions from '../actions/todos';
@@ -53,6 +54,7 @@ class HomePage extends Component<Props> {
           />
         )}
         <Help settings={this.props.settings} show={this.state.helpOpen} />
+        <LastAction lastAction={this.props.lastAction} />
       </>
     );
   }
@@ -62,7 +64,8 @@ function mapStateToProps(state) {
   return {
     settings: state.settings,
     integrations: state.integrations,
-    userId: state.userId
+    userId: state.userId,
+    lastAction: state.lastAction
   };
 }
 

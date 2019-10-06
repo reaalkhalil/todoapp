@@ -1,6 +1,8 @@
 import React, { Component, useState, useRef, useEffect } from 'react';
 import { shell } from 'electron';
 
+import { validURL, now, endOfDay } from '../utils';
+
 import styles from './List.css';
 
 const imageIds = [
@@ -43,29 +45,6 @@ const imageIds = [
   236,
   253
 ];
-
-function validURL(str) {
-  var pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
-    'i'
-  ); // fragment locator
-  return !!pattern.test(str);
-}
-
-function now() {
-  return new Date().getTime();
-}
-
-function endOfDay() {
-  const a = new Date();
-  a.setHours(23, 59, 59, 999);
-  return a.getTime();
-}
 
 export default function List({
   todos,

@@ -7,6 +7,8 @@ export const EDIT_TODO = 'EDIT_TODO';
 
 export const DESELECT_NEWLY_CREATED = 'DESELECT_NEWLY_CREATED';
 
+export const LAST_ACTION = 'LAST_ACTION';
+
 function add(data) {
   return {
     type: ADD_TODO,
@@ -44,6 +46,13 @@ export function editTodo(data) {
 export function deselectNewlyCreated(data) {
   return {
     type: DESELECT_NEWLY_CREATED,
+    data
+  };
+}
+
+export function setLastAction(data) {
+  return {
+    type: LAST_ACTION,
     data
   };
 }

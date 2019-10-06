@@ -1,0 +1,20 @@
+.LastAction {
+  display: block;
+  position: absolute;
+  z-index: 10000;
+  bottom: 0;
+  left: 0;
+  color: rgba(34, 26, 85, 0.75);
+  background-color: rgba(221, 215, 255, 0.75);
+  padding: 3px 10px;
+  font-size: 12px;
+  border-radius: 0 6px 0 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transition: 200ms;
+}
+
+.LastAction--show {
+  opacity: 1;
+}

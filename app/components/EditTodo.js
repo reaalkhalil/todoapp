@@ -68,6 +68,8 @@ export default function EditTodo({
       updated_at: new Date().getTime()
     };
 
+    newTodo.tags = newTodo.tags.filter((t, i) => newTodo.tags.indexOf(t) === i);
+
     setTodo(newTodo);
     onUpdate(newTodo);
   };
@@ -156,7 +158,7 @@ export default function EditTodo({
                   const endWhiteSpace =
                     v.length > 0 && v[v.length - 1] === ' ' ? ' ' : '';
 
-                  const tags = v
+                  let tags = v
                     .split(' ')
                     .map(t => t.trim())
                     .filter(t => t.length > 0);

@@ -10,6 +10,7 @@ import List from './List';
 import * as filter from '../filter';
 
 import KeyBoard from '../keyboard';
+import { previewText, endOfDay } from '../utils';
 
 import { ipcRenderer } from 'electron';
 import ViewTodo from './ViewTodo';
@@ -19,7 +20,8 @@ const onMarkDoneTodo = (
   selectedId,
   setSelectedId,
   editTodo,
-  searchModal
+  searchModal,
+  setLastAction
 ) => {
   if (todos.length == 0) return;
 
@@ -43,6 +45,8 @@ const onMarkDoneTodo = (
       done_at: toDoneStatus ? new Date().getTime() : null
     }
   });
+
+  setLastAction('Done: ' + previewText(t.title));
 };
 
 const onDueTodayTodo = (
@@ -51,7 +55,8 @@ const onDueTodayTodo = (
   setSelectedId,
   editTodo,
   searchModal,
-  endOfDay
+  endOfDay,
+  setLastAction
 ) => {
   if (todos.length == 0) return;
   let ret = false;
@@ -75,12 +80,21 @@ const onDueTodayTodo = (
       due_at: dueToday ? endOfDay : null
     }
   });
+
+  setLastAction('Due Today: ' + previewText(t.title));
 };
 
-const onDeleteTodo = (todos, selectedId, setSelectedId, deleteTodo) => {
+const onDeleteTodo = (
+  todos,
+  selectedId,
+  setSelectedId,
+  deleteTodo,
+  setLastAction
+) => {
   if (todos.length == 0) return;
+  const i = todos.findIndex(t => t.id === selectedId);
   if (todos.length > 1) {
-    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    let idx = i + 1;
     if (idx >= todos.length) idx = todos.length - 2;
     setSelectedId(todos[idx].id);
   } else {
@@ -88,6 +102,7 @@ const onDeleteTodo = (todos, selectedId, setSelectedId, deleteTodo) => {
   }
 
   deleteTodo({ id: selectedId });
+  setLastAction('Deleted: ' + previewText(todos[i].title));
 };
 
 const onMoveSelectUp = (todos, selectedId, setSelectedId) => {
@@ -106,16 +121,11 @@ const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
   }
 };
 
-const endOfDay = function() {
-  const a = new Date();
-  a.setHours(23, 59, 59, 999);
-  return a.getTime();
-};
-
 export default function TodoList({
   addTodo,
   deleteTodo,
   editTodo,
+  setLastAction,
   todos,
   splits,
   pages,
@@ -195,9 +205,11 @@ export default function TodoList({
     if (addModal) {
       addTodo({ todo: todoToAdd });
       setAddModal(false);
+      setLastAction('Created: ' + previewText(todoToAdd.title));
     } else if (editModal) {
       editTodo({ todo: todoToEdit });
       setEditModal(false);
+      setLastAction('Edited: ' + previewText(todoToEdit.title));
     }
   };
 
@@ -215,7 +227,7 @@ export default function TodoList({
       enter: () => {
         addTodo({ todo: todoToAdd });
         setAddModal(false);
-        // TODO: setSelectedId()   need to get ID of todo just created
+        setLastAction('Created: ' + previewText(todoToAdd.title));
       }
     });
   } else if (editModal) {
@@ -224,6 +236,7 @@ export default function TodoList({
       enter: () => {
         editTodo({ todo: todoToEdit });
         setEditModal(false);
+        setLastAction('Edited: ' + previewText(todoToEdit.title));
       }
     });
   } else if (searchModal && searchFocus) {
@@ -298,6 +311,7 @@ export default function TodoList({
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
         editTodo({ todo: { ...t, priority: ((t.priority || 0) + 1) % 3 } });
+        setLastAction('Changed Priority: ' + previewText(t.title));
       },
       t: () => {
         onDueTodayTodo(
@@ -306,12 +320,27 @@ export default function TodoList({
           setSelectedId,
           editTodo,
           searchModal,
-          endOfDay()
+          endOfDay(),
+          setLastAction
         );
       },
       e: () =>
-        onMarkDoneTodo(todos, selectedId, setSelectedId, editTodo, searchModal),
-      'd d': () => onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo),
+        onMarkDoneTodo(
+          todos,
+          selectedId,
+          setSelectedId,
+          editTodo,
+          searchModal,
+          setLastAction
+        ),
+      'd d': () =>
+        onDeleteTodo(
+          todos,
+          selectedId,
+          setSelectedId,
+          deleteTodo,
+          setLastAction
+        ),
       k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
       j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
       '?': () => {
