@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef, useEffect } from 'react';
-import { ipcRenderer, shell } from 'electron';
+import { shell } from 'electron';
 
 import styles from './List.css';
 

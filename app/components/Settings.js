@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as filter from '../filter';
 import { SettingsSchema } from '../store/Store';
 import { initialSettings } from '../store/initial';
+import { shell } from 'electron';
 
 import { Validator } from 'jsonschema';
 
@@ -259,6 +260,37 @@ function IntegrationSettings({
           }}
         />
         <br />
+        <div className={styles.Note}>
+          To verify your telegram / email accounts:
+          <br />
+          Send a telegram message of your ID to{' '}
+          <a
+            className={styles.SelectLink}
+            onClick={() =>
+              shell.openExternal('https://telegram.me/ReaalsTodoAppBot')
+            }
+          >
+            https://telegram.me/ReaalsTodoAppBot
+          </a>
+          <br />
+          Send an email with your ID in the subject line to{' '}
+          <a
+            onClick={() =>
+              shell.openExternal(
+                'mailto:add@todoapp.cc?subject=' + (userId ? `[${userId}]` : '')
+              )
+            }
+            className={styles.SelectLink}
+          >
+            add@todoapp.cc
+          </a>
+          <br />
+          <br />
+          <span className={styles.Danger}>
+            Please keep your ID safe, others could use it to retrieve your
+            todos!
+          </span>
+        </div>
         <a className={styles.Link} onClick={verifyIntegrations}>
           Verify Integrations
         </a>

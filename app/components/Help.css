@@ -83,7 +83,8 @@
   outline: none;
   color: black;
   background-color: #00b8ff99;
-  border: 1px solid #00b8ff;
+  border: 2px solid #00b8ff;
+  line-height: 20px;
   padding: 4px;
   text-align: center;
   border-radius: 5px;

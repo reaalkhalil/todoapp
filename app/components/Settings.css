@@ -89,6 +89,7 @@
 .IntegrationSettings {
   tab-size: 3;
   margin: 10px 30px;
+  margin-top: -10px;
   line-height: 16px;
   padding: 5px 8px;
   width: calc(100% - 90px);
@@ -133,6 +134,7 @@
 
 .Link {
   font-size: 14px;
+  line-height: 20px;
   opacity: 1;
   display: inline-block;
   margin-top: 20px;
@@ -140,7 +142,7 @@
   outline: none;
   color: black;
   background-color: #00b8ff99;
-  border: 1px solid #00b8ff;
+  border: 2px solid #00b8ff;
   padding: 4px 30px;
   text-align: center;
   border-radius: 5px;
@@ -148,4 +150,23 @@
 
 .Link:hover {
   background-color: #00b8ffcc;
+}
+
+.Note {
+  font-size: 14px;
+  line-height: 16px;
+  margin-top: 30px;
+}
+
+.SelectLink {
+  color: #006eff;
+  user-select: text;
+}
+
+.Danger {
+  display: inline-block;
+  border: 2px solid #ff7b7b;
+  border-radius: 5px;
+  padding: 2px 6px;
+  line-height: 20px;
 }
