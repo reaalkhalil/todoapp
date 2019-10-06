@@ -15,15 +15,23 @@ import { previewText, endOfDay, todoToText } from '../utils';
 import { ipcRenderer, clipboard } from 'electron';
 import ViewTodo from './ViewTodo';
 
-const copyTodosToClipboard = todos => {
+const copyTodosToClipboard = (todos, setLastAction) => {
   if (!todos || todos.length === 0) return;
-  const text = todos.map(t => todoToText(t)).join('\n');
+  const maxlen = Math.max(
+    ...todos.map(t =>
+      t.title ? t.title.length : 0 + t.priority ? 1 + t.priority : 0
+    )
+  );
+  const text = todos.map(t => todoToText(t, maxlen)).join('\n');
   clipboard.writeText(text);
+  if (todos.length === 1) setLastAction(`Copied 1 Todo to Clipboard`);
+  else setLastAction(`Copied ${todos.length} Todos to Clipboard`);
 };
 
-const copyTodoToClipboard = todo => {
+const copyTodoToClipboard = (todo, setLastAction) => {
   if (!todo) return;
   clipboard.writeText(todoToText(todo));
+  setLastAction(`Copied 1 Todo to Clipboard`);
 };
 
 const onMarkDoneTodo = (
@@ -278,8 +286,11 @@ export default function TodoList({
     KeyBoard.bind({
       ...shortcuts,
       'command+c': () =>
-        copyTodoToClipboard(todos.find(t => t.id === selectedId)),
-      'command+shift+c': () => copyTodosToClipboard(todos),
+        copyTodoToClipboard(
+          todos.find(t => t.id === selectedId),
+          setLastAction
+        ),
+      'command+shift+c': () => copyTodosToClipboard(todos, setLastAction),
       tab: e => {
         if (searchModal) {
           setSearchFocus(true);

@@ -23,5 +23,7 @@ export default function LastAction({ lastAction }) {
   const classes = [styles.LastAction];
   if (show) classes.push(styles['LastAction--show']);
 
-  return <div className={classes.join(' ')}>{lastAction}</div>;
+  return lastAction ? (
+    <div className={classes.join(' ')}>{lastAction.text}</div>
+  ) : null;
 }

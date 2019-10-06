@@ -27,12 +27,19 @@ export function previewText(title) {
   return title.slice(0, prevLength) + (title.length > prevLength ? '...' : '');
 }
 
-export function todoToText(todo) {
+export function todoToText(todo, maxLength = 0) {
   let res = '';
   res += (todo.done ? '+' : '-') + ' ';
   const p = new Array(todo.priority ? todo.priority : 0).fill('!').join('');
   res += p ? p + ' ' : '';
   res += todo.title;
+
+  const spaces = Math.max(maxLength - res.length + 5, 3);
+
+  if (todo.tags && todo.tags.length > 0)
+    res +=
+      new Array(spaces).fill(' ').join('') +
+      todo.tags.map(t => '#' + t).join(' ');
 
   return res;
 }
