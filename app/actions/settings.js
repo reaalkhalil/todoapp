@@ -22,7 +22,7 @@ export function verifyIntegrations() {
   return (dispatch: Dispatch, getState: GetState) => {
     const { integrations, userId } = getState();
 
-    fetch('https://todoapp.cc/server/pull/' + userId)
+    fetch('https://todoapp.cc/server/get_user/' + userId)
       .then(r => {
         r.json()
           .then(d => {
