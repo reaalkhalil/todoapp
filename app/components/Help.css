@@ -40,6 +40,7 @@
 }
 
 .Key__Button {
+  letter-spacing: -1px;
   background: white;
   border: 1px solid #bbb;
   box-shadow: 0 3px 0 #bbb;

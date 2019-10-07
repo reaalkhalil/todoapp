@@ -21,12 +21,16 @@ const sections = [
       [['j'], 'Down'],
       [['/'], 'Search'],
       [['cmd', 'c'], 'Copy Todo'],
+      [['cmd shift', 'c'], 'Copy List'],
       [['cmd', 'x'], 'Cut Todo'],
-      [['cmd', 'shift', 'c'], 'Copy List'],
-      [['cmd', 'v'], 'Paste&Edit Todos'],
-      [['cmd', 'shift', 'v'], 'Paste Todos'],
+      [['cmd', 'v'], 'Import Todo(s)'],
+      [['cmd shift', 'v'], 'Paste Todo(s)'],
       [['cmd', ','], 'Preferences']
     ]
+  },
+  {
+    header: 'Import Multiple',
+    keys: [[['enter'], 'Confirm'], [['esc'], 'Cancel']]
   },
   {
     header: 'Global Shortcuts',
@@ -62,7 +66,12 @@ const sections = [
   },
   {
     header: 'Preferences',
-    keys: [[['cmd', 's'], 'Save Preferences'], [['esc'], 'Cancel']]
+    keys: [
+      [['esc'], 'Cancel'],
+      [['tab'], 'Next Tab'],
+      [['shift', 'tab'], 'Prev Tab'],
+      [['cmd', 's'], 'Save Preferences']
+    ]
   }
 ];
 
