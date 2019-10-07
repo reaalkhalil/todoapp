@@ -25,6 +25,8 @@ const sections = [
       [['cmd', 'x'], 'Cut Todo'],
       [['cmd', 'v'], 'Import Todo(s)'],
       [['cmd shift', 'v'], 'Paste Todo(s)'],
+      [['cmd', 'z'], 'Undo'],
+      [['cmd', 'shift', 'z'], 'Redo'],
       [['cmd', ','], 'Preferences']
     ]
   },
