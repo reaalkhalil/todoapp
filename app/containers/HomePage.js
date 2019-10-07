@@ -35,6 +35,9 @@ class HomePage extends Component<Props> {
       );
       this.props.addTodo({ todo });
     });
+    pull.setLastActionFunc(n =>
+      this.props.setLastAction(`Downloaded ${n} Todo` + (n > 1 ? 's' : ''))
+    );
 
     return (
       <>

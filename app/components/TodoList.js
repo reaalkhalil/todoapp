@@ -174,15 +174,16 @@ export default function TodoList({
   }
 
   const [selectedId, setSelectedId] = useState(
-    newlyCreatedId === 0 || !!newlyCreatedId
-      ? newlyCreatedId
-      : todos && todos[0]
-      ? todos[0].id
-      : null
+    todos && todos[0] ? todos[0].id : null
   );
 
   useEffect(() => {
-    if (newlyCreatedId === 0 || newlyCreatedId) setSelectedId(newlyCreatedId);
+    if (
+      (newlyCreatedId === 0 || newlyCreatedId) &&
+      todos.find(t => t.id === newlyCreatedId)
+    ) {
+      setSelectedId(newlyCreatedId);
+    }
   }, [newlyCreatedId]);
 
   const [addModal, setAddModal] = useState(false);

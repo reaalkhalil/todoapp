@@ -7,6 +7,7 @@ class TodoPuller {
     this.userId = '';
     this.integrations = [];
     this.addFunc = () => {};
+    this.lastActionFunc = () => {};
     this.delay = delay;
     this.interval = setInterval(() => this.checkForTodos(), delay);
   }
@@ -24,7 +25,13 @@ class TodoPuller {
     this.addFunc = addFunc;
   }
 
+  setLastActionFunc(lastActionFunc) {
+    this.lastActionFunc = lastActionFunc;
+  }
+
   addTodos(tt) {
+    if (!tt || tt.length === 0) return;
+
     tt.forEach(t => {
       this.addFunc({
         title: t.title || t.Title,
@@ -38,6 +45,8 @@ class TodoPuller {
         tags: []
       });
     });
+
+    this.lastActionFunc(tt.length);
   }
 
   backOff() {
