@@ -157,7 +157,11 @@ export default function TodoList({
   onSettings,
   helpOpen,
   deselectNewlyCreated,
-  newlyCreatedId
+  newlyCreatedId,
+  canUndo,
+  undo,
+  canRedo,
+  redo
 }) {
   const [selectedSplit, setSelectedSplit] = useState(0);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -308,6 +312,22 @@ export default function TodoList({
 
     KeyBoard.bind({
       ...shortcuts,
+      // UNDO / REDO
+      'command+z': e => {
+        if (canUndo) {
+          undo();
+          setLastAction('Undo');
+          e.preventDefault();
+        }
+      },
+      'command+shift+z': e => {
+        if (canRedo) {
+          redo();
+          setLastAction('Redo');
+          e.preventDefault();
+        }
+      },
+
       // ZOOM IN / OUT
       'command+=': () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1),
       'command+-': () => webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1),

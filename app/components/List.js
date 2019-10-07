@@ -100,7 +100,6 @@ export default function List({
               }
             }}
             onClick={e => onClick(t.id, e.metaKey)}
-            onDoubleClick={e => console.log('DOUBLE CLICK')}
           >
             {t.id === selectedId ? (
               <span className={styles.TodoItem__highlight}></span>

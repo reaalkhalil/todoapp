@@ -11,8 +11,6 @@ import Store from './Store';
 
 const history = createHashHistory();
 const rootReducer = createRootReducer(history);
-const router = routerMiddleware(history);
-const enhancer = applyMiddleware(thunk, router);
 
 function configureStore() {
   const s = new Store();
@@ -29,7 +27,7 @@ function configureStore() {
           s.setIntegrations(state.integrations);
         }
       } else if (action.type in todosActions) {
-        s.saveTodos(state.todos);
+        s.saveTodos(state.todos.present);
       }
 
       return returnValue;
@@ -44,7 +42,7 @@ function configureStore() {
   return createStore(
     rootReducer,
     {
-      todos,
+      todos: { past: [], future: [], present: todos },
       settings,
       userId,
       integrations

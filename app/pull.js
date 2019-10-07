@@ -3,7 +3,6 @@ const maxInterval = 3600 * 1000;
 
 class TodoPuller {
   constructor(delay = initInterval) {
-    console.log('new TodoPuller');
     this.userId = '';
     this.integrations = [];
     this.addFunc = () => {};
@@ -50,7 +49,7 @@ class TodoPuller {
   }
 
   backOff() {
-    console.log('backOff()', this.delay);
+    console.info('backOff()', this.delay);
 
     if (this.delay >= maxInterval) return;
     this.delay = Math.round(this.delay * 1.5);
@@ -60,7 +59,7 @@ class TodoPuller {
   }
 
   clearBackOff() {
-    console.log('clearBackOff()', this.delay);
+    console.info('clearBackOff()', this.delay);
 
     if (this.delay === initInterval) return;
     this.delay = initInterval;
@@ -81,7 +80,7 @@ class TodoPuller {
     fetch('https://todoapp.cc/server/pull/' + this.userId)
       .then(r => {
         r.json().then(d => {
-          console.log('checkForTodos()', d);
+          console.info('checkForTodos()', d);
 
           this.clearBackOff();
           if (d.todos && d.todos.length > 0) this.addTodos(d.todos);

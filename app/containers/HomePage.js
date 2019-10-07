@@ -29,11 +29,8 @@ class HomePage extends Component<Props> {
     pull.setUserId(this.props.userId);
     pull.setIntegrations(this.props.integrations);
     pull.setAddFunc(todo => {
-      console.log(
-        'ADD_TODO_FROM_PULL \n\n\n++++++++++++++================',
-        todo
-      );
-      this.props.addTodo({ todo });
+      console.log('ADD_TODO_FROM_PULL', todo);
+      this.props.addTodo({ todo }); // TODO: shouldn't be undo-able
     });
     pull.setLastActionFunc(n =>
       this.props.setLastAction(`Downloaded ${n} Todo` + (n > 1 ? 's' : ''))

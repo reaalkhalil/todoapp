@@ -272,6 +272,7 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "redux-undo": "^0.6.1",
     "source-map-support": "^0.5.9",
     "typeface-roboto": "0.0.75",
     "typeface-roboto-mono": "0.0.75",

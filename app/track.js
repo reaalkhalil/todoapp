@@ -49,23 +49,13 @@ export function trackEvent(category, action, label, value) {
 
 window.onerror = function(msg, src, line, col, err) {
   const error = `${err.message}: ${err.stack}`;
-  if (isDev) {
-    console.log('TRACK ERROR', error);
-    return false;
-  }
-
-  usr.exception(error).send();
+  if (!isDev) usr.exception(error).send();
   return false;
 };
 
 window.onunhandledrejection = function(e) {
   const error = `${e.reason.message}: ${e.reason.stack}`;
-  if (isDev) {
-    console.log('TRACK UNHANDLED REJ', error);
-    return false;
-  }
-
-  usr.exception(error).send();
+  if (isDev) usr.exception(error).send();
   return false;
 };
 

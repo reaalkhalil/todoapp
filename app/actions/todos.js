@@ -21,7 +21,7 @@ export function addTodo(data) {
     const { todos } = getState();
 
     let i = 0;
-    todos.forEach(t => {
+    todos.present.forEach(t => {
       if (t.id > i) i = t.id;
     });
 
