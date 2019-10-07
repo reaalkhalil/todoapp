@@ -43,3 +43,34 @@ export function todoToText(todo, maxLength = 0) {
 
   return res;
 }
+
+export function textToTodo(text) {
+  // TODO: implement this
+  const res = {
+    title: '',
+    priority: 0,
+    done: false
+  };
+
+  let t = text;
+  if (t.startsWith('+ ')) res.done = true;
+  t = t.slice(2);
+  if (t.startsWith('!!')) {
+    res.priority = 2;
+    t = t.slice(2);
+  } else if (t.startsWith('!')) {
+    res.priority = 1;
+    t = t.slice(1);
+  }
+
+  // TODO: better tag parsing
+  const tt = t.split('#');
+
+  res.title = tt[0].trim();
+  res.tags = tt
+    .slice(1)
+    .map(t => t.trim())
+    .filter(t => t !== '');
+
+  return res;
+}

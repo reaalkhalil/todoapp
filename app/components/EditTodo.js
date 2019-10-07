@@ -5,7 +5,7 @@ import * as Mousetrap from 'mousetrap';
 import styles from './EditTodo.css';
 
 export default function EditTodo({
-  initTodo,
+  defaultTodo = {},
   onUpdate,
   helpOpen,
   create,
@@ -22,31 +22,6 @@ export default function EditTodo({
     a.setHours(23, 59, 59, 999);
     return a.getTime();
   };
-
-  // ADDFIELDS:
-  let defaultTodo = {
-    title: '',
-    content: '',
-    priority: 0,
-    done: false,
-    created_at: 0,
-    updated_at: 0,
-    done_at: null,
-    due_at: null,
-    tags: []
-  };
-
-  if (initTodo) {
-    defaultTodo = { ...defaultTodo, ...initTodo };
-
-    if (initTodo.due_at === 0) defaultTodo.due_at = endOfDay();
-    if (initTodo.created_at) {
-      defaultTodo.created_at = initTodo.created_at;
-    } else {
-      defaultTodo.created_at = new Date().getTime();
-    }
-    if (!initTodo.done) defaultTodo.done_at = null;
-  }
 
   useEffect(() => {
     onUpdate({
@@ -91,7 +66,7 @@ export default function EditTodo({
                 ref={titleRef}
                 className={['mousetrap', styles.TextInput].join(' ')}
                 type="text"
-                defaultValue={defaultTodo.title}
+                defaultValue={defaultTodo ? defaultTodo.title.trim() : ''}
                 onChange={() => updateData('title', titleRef.current.value)}
                 onKeyDown={e => {
                   if (e.keyCode === 9 && event.shiftKey) {
@@ -130,7 +105,7 @@ export default function EditTodo({
                     updateData('priority', newV);
                   }
                 }}
-                defaultValue={defaultTodo.priority}
+                defaultValue={defaultTodo ? defaultTodo.priority : 0}
                 onChange={() => {
                   let v = parseInt(priorityRef.current.value);
                   if (v !== v || typeof v !== 'number') v = 0;

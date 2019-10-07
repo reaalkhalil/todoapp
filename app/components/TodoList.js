@@ -10,9 +10,9 @@ import List from './List';
 import * as filter from '../filter';
 
 import KeyBoard from '../keyboard';
-import { previewText, endOfDay, todoToText } from '../utils';
+import { previewText, endOfDay, todoToText, textToTodo } from '../utils';
 
-import { ipcRenderer, clipboard } from 'electron';
+import { ipcRenderer, clipboard, webFrame } from 'electron';
 import ViewTodo from './ViewTodo';
 
 const copyTodosToClipboard = (todos, setLastAction) => {
@@ -65,7 +65,9 @@ const onMarkDoneTodo = (
     }
   });
 
-  setLastAction('Done: ' + previewText(t.title));
+  setLastAction(
+    (toDoneStatus ? 'Done: ' : 'Not Done: ') + previewText(t.title)
+  );
 };
 
 const onDueTodayTodo = (
@@ -100,7 +102,10 @@ const onDueTodayTodo = (
     }
   });
 
-  setLastAction('Due Today: ' + previewText(t.title));
+  setLastAction(
+    (dueToday ? 'Moved to Today: ' : 'Moved out of Today: ') +
+      previewText(t.title)
+  );
 };
 
 const onDeleteTodo = (
@@ -217,6 +222,7 @@ export default function TodoList({
     setSearchQuery(null);
   };
 
+  const [initTodo, setInitTodo] = useState(null);
   const [todoToAdd, setTodoToAdd] = useState(null);
   const [todoToEdit, setTodoToEdit] = useState(null);
 
@@ -285,11 +291,27 @@ export default function TodoList({
 
     KeyBoard.bind({
       ...shortcuts,
-      'command+c': () =>
+      // ZOOM IN / OUT
+      'command+=': () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1),
+      'command+-': () => webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1),
+      'command+0': () => webFrame.setZoomFactor(1),
+
+      // COPY
+      'command+c': e => {
         copyTodoToClipboard(
           todos.find(t => t.id === selectedId),
           setLastAction
-        ),
+        );
+        e.preventDefault();
+      },
+      'command+x': e => {
+        copyTodoToClipboard(todos.find(t => t.id === selectedId), () => {});
+        onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo, () => {});
+
+        setLastAction('Cut 1 Todo');
+
+        e.preventDefault();
+      },
       'command+shift+c': () => copyTodosToClipboard(todos, setLastAction),
       tab: e => {
         if (searchModal) {
@@ -305,6 +327,65 @@ export default function TodoList({
           (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
         );
       },
+
+      // PASTE
+      'command+v': e => {
+        const pasted = clipboard.readText();
+        if (!pasted || pasted === '') return;
+
+        const tt = pasted
+          .split('\n')
+          .map(t => t.trim())
+          .filter(t => t !== '')
+          .map(t => textToTodo(t));
+
+        if (tt.length === 0) return;
+
+        if (tt.length === 1) {
+          setInitTodo(tt[0]);
+          setAddModal(true);
+          setLastAction('Pasted 1 Todo');
+        } else {
+          // TODO: handle paste multiple
+          setLastAction(`Pasted ${tt.length} Todos`);
+        }
+
+        e.preventDefault();
+      },
+      'command+shift+v': e => {
+        const pasted = clipboard.readText();
+        if (!pasted || pasted === '') return;
+
+        const tt = pasted
+          .split('\n')
+          .map(t => t.trim())
+          .filter(t => t !== '')
+          .map(t => textToTodo(t));
+
+        if (tt.length === 0) return;
+
+        e.preventDefault();
+        if (tt.length === 1) {
+          const t = getDefaultTodo(
+            tt[0],
+            splits,
+            selectedSplit,
+            pages,
+            selectedPage
+          );
+
+          addTodo({ todo: t });
+          setLastAction('# Pasted 1 Todo');
+        } else {
+          // TODO: handle paste multiple
+          setLastAction(`# Pasted ${tt.length} Todos`);
+          console.log('paste multiple', tt);
+        }
+
+        e.preventDefault();
+      },
+
+      // NAV SPLITS
       'shift+tab': e => {
         if (searchModal) {
           setSearchFocus(true);
@@ -419,28 +500,31 @@ export default function TodoList({
   if (viewTodo && selectedId !== 0 && !selectedId) setViewTodo(false);
 
   if (addModal) {
-    let initTodo = null;
-
-    if (splits) {
-      const s = splits.find(s => s.position === selectedSplit);
-      if (s) initTodo = s.default || initTodo;
-    }
-
-    if (selectedPage !== '') {
-      const page = pages.find(p => p.shortcut === selectedPage);
-      if (page && page.default) {
-        initTodo = page.default;
-      }
-    }
+    const init = getDefaultTodo(
+      initTodo,
+      splits,
+      selectedSplit,
+      pages,
+      selectedPage
+    );
 
     return (
       <EditTodo
         helpOpen={helpModal}
         create={true}
-        initTodo={initTodo}
-        onUpdate={setTodoToAdd}
-        trigger={triggerAddorEdit}
-        cancel={cancelAddorEdit}
+        defaultTodo={init}
+        onUpdate={a => {
+          setTodoToAdd(a);
+          setInitTodo(null);
+        }}
+        trigger={a => {
+          triggerAddorEdit(a);
+          setInitTodo(null);
+        }}
+        cancel={a => {
+          cancelAddorEdit(a);
+          setInitTodo(null);
+        }}
       />
     );
   }
@@ -450,7 +534,7 @@ export default function TodoList({
       <EditTodo
         helpOpen={helpModal}
         onUpdate={setTodoToEdit}
-        initTodo={todos.find(t => t.id === selectedId)}
+        defaultTodo={todos.find(t => t.id === selectedId)}
         trigger={triggerAddorEdit}
         cancel={cancelAddorEdit}
       />
@@ -498,4 +582,71 @@ export default function TodoList({
       />
     </div>
   );
+}
+
+function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
+  let init = initTodo ? { ...initTodo } : {};
+
+  const initTags = init.tags ? init.tags : [];
+
+  if (splits) {
+    const s = splits.find(s => s.position === selectedSplit);
+    if (s && s.default)
+      init = {
+        ...init,
+        ...s.default,
+        tags: [
+          ...initTags,
+          ...(s.default && s.default.tags ? s.default.tags : [])
+        ]
+      };
+  }
+
+  if (selectedPage !== '') {
+    const p = pages.find(p => p.shortcut === selectedPage);
+    if (p && p.default) {
+      init = {
+        ...init,
+        ...p.default,
+        tags: [
+          ...initTags,
+          ...(p.default && p.default.tags ? p.default.tags : [])
+        ]
+      };
+    }
+  }
+
+  let defaultTodo = {
+    title: '',
+    content: '',
+    priority: 0,
+    done: false,
+    created_at: 0,
+    updated_at: 0,
+    done_at: null,
+    due_at: null,
+    tags: []
+  };
+
+  if (init) {
+    defaultTodo = { ...defaultTodo, ...init };
+
+    //  console.log(' >   defaultTodo.due_at', defaultTodo.due_at);
+    if (init.due_at === 0) defaultTodo.due_at = endOfDay();
+    //  console.log(' >>   defaultTodo.due_at', defaultTodo.due_at);
+    if (init.created_at) {
+      defaultTodo.created_at = init.created_at;
+    } else {
+      defaultTodo.created_at = new Date().getTime();
+    }
+    if (!init.done) defaultTodo.done_at = null;
+  }
+
+  //   console.log('=========', init);
+
+  defaultTodo.tags = defaultTodo.tags.filter(
+    (t, i) => defaultTodo.tags.indexOf(t) === i
+  );
+
+  return defaultTodo;
 }
