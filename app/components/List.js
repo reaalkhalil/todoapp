@@ -76,7 +76,7 @@ export default function List({
 
   const [hoverId, setHoverId] = useState(null);
   const todoList = todos
-    ? todos.map(t => {
+    ? todos.map((t, tIdx) => {
         const classes = [styles.TodoItem];
         if (t.id === selectedId) classes.push(styles['TodoItem--selected']);
         if (t.done) classes.push(styles['TodoItem--done']);
@@ -90,7 +90,7 @@ export default function List({
         return (
           <div
             ref={t.id === selectedId ? todoRef : null}
-            key={t.id}
+            key={t.id === 0 || t.id ? t.id : tIdx}
             className={classes.join(' ')}
             onMouseMoveCapture={() => {
               if (t.id !== hoverId) {

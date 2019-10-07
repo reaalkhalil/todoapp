@@ -95,14 +95,21 @@ function textToTodo(text) {
     t = t.slice(1);
   }
 
-  // TODO: better tag parsing
-  const tt = t.trimLeft().split('#');
+  const tags = [];
+  let title = [''];
 
-  res.title = tt[0].trim();
-  res.tags = tt
-    .slice(1)
-    .map(t => t.trim())
-    .filter(t => t !== '');
+  const tt = t.trim().split(' ');
+  for (let i = tt.length - 1; i >= 0; i--) {
+    if (tt[i].startsWith('#')) {
+      tags.push(tt[i].slice(1));
+    } else {
+      title = tt.slice(0, i + 1);
+      break;
+    }
+  }
+
+  res.tags = tags;
+  res.title = title.join(' ');
 
   return res;
 }

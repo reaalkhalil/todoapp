@@ -607,15 +607,37 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
 
   if (splits) {
     const s = splits.find(s => s.position === selectedSplit);
-    if (s && s.default)
-      init = {
-        ...init,
-        ...s.default,
-        tags: [
-          ...initTags,
-          ...(s.default && s.default.tags ? s.default.tags : [])
-        ]
-      };
+    if (s) {
+      if (s.default)
+        init = {
+          ...init,
+          ...s.default,
+          tags: [
+            ...initTags,
+            ...(s.default && s.default.tags ? s.default.tags : [])
+          ]
+        };
+
+      // Remove higher order tags from init
+      const higherOrderSplits = [];
+      splits.some(s => {
+        if (s.position === selectedSplit) {
+          return true;
+        } else {
+          higherOrderSplits.push(s);
+        }
+      });
+      const tags = [];
+      higherOrderSplits.forEach(s => {
+        if (s.filters && s.filters.length > 0) {
+          s.filters.forEach(f => {
+            if (f.field === 'tags' && f.op === 'CONTAINS') tags.push(f.value);
+          });
+        }
+      });
+
+      init.tags = init.tags.filter(t => tags.indexOf(t) === -1);
+    }
   }
 
   if (selectedPage !== '') {
