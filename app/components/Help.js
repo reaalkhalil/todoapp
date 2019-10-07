@@ -20,9 +20,12 @@ const sections = [
       [['k'], 'Up'],
       [['j'], 'Down'],
       [['/'], 'Search'],
-      [['cmd', ','], 'Preferences'],
       [['cmd', 'c'], 'Copy Todo'],
-      [['cmd', 'shift', 'c'], 'Copy List']
+      [['cmd', 'x'], 'Cut Todo'],
+      [['cmd', 'shift', 'c'], 'Copy List'],
+      [['cmd', 'v'], 'Paste&Edit Todos'],
+      [['cmd', 'shift', 'v'], 'Paste Todos'],
+      [['cmd', ','], 'Preferences']
     ]
   },
   {

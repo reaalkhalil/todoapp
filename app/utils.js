@@ -41,20 +41,52 @@ export function todoToText(todo, maxLength = 0) {
       new Array(spaces).fill(' ').join('') +
       todo.tags.map(t => '#' + t).join(' ');
 
+  if (todo.content && todo.content.length > 0)
+    res +=
+      '\n' +
+      todo.content
+        .split('\n')
+        .map(c => '\t' + c)
+        .join('\n');
+
   return res;
 }
 
-export function textToTodo(text) {
-  // TODO: implement this
+export function textToTodos(text) {
+  let todos = [];
+  const tt = text.split('\n');
+  tt.forEach(t => {
+    if ((t.startsWith(' ') || t.startsWith('\t')) && todos.length > 0) {
+      todos[todos.length - 1].content.push(t);
+      return;
+    }
+
+    if (t.trim() === '') return;
+    todos.push({ title: t, content: [] });
+  });
+
+  return todos.map(t => {
+    const todo = textToTodo(t.title);
+    todo.content = removeCommonWhitespace(t.content);
+    return todo;
+  });
+}
+
+function textToTodo(text) {
   const res = {
     title: '',
     priority: 0,
     done: false
   };
 
-  let t = text;
-  if (t.startsWith('+ ')) res.done = true;
-  t = t.slice(2);
+  let t = text.trimLeft();
+  if (t.startsWith('+ ') || t.startsWith('x ')) {
+    res.done = true;
+    t = t.slice(2);
+  } else if (t.startsWith('- ')) {
+    t = t.slice(2);
+  }
+
   if (t.startsWith('!!')) {
     res.priority = 2;
     t = t.slice(2);
@@ -64,7 +96,7 @@ export function textToTodo(text) {
   }
 
   // TODO: better tag parsing
-  const tt = t.split('#');
+  const tt = t.trimLeft().split('#');
 
   res.title = tt[0].trim();
   res.tags = tt
@@ -73,4 +105,13 @@ export function textToTodo(text) {
     .filter(t => t !== '');
 
   return res;
+}
+
+function removeCommonWhitespace(aa) {
+  for (let delim of ['\t', '    ', '   ', '  ', ' ']) {
+    if (aa.every(t => t.startsWith(delim)))
+      return aa.map(a => a.slice(delim.length)).join('\n');
+  }
+
+  return aa.join('\n');
 }

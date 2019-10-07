@@ -10,7 +10,7 @@ import List from './List';
 import * as filter from '../filter';
 
 import KeyBoard from '../keyboard';
-import { previewText, endOfDay, todoToText, textToTodo } from '../utils';
+import { previewText, endOfDay, todoToText, textToTodos } from '../utils';
 
 import { ipcRenderer, clipboard, webFrame } from 'electron';
 import ViewTodo from './ViewTodo';
@@ -191,6 +191,7 @@ export default function TodoList({
   const [searchFocus, setSearchFocus] = useState(false);
   const [viewTodo, setViewTodo] = useState(false);
   const [helpModal, setHelpModal] = useState(helpOpen);
+  const [pasteModal, setPasteModal] = useState(null);
 
   useEffect(() => {
     const f = () => {
@@ -272,6 +273,21 @@ export default function TodoList({
       'shift+tab': onExitSearch,
       enter: () => setSearchFocus(false)
     });
+  } else if (pasteModal) {
+    KeyBoard.bind({
+      esc: () => setPasteModal(null),
+      enter: () => {
+        if (!pasteModal || pasteModal.length === 0) return;
+
+        pasteModal.forEach(t => {
+          addTodo({
+            todo: getDefaultTodo(t, splits, selectedSplit, pages, selectedPage)
+          });
+        });
+
+        setPasteModal(null);
+      }
+    });
   } else {
     // TODO: if user enters "|" in shortcut it'll mess this up
 
@@ -333,11 +349,7 @@ export default function TodoList({
         const pasted = clipboard.readText();
         if (!pasted || pasted === '') return;
 
-        const tt = pasted
-          .split('\n')
-          .map(t => t.trim())
-          .filter(t => t !== '')
-          .map(t => textToTodo(t));
+        const tt = textToTodos(pasted);
 
         if (tt.length === 0) return;
 
@@ -346,7 +358,7 @@ export default function TodoList({
           setAddModal(true);
           setLastAction('Pasted 1 Todo');
         } else {
-          // TODO: handle paste multiple
+          setPasteModal(tt);
           setLastAction(`Pasted ${tt.length} Todos`);
         }
 
@@ -356,31 +368,20 @@ export default function TodoList({
         const pasted = clipboard.readText();
         if (!pasted || pasted === '') return;
 
-        const tt = pasted
-          .split('\n')
-          .map(t => t.trim())
-          .filter(t => t !== '')
-          .map(t => textToTodo(t));
+        const tt = textToTodos(pasted);
 
         if (tt.length === 0) return;
 
         e.preventDefault();
-        if (tt.length === 1) {
-          const t = getDefaultTodo(
-            tt[0],
-            splits,
-            selectedSplit,
-            pages,
-            selectedPage
-          );
+        tt.forEach(t => {
+          addTodo({
+            todo: getDefaultTodo(t, splits, selectedSplit, pages, selectedPage)
+          });
+        });
 
-          addTodo({ todo: t });
-          setLastAction('# Pasted 1 Todo');
-        } else {
-          // TODO: handle paste multiple
-          setLastAction(`# Pasted ${tt.length} Todos`);
-          console.log('paste multiple', tt);
-        }
+        setLastAction(
+          tt.length === 1 ? 'Pasted 1 Todo' : `Pasted ${tt.length} Todos`
+        );
 
         e.preventDefault();
       },
@@ -540,6 +541,20 @@ export default function TodoList({
       />
     );
 
+  if (pasteModal && pasteModal.length > 0)
+    return (
+      <>
+        <span className={styles.Header}>Paste Multiple</span>
+
+        <List
+          showImage={!searchModal}
+          helpOpen={helpModal}
+          todos={pasteModal}
+          selectedId={null}
+        />
+      </>
+    );
+
   const listStyles = [styles.TodoList];
   if (helpModal) {
     listStyles.push(styles['TodoList--help-open']);
@@ -631,9 +646,7 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
   if (init) {
     defaultTodo = { ...defaultTodo, ...init };
 
-    //  console.log(' >   defaultTodo.due_at', defaultTodo.due_at);
     if (init.due_at === 0) defaultTodo.due_at = endOfDay();
-    //  console.log(' >>   defaultTodo.due_at', defaultTodo.due_at);
     if (init.created_at) {
       defaultTodo.created_at = init.created_at;
     } else {
@@ -641,8 +654,6 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
     }
     if (!init.done) defaultTodo.done_at = null;
   }
-
-  //   console.log('=========', init);
 
   defaultTodo.tags = defaultTodo.tags.filter(
     (t, i) => defaultTodo.tags.indexOf(t) === i
