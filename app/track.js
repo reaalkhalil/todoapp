@@ -38,24 +38,15 @@ export function trackEvent(category, action, label, value) {
     .send();
 }
 
-// TODO: does this work?
-// setTimeout(() => {
-//   console.log('testerr');
-
-//   usr
-//     .exception({ exDescription: 'TEST ERROR', exFatal: false })
-//     .send(e => console.log(e));
-// }, 6000);
-
 window.onerror = function(msg, src, line, col, err) {
   const error = `${err.message}: ${err.stack}`;
-  if (!isDev) usr.exception(error).send();
+  if (!isDev) usr.exception({ exDescription: error, exFatal: false }).send();
   return false;
 };
 
 window.onunhandledrejection = function(e) {
   const error = `${e.reason.message}: ${e.reason.stack}`;
-  if (isDev) usr.exception(error).send();
+  if (isDev) usr.exception({ exDescription: error, exFatal: false }).send();
   return false;
 };
 

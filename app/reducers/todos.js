@@ -1,14 +1,8 @@
 // @flow
-import {
-  ADD_TODO,
-  DELETE_TODO,
-  EDIT_TODO,
-  DESELECT_NEWLY_CREATED,
-  LAST_ACTION
-} from '../actions/todos';
+import { ADD_TODO, DELETE_TODO, EDIT_TODO } from '../actions/todos';
 import { trackEvent, Categories, Actions } from '../track';
 import { Action, Todo } from './types';
-import undoable, { excludeAction } from 'redux-undo';
+import undoable, { includeAction } from 'redux-undo';
 
 function todos(state: Todo[] = [], action: Action) {
   switch (action.type) {
@@ -34,7 +28,7 @@ function todos(state: Todo[] = [], action: Action) {
 }
 
 const undoableTodos = undoable(todos, {
-  filter: excludeAction([DESELECT_NEWLY_CREATED, LAST_ACTION])
+  filter: includeAction([ADD_TODO, DELETE_TODO, EDIT_TODO])
 });
 
 export default undoableTodos;

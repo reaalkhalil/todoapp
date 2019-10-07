@@ -317,15 +317,17 @@ export default function TodoList({
         if (canUndo) {
           undo();
           setLastAction('Undo');
-          e.preventDefault();
-        }
+        } else setLastAction('Nothing to Undo');
+
+        e.preventDefault();
       },
       'command+shift+z': e => {
         if (canRedo) {
           redo();
           setLastAction('Redo');
-          e.preventDefault();
-        }
+        } else setLastAction('Nothing to Redo');
+
+        e.preventDefault();
       },
 
       // ZOOM IN / OUT
