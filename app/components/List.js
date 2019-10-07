@@ -51,6 +51,7 @@ export default function List({
   startIndex,
   selectedId,
   onHover,
+  onClick,
   helpOpen,
   showImage
 }) {
@@ -98,6 +99,8 @@ export default function List({
                 onHover(t.id);
               }
             }}
+            onClick={e => onClick(t.id, e.metaKey)}
+            onDoubleClick={e => console.log('DOUBLE CLICK')}
           >
             {t.id === selectedId ? (
               <span className={styles.TodoItem__highlight}></span>

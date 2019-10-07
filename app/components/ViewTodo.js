@@ -4,7 +4,7 @@ import { validURL } from '../utils';
 
 import styles from './ViewTodo.css';
 
-export default function ViewTodo({ todo, show }) {
+export default function ViewTodo({ todo, show, onClick }) {
   const todoClasses = [styles.Todo];
   const bgClasses = [styles.Todo__BG];
   if (show) {
@@ -20,7 +20,7 @@ export default function ViewTodo({ todo, show }) {
 
   return (
     <>
-      <div key="bg" className={bgClasses.join(' ')}></div>
+      <div key="bg" className={bgClasses.join(' ')} onClick={onClick}></div>
       <div key="todo" className={todoClasses.join(' ')}>
         {todo ? (
           <>

@@ -37,3 +37,44 @@ export function trackEvent(category, action, label, value) {
     })
     .send();
 }
+
+// TODO: does this work?
+// setTimeout(() => {
+//   console.log('testerr');
+
+//   usr
+//     .exception({ exDescription: 'TEST ERROR', exFatal: false })
+//     .send(e => console.log(e));
+// }, 6000);
+
+window.onerror = function(msg, src, line, col, err) {
+  const error = `${err.message}: ${err.stack}`;
+  if (isDev) {
+    console.log('TRACK ERROR', error);
+    return false;
+  }
+
+  usr.exception(error).send();
+  return false;
+};
+
+window.onunhandledrejection = function(e) {
+  const error = `${e.reason.message}: ${e.reason.stack}`;
+  if (isDev) {
+    console.log('TRACK UNHANDLED REJ', error);
+    return false;
+  }
+
+  usr.exception(error).send();
+  return false;
+};
+
+// TODO: use this
+export function pageView(page) {
+  if (isDev) {
+    console.log('TRACK PAGEVIEW', page);
+    return;
+  }
+
+  usr.pageview(page).send();
+}

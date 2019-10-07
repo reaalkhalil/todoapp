@@ -7,7 +7,7 @@ const sections = [
   {
     header: 'Todo List',
     keys: [
-      [['?'], 'Toggle Help'],
+      [['shift', '?'], 'Toggle Help'],
       [['tab'], 'Next Split'],
       [['shift', 'tab'], 'Prev Split'],
       [['space'], 'View Todo'],

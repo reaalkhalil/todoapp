@@ -572,12 +572,17 @@ export default function TodoList({
           hasFocus={searchFocus}
         />
       ) : selectedPage ? (
-        <Page pages={pages} selectedPage={selectedPage} />
+        <Page
+          pages={pages}
+          selectedPage={selectedPage}
+          onClick={() => setSelectedPage('')}
+        />
       ) : (
         <Splits
           helpOpen={helpModal}
           splits={splits}
           selectedSplit={selectedSplit}
+          onClick={setSelectedSplit}
         />
       )}
 
@@ -585,6 +590,7 @@ export default function TodoList({
         todo={todos.find(t => t.id === selectedId)}
         helpOpen={helpOpen}
         show={viewTodo}
+        onClick={() => setViewTodo(false)}
       />
 
       <List
@@ -594,6 +600,12 @@ export default function TodoList({
         selectedId={searchFocus ? null : selectedId}
         onHover={a => {
           setSelectedId(a);
+        }}
+        onClick={(id, meta) => {
+          if (id !== selectedId) {
+            setSelectedId(id);
+          }
+          if (!meta) setViewTodo(true);
         }}
       />
     </div>

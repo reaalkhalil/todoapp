@@ -3,7 +3,7 @@ import useWindowDimensions from '../window';
 
 import styles from './Splits.css';
 
-export function Splits({ splits, selectedSplit, helpOpen }) {
+export function Splits({ splits, selectedSplit, helpOpen, onClick }) {
   const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
 
   const classes = [styles.Splits];
@@ -52,6 +52,7 @@ export function Splits({ splits, selectedSplit, helpOpen }) {
                 ? lastSplitRef
                 : null
             }
+            onClick={() => onClick(s.position)}
           >
             {s.title}
           </span>
@@ -61,7 +62,7 @@ export function Splits({ splits, selectedSplit, helpOpen }) {
   );
 }
 
-export function Page({ pages, selectedPage, helpOpen }) {
+export function Page({ pages, selectedPage, helpOpen, onClick }) {
   const classes = [styles.Splits];
   if (helpOpen) classes.push(styles['Splits--helpOpen']);
 
@@ -70,7 +71,10 @@ export function Page({ pages, selectedPage, helpOpen }) {
 
   return (
     <div className={classes.join(' ')}>
-      <span className={[styles.Split, styles['Split--selected']].join(' ')}>
+      <span
+        className={[styles.Split, styles['Split--selected']].join(' ')}
+        onClick={onClick}
+      >
         {title}
       </span>
     </div>

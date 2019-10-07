@@ -23,11 +23,17 @@
   padding-bottom: 2px;
   margin-right: 25px;
   position: relative;
+  cursor: pointer;
+  transition: 80ms;
 }
 
 .Split:last-of-type {
   padding-bottom: 2px;
   margin-right: 0;
+}
+
+.Split:not(.Split--selected):hover {
+  color: rgb(34, 26, 85, 0.6);
 }
 
 .Split--selected {
