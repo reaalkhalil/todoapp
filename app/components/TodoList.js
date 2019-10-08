@@ -653,6 +653,7 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
         };
 
       // Remove higher order tags from init
+      // TODO: does this need to be smarter? maybe worry about it when query language is improved
       const higherOrderSplits = [];
       splits.some(s => {
         if (s.position === selectedSplit) {
