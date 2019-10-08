@@ -109,7 +109,7 @@ function textToTodo(text) {
   }
 
   res.tags = tags;
-  res.title = title.join(' ');
+  res.title = title.join(' ').trim();
 
   return res;
 }

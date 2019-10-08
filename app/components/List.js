@@ -94,12 +94,14 @@ export default function List({
             key={t.id === 0 || t.id ? t.id : tIdx}
             className={classes.join(' ')}
             onMouseMoveCapture={() => {
-              if (t.id !== hoverId) {
+              if (t.id !== hoverId && !!onHover) {
                 setHoverId(t.id);
                 onHover(t.id);
               }
             }}
-            onClick={e => onClick(t.id, e.metaKey)}
+            onClick={e => {
+              if (!!onClick) onClick(t.id, e.metaKey);
+            }}
           >
             {t.id === selectedId ? (
               <span className={styles.TodoItem__highlight}></span>

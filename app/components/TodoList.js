@@ -567,10 +567,10 @@ export default function TodoList({
   if (pasteModal && pasteModal.length > 0)
     return (
       <>
-        <span className={styles.Header}>Confirm Paste Multiple</span>
+        <span className={styles.Header}>Confirm Import Todos</span>
 
         <List
-          showImage={!searchModal}
+          showImage={false}
           helpOpen={helpModal}
           todos={pasteModal}
           selectedId={null}
