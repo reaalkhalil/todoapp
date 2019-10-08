@@ -129,7 +129,9 @@ export default function List({
               </span>
             ) : null}
 
-            {!!t.due_at && (t.due_at < now() || t.due_at === endOfDay()) ? (
+            {!t.done &&
+            !!t.due_at &&
+            (t.due_at < now() || t.due_at === endOfDay()) ? (
               <span className={styles.TodoItem__DueToday}>
                 <i
                   className={

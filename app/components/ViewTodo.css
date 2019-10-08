@@ -9,7 +9,7 @@
   z-index: 1000;
   border-radius: 10px;
   border: 1px solid #ccc;
-  box-shadow: 0 30px 100px #0001;
+  box-shadow: 0 30px 1000px #0005;
   opacity: 0;
   pointer-events: none;
   transform: scale(0.9);
