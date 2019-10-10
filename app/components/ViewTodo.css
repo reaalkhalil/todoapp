@@ -13,7 +13,8 @@
   opacity: 0;
   pointer-events: none;
   transform: scale(0.9);
-  transition: 50ms ease-in-out;
+  transform-origin: center;
+  transition: 80ms ease-in-out;
 }
 
 .Todo__BG {
@@ -61,7 +62,6 @@
   pointer-events: auto;
   opacity: 1;
   transform: scale(1);
-  transition: 0;
 }
 
 .Times {

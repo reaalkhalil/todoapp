@@ -125,7 +125,7 @@ app.on('ready', async () => {
 
   mainWindow.on('close', event => {
     if (app.quitting) {
-      win = null;
+      mainWindow = null;
     } else {
       event.preventDefault();
       mainWindow.hide();
@@ -162,7 +162,9 @@ app.on('ready', async () => {
   createUpdater();
 });
 
-app.on('before-quit', () => (app.quitting = true));
+app.on('before-quit', () => {
+  app.quitting = true;
+});
 
 app.on('activate', () => {
   mainWindow.show();

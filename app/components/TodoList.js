@@ -1,7 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-
-import styles from './TodoList.css';
+import { ipcRenderer, clipboard, webFrame } from 'electron';
 
 import Search from './Search';
 import EditTodo from './EditTodo';
@@ -12,8 +11,9 @@ import * as filter from '../filter';
 import KeyBoard from '../keyboard';
 import { previewText, endOfDay, todoToText, textToTodos } from '../utils';
 
-import { ipcRenderer, clipboard, webFrame } from 'electron';
 import ViewTodo from './ViewTodo';
+
+import styles from './TodoList.css';
 
 const copyTodosToClipboard = (todos, setLastAction) => {
   if (!todos || todos.length === 0) return;
@@ -313,7 +313,7 @@ export default function TodoList({
     KeyBoard.bind({
       ...shortcuts,
       // UNDO / REDO
-      'command+z': e => {
+      'command+z|ctrl+z': e => {
         if (canUndo) {
           undo();
           setLastAction('Undo');
@@ -321,7 +321,7 @@ export default function TodoList({
 
         e.preventDefault();
       },
-      'command+shift+z': e => {
+      'command+shift+z|ctrl+shift+z': e => {
         if (canRedo) {
           redo();
           setLastAction('Redo');
@@ -509,8 +509,8 @@ export default function TodoList({
         if (selectedSplit !== 0) setSelectedSplit(0);
       },
 
-      'command+,|ctrl+,': e => onSettings(true),
-      '/': e => {
+      'command+,|ctrl+,': () => onSettings(true),
+      '/|command+f|ctrl+f': e => {
         setSearchFocus(true);
         if (searchModal) return;
 

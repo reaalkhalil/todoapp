@@ -237,6 +237,9 @@ function IntegrationSettings({
       </div>
       <div className={styles.IntegrationSettings}>
         <br />
+        Add todos by simply sending an email or telegram message!
+        <br />
+        <br />
         <table className={styles.Table}>
           <tbody>
             <tr>
@@ -258,9 +261,7 @@ function IntegrationSettings({
           </tbody>
         </table>
         <br />
-
         <div className={styles.Label}>ID:</div>
-
         <textarea
           readOnly
           className={[styles.Selectable, 'mousetrap'].join(' ')}
@@ -289,7 +290,7 @@ function IntegrationSettings({
           ) : (
             <i className="far fa-check-square"></i>
           )}{' '}
-          Send a telegram message of your ID to{' '}
+          Verify your Telegram by sending your ID to{' '}
           <a
             className={styles.SelectLink}
             onClick={() =>
@@ -305,7 +306,7 @@ function IntegrationSettings({
           ) : (
             <i className="far fa-check-square"></i>
           )}{' '}
-          Send an email with your ID in the subject line to{' '}
+          Verify your email by sending your ID in the subject line to{' '}
           <a
             onClick={() =>
               shell.openExternal(
