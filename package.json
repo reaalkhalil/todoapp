@@ -265,6 +265,7 @@
     "jsonschema": "^1.2.4",
     "mousetrap": "^1.6.3",
     "react": "^16.8.3",
+    "react-contenteditable": "^3.3.2",
     "react-dom": "^16.8.3",
     "react-hot-loader": "^4.3.12",
     "react-redux": "^5.1.1",

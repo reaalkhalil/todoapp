@@ -137,6 +137,8 @@ app.on('ready', async () => {
   //  should be done again on ready
 
   const ret = globalShortcut.register('Control+Space', () => {
+    if (process.env.NODE_ENV === 'development') return;
+
     mainWindow.webContents.send('createTodo');
     mainWindow.show();
     mainWindow.focus();
