@@ -59,7 +59,7 @@ export default function List({
   const todoRef = useRef();
 
   useEffect(() => {
-    if (!todoRef) return;
+    if (!todoRef || !todoRef.current) return;
 
     const l = listRef.current.getBoundingClientRect();
     const t = todoRef.current.getBoundingClientRect();

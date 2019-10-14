@@ -16,6 +16,7 @@ const sections = [
       [['e'], '(Un)Mark Done'],
       [['d', 'd'], 'Delete'],
       [['s'], 'Toggle Priority'],
+      [['l'], 'Edit Tags'],
       [['enter'], 'Edit'],
       [['k'], 'Up'],
       [['j'], 'Down'],

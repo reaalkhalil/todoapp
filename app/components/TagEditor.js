@@ -26,12 +26,12 @@ export default function TagEditor({
     const l = tagListRef.current.getBoundingClientRect();
     const t = tagRef.current.getBoundingClientRect();
 
-    if (l.bottom + 10 < t.bottom) {
+    if (l.bottom + 20 < t.bottom) {
       tagListRef.current.scrollTop += l.height / 2;
       return;
     }
 
-    if (t.top + 10 < l.top) {
+    if (t.top + 20 < l.top) {
       tagListRef.current.scrollTop -= l.height / 2;
       return;
     }
