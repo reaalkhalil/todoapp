@@ -98,3 +98,22 @@
   color: #000c;
   font-weight: 400;
 }
+
+.TagInput {
+  height: 24px;
+  width: calc(100vw - 221px);
+  overflow-x: auto;
+  overflow: hidden;
+}
+
+.TagInput b {
+  margin-right: -6px;
+  font-size: 11px;
+  background-color: rgba(205, 212, 252);
+  border: 1px solid rgba(34, 26, 85, 0.315);
+  border-radius: 5px;
+  padding: 0 3px;
+  color: rgb(56, 48, 99);
+  font-weight: 400;
+  vertical-align: middle;
+}

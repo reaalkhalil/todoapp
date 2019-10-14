@@ -1,8 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
-
+import ContentEditable from 'react-contenteditable';
 import * as Mousetrap from 'mousetrap';
 
 import styles from './EditTodo.css';
+
+function tagsToHTML(tags) {
+  if (!tags) return '';
+  return tags.map(t => '<b>' + t + '</b>').join(' ');
+}
 
 export default function EditTodo({
   defaultTodo = {},
@@ -31,6 +36,11 @@ export default function EditTodo({
   }, []);
 
   const [todo, setTodo] = useState(defaultTodo);
+  const [tagsHTML, setTagsHTML] = useState(
+    defaultTodo.tags && defaultTodo.tags.length
+      ? tagsToHTML(defaultTodo.tags) + ' '
+      : ''
+  );
 
   useEffect(() => {
     titleRef.current.focus();
@@ -47,6 +57,31 @@ export default function EditTodo({
 
     setTodo(newTodo);
     onUpdate(newTodo);
+  };
+
+  const updateTags = v => {
+    const endWhiteSpace = v.length > 0 && v[v.length - 1] === ' ' ? ' ' : '';
+
+    let tags = v
+      .split(' ')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+
+    tags = tags.filter(
+      (t, i) =>
+        tags.indexOf(t) === i || (i === tags.length - 1 && !endWhiteSpace)
+    );
+
+    let html = tagsToHTML(tags.slice(0, -1));
+
+    if (endWhiteSpace) {
+      html += (tags.length > 1 ? ' ' : '') + tagsToHTML(tags.slice(-1));
+    } else if (tags.length > 0) {
+      html += (tags.length > 1 ? ' ' : '') + tags[tags.length - 1];
+    }
+
+    setTagsHTML(html + endWhiteSpace);
+    updateData('tags', tags);
   };
 
   const classes = [styles.EditTodo];
@@ -118,28 +153,22 @@ export default function EditTodo({
             </td>
             <td>
               <span className={styles.Label}>Tags:</span>
-              <input
-                type="text"
-                ref={tagsRef}
-                className={['mousetrap', styles.TextInput].join(' ')}
-                defaultValue={
-                  defaultTodo.tags && defaultTodo.tags.length
-                    ? defaultTodo.tags.join(' ') + ' '
-                    : ''
-                }
-                rows={3}
+              <ContentEditable
+                html={tagsHTML}
+                innerRef={tagsRef}
+                tagName="pre"
+                className={[
+                  'mousetrap',
+                  styles.TextInput,
+                  styles.TagInput
+                ].join(' ')}
+                onFocus={() => {
+                  const sel = window.getSelection();
+                  sel.selectAllChildren(tagsRef.current);
+                  sel.collapseToEnd();
+                }}
                 onChange={() => {
-                  const v = tagsRef.current.value;
-                  const endWhiteSpace =
-                    v.length > 0 && v[v.length - 1] === ' ' ? ' ' : '';
-
-                  let tags = v
-                    .split(' ')
-                    .map(t => t.trim())
-                    .filter(t => t.length > 0);
-
-                  tagsRef.current.value = tags.join(' ') + endWhiteSpace;
-                  updateData('tags', tags);
+                  updateTags(tagsRef.current.innerText);
                 }}
               />
             </td>

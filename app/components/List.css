@@ -69,6 +69,7 @@
   position: relative;
   margin-left: auto;
   overflow: hidden;
+  height: 28px;
   z-index: 100;
   width: calc(100px + 20%);
   max-width: calc(20px + 20%);
@@ -94,6 +95,7 @@
 .TodoItem--overdue .TodoItem__Tags span {
   background-color: rgba(255, 115, 115, 0.445);
   border: 1px solid rgba(138, 27, 27, 0.445);
+  color: #500;
 }
 
 .TodoItem--done .TodoItem__Tags span {

@@ -5,6 +5,7 @@ import { ipcRenderer, clipboard, webFrame } from 'electron';
 import Search from './Search';
 import EditTodo from './EditTodo';
 import { Splits, Page } from './Splits';
+import TagEditor from './TagEditor';
 import List from './List';
 import * as filter from '../filter';
 
@@ -167,6 +168,8 @@ export default function TodoList({
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
 
+  const tags = filter.getTags(todos);
+
   if (searchQuery === null) {
     if (!selectedPage) {
       todos = filter.applySplits(todos, splits, selectedSplit);
@@ -192,6 +195,7 @@ export default function TodoList({
 
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [tagModal, setTagModal] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
   const [viewTodo, setViewTodo] = useState(false);
@@ -270,12 +274,18 @@ export default function TodoList({
         setLastAction('Edited: ' + previewText(todoToEdit.title));
       }
     });
+  } else if (tagModal) {
+    KeyBoard.bind({
+      esc: () => {
+        setTagModal(false);
+      }
+    });
   } else if (searchModal && searchFocus) {
     KeyBoard.bind({
       '/': onExitSearch,
       esc: onExitSearch,
-      tab: onExitSearch,
-      'shift+tab': onExitSearch,
+      'tab|`': onExitSearch,
+      'shift+tab|shift+`': onExitSearch,
       enter: () => setSearchFocus(false)
     });
   } else if (pasteModal) {
@@ -352,20 +362,6 @@ export default function TodoList({
         e.preventDefault();
       },
       'command+shift+c': () => copyTodosToClipboard(todos, setLastAction),
-      tab: e => {
-        if (searchModal) {
-          setSearchFocus(true);
-          e.preventDefault();
-          return;
-        }
-        if (selectedPage) {
-          setSelectedPage('');
-          return;
-        }
-        setSelectedSplit(
-          (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
-        );
-      },
 
       // PASTE
       'command+v': e => {
@@ -410,7 +406,7 @@ export default function TodoList({
       },
 
       // NAV SPLITS
-      'shift+tab': e => {
+      'shift+tab|shift+`': e => {
         if (searchModal) {
           setSearchFocus(true);
           e.preventDefault();
@@ -426,10 +422,30 @@ export default function TodoList({
             splits.filter(s => s.position >= 0).length
         );
       },
+      'tab|`': e => {
+        if (searchModal) {
+          setSearchFocus(true);
+          e.preventDefault();
+          return;
+        }
+        if (selectedPage) {
+          setSelectedPage('');
+          return;
+        }
+        setSelectedSplit(
+          (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
+        );
+      },
 
       c: e => {
         setAddModal(true);
         e.preventDefault();
+      },
+      l: e => {
+        e.preventDefault();
+        if (selectedId === null) return;
+
+        setTagModal(true);
       },
       space: e => {
         e.preventDefault();
@@ -514,7 +530,9 @@ export default function TodoList({
         setSearchFocus(true);
         if (searchModal) return;
 
+        if (viewTodo) setViewTodo(false);
         setSearchModal(true);
+
         setSearchQuery('');
         e.preventDefault();
       }
@@ -607,6 +625,35 @@ export default function TodoList({
           onClick={setSelectedSplit}
         />
       )}
+
+      {tagModal ? (
+        <TagEditor
+          onCancel={() => setTagModal(false)}
+          allTags={tags}
+          currentTags={
+            (todos.find(t => t.id === selectedId) || { tags: [] }).tags
+          }
+          onExecute={(tag, remove) => {
+            setTagModal(false);
+
+            const t = todos.find(t => t.id === selectedId);
+            let tags = t.tags;
+
+            if (remove) tags = tags.filter(t => t !== tag);
+            else tags.push(tag);
+
+            editTodo({
+              todo: {
+                ...t,
+                updated_at: new Date().getTime(),
+                tags
+              }
+            });
+
+            setLastAction('Updated tags: ' + previewText(t.title));
+          }}
+        />
+      ) : null}
 
       <ViewTodo
         todo={todos.find(t => t.id === selectedId)}

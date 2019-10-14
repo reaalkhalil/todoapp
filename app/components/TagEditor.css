@@ -1,0 +1,103 @@
+.TagEditor {
+  display: block;
+  position: absolute;
+  top: calc(50vh - 150px);
+  left: calc(50vw - 225px);
+  width: 450px;
+  min-height: 200px;
+  padding-bottom: 10px;
+  max-height: 300px;
+  background: #fffe;
+  z-index: 1000;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 30px 1000px #0005;
+  pointer-events: all;
+
+  min-height: 110px;
+  overflow: hidden;
+  padding-bottom: 5px;
+}
+
+.TagEditor__BG {
+  content: ' ';
+  display: block;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  pointer-events: all;
+}
+
+.Tag__Input {
+  margin: 10px;
+  line-height: 20px;
+  font-size: 16px;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: calc(100% - 44px);
+  border: 2px solid #8787af46;
+  background-color: #eee5;
+  font-weight: 300;
+  color: #000b;
+  outline: none;
+  position: relative;
+}
+
+.Tag__Input:focus {
+  border: 2px solid #00b8ffee;
+  color: black;
+}
+
+.TagList {
+  max-height: 246px;
+  overflow-y: scroll;
+}
+
+.TagList__Tag {
+  display: block;
+  height: 28px;
+  user-select: none;
+  position: relative;
+  font-size: 14px;
+  font-weight: 300;
+  padding-left: 20px;
+  color: black;
+}
+
+.TagList__Tag__Title {
+  line-height: 28px;
+  font-size: 11px;
+  background-color: rgba(205, 212, 252);
+  border: 1px solid rgba(34, 26, 85, 0.315);
+  border-radius: 5px;
+  padding: 0 3px;
+  color: rgb(56, 48, 99);
+  font-weight: 400;
+}
+
+.TagList__Tag--focus {
+  color: black;
+  background-color: #e9f3ff;
+}
+
+.TagList__Tag__highlight {
+  position: absolute;
+  display: block;
+  width: 4px;
+  height: 28px;
+  left: 0;
+  background-color: #00b8ff;
+}
+
+.TagList__Tag__Current {
+  color: rgb(56, 48, 99);
+  font-size: 14px;
+  line-height: 28px;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}

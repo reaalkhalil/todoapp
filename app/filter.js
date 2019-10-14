@@ -165,9 +165,36 @@ function sort(todos: Todo[], by: string[]) {
 }
 
 export function search(todos: Todos[], q: String) {
-  const res = todos.filter(t =>
-    t.title ? t.title.toLowerCase().indexOf(q.toLowerCase()) > -1 : false
-  );
+  const res = todos.filter(t => (t.title ? match(q, t.title) : false));
 
   return sort(res, ['done', 'due_at', 'created_at desc']);
+}
+
+export function match(query, str) {
+  return str.toLowerCase().indexOf(query.toLowerCase()) > -1;
+}
+
+export function getTags(todos) {
+  let tags = [];
+
+  todos.forEach(todo =>
+    todo.tags
+      ? todo.tags.forEach(t => {
+          if (!tags.find(tag => tag.tag === t))
+            tags.push({ tag: t, timesNotDone: 0, timesDone: 0 });
+
+          const tag = tags.find(tag => tag.tag === t);
+          if (todo.done) tag.timesDone = tag.timesDone ? tag.timesDone + 1 : 1;
+          else tag.timesNotDone = tag.timesNotDone ? tag.timesNotDone + 1 : 1;
+        })
+      : null
+  );
+
+  return tags
+    .sort((a, b) => {
+      const diff = b.timesNotDone - a.timesNotDone;
+      if (diff !== 0) return diff;
+      return b.timesDone - a.timesDone.timesDone;
+    })
+    .map(t => t.tag);
 }

@@ -59,21 +59,20 @@ export default function List({
   const todoRef = useRef();
 
   useEffect(() => {
-    if ((selectedId !== 0 && !selectedId) || !todoRef) return;
+    if (!todoRef) return;
 
-    const idx = todos.findIndex(t => t.id === selectedId);
     const l = listRef.current.getBoundingClientRect();
     const t = todoRef.current.getBoundingClientRect();
-    if (l.bottom + 5 < t.bottom) {
+    if (l.bottom + 10 < t.bottom) {
       listRef.current.scrollTop += l.height / 2;
       return;
     }
 
-    if (t.top + 5 < l.top) {
+    if (t.top + 10 < l.top) {
       listRef.current.scrollTop -= l.height / 2;
       return;
     }
-  }, [selectedId, todoRef]);
+  }, [selectedId]);
 
   const [hoverId, setHoverId] = useState(null);
   const todoList = todos
