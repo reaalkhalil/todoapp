@@ -637,7 +637,7 @@ export default function TodoList({
             setTagModal(false);
 
             const t = todos.find(t => t.id === selectedId);
-            let tags = t.tags;
+            let tags = [...t.tags];
 
             if (remove) tags = tags.filter(t => t !== tag);
             else tags.push(tag);
