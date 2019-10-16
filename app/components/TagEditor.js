@@ -86,6 +86,7 @@ export default function TagEditor({
           }}
           onKeyDown={e => {
             if (e.keyCode === 13) {
+              e.preventDefault();
               e.stopPropagation();
               if (selectedTag !== '') {
                 const tag = tags.find(t => t.tag === selectedTag);
@@ -97,12 +98,20 @@ export default function TagEditor({
 
             if (e.keyCode === 27 || (e.keyCode === 8 && tagQuery === '')) {
               onCancel();
+              e.preventDefault();
               e.stopPropagation();
               return;
             }
 
             if (e.keyCode === 38 || e.keyCode === 40) {
               moveSelection(e.keyCode === 38);
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
+            if (e.ctrlKey && (e.keyCode === 74 || e.keyCode === 75)) {
+              moveSelection(e.keyCode === 75);
               e.preventDefault();
               e.stopPropagation();
               return;
