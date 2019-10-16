@@ -347,6 +347,7 @@ export default function TodoList({
 
       // COPY
       'command+c': e => {
+        if (viewTodo && !window.getSelection().isCollapsed) return;
         copyTodoToClipboard(
           todos.find(t => t.id === selectedId),
           setLastAction
@@ -700,24 +701,7 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
         };
 
       // Remove higher order tags from init
-      // TODO: does this need to be smarter? maybe worry about it when query language is improved
-      const higherOrderSplits = [];
-      splits.some(s => {
-        if (s.position === selectedSplit) {
-          return true;
-        } else {
-          higherOrderSplits.push(s);
-        }
-      });
-      const tags = [];
-      higherOrderSplits.forEach(s => {
-        if (s.filters && s.filters.length > 0) {
-          s.filters.forEach(f => {
-            if (f.field === 'tags' && f.op === 'CONTAINS') tags.push(f.value);
-          });
-        }
-      });
-
+      const tags = filter.higerOrderTags(splits, selectedSplit);
       init.tags = init.tags.filter(t => tags.indexOf(t) === -1);
     }
   }
