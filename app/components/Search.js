@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
+import CaretPositioning from '../caretpos';
 
 import styles from './Search.css';
 
@@ -20,6 +21,7 @@ export default function Search({
   const priorityRef = useRef();
   const tagsRef = useRef();
 
+  const [caretPos, setCaretPos] = useState({ start: 0, end: 0 });
   const [searchHTML, setSearchHTML] = useState(
     (function() {
       if (!defaultQuery) return '';
@@ -35,7 +37,11 @@ export default function Search({
     if (hasFocus) searchRef.current.focus();
   }, [hasFocus]);
 
-  const updateQuery = q => {
+  useEffect(() => {
+    CaretPositioning.restoreSelection(searchRef.current, caretPos);
+  }, [searchHTML]);
+
+  const updateQuery = (e, q) => {
     const { all } = filter.parseSearchQ(q);
     const endWhiteSpace = q.length > 0 && q[q.length - 1] === ' ' ? ' ' : '';
 
@@ -48,13 +54,10 @@ export default function Search({
       )
       .join(' ');
 
-    // TODO: get carat position
+    let savedCaretPosition = CaretPositioning.saveSelection(searchRef.current);
 
-    setSearchHTML(
-      htmlQ + endWhiteSpace // this moves the carat
-    );
-
-    // TODO: set carat position
+    setCaretPos(savedCaretPosition);
+    setSearchHTML(htmlQ + endWhiteSpace);
 
     onUpdate(q);
   };
@@ -74,7 +77,7 @@ export default function Search({
         autoFocus={hasFocus}
         onFocus={() => onUpdateFocus(true)}
         onBlur={() => onUpdateFocus(false)}
-        onChange={() => updateQuery(searchRef.current.innerText)}
+        onChange={e => updateQuery(e, searchRef.current.innerText)}
         onKeyDown={e => {
           if (e.keyCode === 13) {
             searchRef.current.blur();
