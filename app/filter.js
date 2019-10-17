@@ -3,33 +3,26 @@ import type { Todo } from './reducers/types';
 import { now, endOfDay } from './utils';
 
 export const EQUAL = 'EQUAL';
+export const LESS_THAN = 'LESS_THAN';
+export const GREATER_THAN = 'GREATER_THAN';
 export const NOT_EQUAL = 'NOT_EQUAL';
 export const CONTAINS = 'CONTAINS';
 export const NOT_CONTAINS = 'NOT_CONTAINS';
+export const CONTAINS_SOME = 'CONTAINS_SOME';
+export const CONTAINS_ALL = 'CONTAINS_ALL';
 export const BEFORE_EOD = 'BEFORE_EOD';
 export const AFTER_EOD = 'AFTER_EOD';
 export const BEFORE_NOW = 'BEFORE_NOW';
 export const AFTER_NOW = 'AFTER_NOW';
 
-// type Split = {
-//   position: number,
-//   title: String,
-//   shortcut: String,
-//   filters: Filter[],
-//   sort: String[]
-// };
-
-// type Page = {
-//   title: String,
-//   shortcut: String,
-//   filters: Filter[],
-//   sort: String[]
-// };
-
 const FILTERS = {
   [EQUAL]: (tt, f, v) => tt.filter(t => t[f] === v),
 
   [NOT_EQUAL]: (tt, f, v) => tt.filter(t => t[f] !== v),
+
+  [LESS_THAN]: (tt, f, v) => tt.filter(t => t[f] < v),
+
+  [GREATER_THAN]: (tt, f, v) => tt.filter(t => t[f] > v),
 
   [CONTAINS]: (tt, f, v) =>
     tt.filter(t => (!t[f] ? false : t[f].indexOf(v) !== -1)),
@@ -37,11 +30,21 @@ const FILTERS = {
   [NOT_CONTAINS]: (tt, f, v) =>
     tt.filter(t => (!t[f] ? false : t[f].indexOf(v) === -1)),
 
-  [BEFORE_EOD]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] <= endOfDay(v)),
+  [CONTAINS_ALL]: (tt, f, vv) =>
+    tt.filter(t =>
+      !t[f] ? false : vv.every(v => t[f].some(tf => match(v, tf)))
+    ),
+
+  [CONTAINS_SOME]: (tt, f, vv) =>
+    tt.filter(t =>
+      !t[f] ? false : vv.some(v => t[f].some(tf => match(v, tf)))
+    ),
+
+  [BEFORE_EOD]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] < endOfDay(v)),
 
   [AFTER_EOD]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] > endOfDay(v)),
 
-  [BEFORE_NOW]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] <= now(v)),
+  [BEFORE_NOW]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] < now(v)),
 
   [AFTER_NOW]: (tt, f, v) => tt.filter(t => !!t[f] && t[f] > now(v))
 };
@@ -134,14 +137,19 @@ function sort(tt: Todo[], by: string) {
         b = matchFilter(t2, filter);
       }
 
-      if (a == undefined && b != undefined) return 1;
-      if (b == undefined && a != undefined) return -1;
-
       const asc = order
         ? order.toLowerCase().startsWith('desc')
           ? 1
           : -1
         : -1;
+
+      if (!filter) {
+        if (a === undefined && b !== undefined) return asc;
+        if (b === undefined && a !== undefined) return 0 - asc;
+      } else {
+        if (a === false && b !== false) return 0 - asc;
+        if (b === false && a !== false) return asc;
+      }
 
       if (a < b) return asc;
       if (b < a) return -asc;
@@ -165,8 +173,8 @@ function sort(tt: Todo[], by: string) {
   return ts;
 }
 
-export function search(tt: Todos[], q: String) {
-  const searchQuery = q
+export function parseSearchQ(q) {
+  const queries = q
     .split(' ')
     .filter(s => s !== '')
     .filter(s => !parseFilter(s))
@@ -174,21 +182,33 @@ export function search(tt: Todos[], q: String) {
     .map(s => (s.length > 0 && s[s.length - 1] === '"' ? s.slice(0, -1) : s))
     .filter(s => s !== '');
 
-  const searchFilters = q
+  const filters = q
     .split(' ')
     .filter(parseFilter)
-    .join(' ');
+    .filter(f => !!f);
+
+  const all = q
+    .split(' ')
+    .filter(s => s !== '\n')
+    .map(s => ({ type: parseFilter(s) ? 'filter' : 'query', str: s }));
+
+  return { queries, filters, all };
+}
+
+export function search(tt: Todos[], q: String) {
+  const { queries, filters } = parseSearchQ(q);
 
   const res = tt
     .filter(t =>
-      searchFilters.length > 0 ? apply([t], searchFilters).length > 0 : true
+      filters.length > 0 ? apply([t], filters.join(' ')).length > 0 : true
     )
     .filter(t =>
-      t.title && searchQuery.length > 0
-        ? searchQuery.every(q => match(q, t.title))
+      t.title && queries.length > 0
+        ? queries.every(q => match(q, t.title))
         : !!t.title
     );
-  return sort(res, 'done,due_at,created_at desc');
+
+  return sort(res, 'done:desc due_at<eod priority:desc due_at created_at');
 }
 
 export function match(query, str) {
@@ -221,20 +241,14 @@ export function getTags(tt) {
 }
 
 /*
-	!! report parsing errors for this
-
-	done (done=true) (done=false)
-	tags=reading,books <- all tags
-	tag=reading,books <- any tag
-   sort=done_at:desc,priority:desc
-   due=0,eod  due=0,eod-2d  OR? due<eod+2d
-
-   https://www.peterbe.com/plog/a-darn-good-search-filter-function-in-javascript
+   TODO: report parsing errors for this
+   TODO: use this https://www.peterbe.com/plog/a-darn-good-search-filter-function-in-javascript
 */
 
 function parseFilter(str) {
   const allowedFilterNames = [
     'done',
+    'priority',
     'tags',
     'due_at',
     'done_at',
@@ -248,8 +262,6 @@ function parseFilter(str) {
     const i = str.indexOf(op);
     if (i !== -1) opIdx = i;
   });
-
-  if (opIdx === str.length - 1) return;
 
   const op = opIdx === -1 ? '' : str[opIdx];
   const filterName = opIdx > -1 ? str.slice(0, opIdx) : str;
@@ -267,7 +279,26 @@ function parseFilter(str) {
       }
 
       if (op !== '' && op !== '=') return null;
-      if (op === '=' && vals.length > 0 && vals[0] === 'false') f.value = false;
+      if (op === '=') {
+        if (vals.length === 0) return null;
+        if (vals[0] === 'false' || vals[0] === '0') f.value = false;
+        else if (vals[0] === 'true' || vals[0] === '1') {
+        } else return null;
+      }
+
+      return f;
+    }
+
+    case 'priority': {
+      const f = { field: filterName };
+      if ((op !== '=' && op !== '<' && op !== '>') || vals.length === 0) return;
+
+      if (op === '=') f.op = EQUAL;
+      if (op === '<') f.op = LESS_THAN;
+      if (op === '>') f.op = GREATER_THAN;
+
+      f.value = parseInt(vals[0]);
+      if (Number.isNaN(f.value)) return null;
 
       return f;
     }
@@ -277,27 +308,44 @@ function parseFilter(str) {
     case 'done_at':
     case 'due_at': {
       const f = { field: filterName };
-      if ((op !== '<' && op !== '>') || vals.length !== 1) return null;
+      if ((op !== '<' && op !== '>' && op !== '=') || vals.length !== 1)
+        return null;
 
       const t = parseTime(vals[0]);
       if (t === null) return;
 
       if (t.base === 'eod') {
         if (op === '<') f.op = 'BEFORE_EOD';
-        else f.op = 'AFTER_EOD';
+        else if (op === '>') f.op = 'AFTER_EOD';
       } else if (t.base === 'now') {
         if (op === '<') f.op = 'BEFORE_NOW';
-        else f.op = 'AFTER_NOW';
+        else if (op === '>') f.op = 'AFTER_NOW';
       } else return null;
 
-      f.value = t.offset * (t.op === '-' ? -1 : 1);
-
+      if (op === '=') {
+        f.op = 'EQUAL';
+        if (t.base !== 'eod' && t.base !== 'now' && t.base !== '0') return null;
+        f.value = t.base === 'eod' ? endOfDay() : t.base === 'now' ? now() : 0;
+        f.value += t.offset * (t.op === '-' ? -1 : 1);
+      } else {
+        f.value = t.offset * (t.op === '-' ? -1 : 1);
+      }
       return f;
     }
 
     case 'tags': {
-      if (op !== '=' || vals.length < 1) return null;
-      return { field: filterName, op: CONTAINS, value: vals[0] };
+      if (
+        (op !== '=' && op !== '>') ||
+        vals.length < 1 ||
+        !(vals instanceof Array)
+      )
+        return null;
+
+      return {
+        field: filterName,
+        op: op === '=' ? CONTAINS_SOME : CONTAINS_ALL,
+        value: vals
+      };
     }
 
     default:

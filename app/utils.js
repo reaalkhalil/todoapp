@@ -11,14 +11,14 @@ export function validURL(str) {
   return !!pattern.test(str);
 }
 
-export function now() {
-  return new Date().getTime();
+export function now(offset) {
+  return new Date().getTime() + (offset ? offset : 0);
 }
 
-export function endOfDay() {
+export function endOfDay(offset) {
   const a = new Date();
   a.setHours(23, 59, 59, 999);
-  return a.getTime();
+  return a.getTime() + (offset ? offset : 0);
 }
 
 export function previewText(title) {

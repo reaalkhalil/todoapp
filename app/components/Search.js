@@ -1,8 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
+import ContentEditable from 'react-contenteditable';
 
 import styles from './Search.css';
 
 import * as filter from '../filter';
+
+function filterToHTML(f) {
+  return f ? '<b>' + f.replace('<', '&lt;').replace('>', '&gt;') + '</b>' : '';
+}
 
 export default function Search({
   onUpdate,
@@ -15,14 +20,42 @@ export default function Search({
   const priorityRef = useRef();
   const tagsRef = useRef();
 
-  const [searchQuerty, setSearchQuery] = useState('');
+  const [searchHTML, setSearchHTML] = useState(
+    (function() {
+      if (!defaultQuery) return '';
+      const { queries, filters } = filter.parseSearchQ(defaultQuery);
+      return [
+        ...filters.map(filterToHTML),
+        ...queries.map(q => q.replace('<', '&lt;').replace('>', '&gt;'))
+      ].join(' ');
+    })()
+  );
 
   useEffect(() => {
     if (hasFocus) searchRef.current.focus();
   }, [hasFocus]);
 
   const updateQuery = q => {
-    setSearchQuery(q);
+    const { all } = filter.parseSearchQ(q);
+    const endWhiteSpace = q.length > 0 && q[q.length - 1] === ' ' ? ' ' : '';
+
+    const htmlQ = all
+      .filter(s => s && s.str)
+      .map(s =>
+        s.type === 'filter'
+          ? filterToHTML(s.str)
+          : s.str.replace('<', '&lt;').replace('>', '&gt;')
+      )
+      .join(' ');
+
+    // TODO: get carat position
+
+    setSearchHTML(
+      htmlQ + endWhiteSpace // this moves the carat
+    );
+
+    // TODO: set carat position
+
     onUpdate(q);
   };
 
@@ -33,15 +66,15 @@ export default function Search({
   return (
     <div className={classes.join(' ')}>
       <i className={['fas fa-search', styles.Search__Icon].join(' ')}></i>
-      <input
-        ref={searchRef}
+      <ContentEditable
+        html={searchHTML}
+        innerRef={searchRef}
+        tagName="pre"
         className={['mousetrap', styles.Search__Input].join(' ')}
-        type="text"
-        defaultValue={defaultQuery}
         autoFocus={hasFocus}
         onFocus={() => onUpdateFocus(true)}
         onBlur={() => onUpdateFocus(false)}
-        onChange={() => updateQuery(searchRef.current.value)}
+        onChange={() => updateQuery(searchRef.current.innerText)}
         onKeyDown={e => {
           if (e.keyCode === 13) {
             searchRef.current.blur();

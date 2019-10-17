@@ -532,9 +532,25 @@ export default function TodoList({
         if (searchModal) return;
 
         if (viewTodo) setViewTodo(false);
+
+        //   const filter = (function() {
+        //     let filter = '';
+        //     if (selectedPage !== '') {
+        //       const p = pages.find(p => p.shortcut === selectedPage);
+        //       filter = p && p.filters ? p.filters : '';
+        //     }
+
+        //     if (selectedSplit !== null && selectedSplit >= 0) {
+        //       const s = splits.find(p => p.position === selectedSplit);
+        //       filter = s && s.filters ? s.filters : '';
+        //     }
+
+        //     return filter;
+        //   })();
+
+        setSearchQuery(/*filter*/ '');
         setSearchModal(true);
 
-        setSearchQuery('');
         e.preventDefault();
       }
     });
