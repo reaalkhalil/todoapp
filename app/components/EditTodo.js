@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
+import CaretPositioning from '../caretpos';
 import * as Mousetrap from 'mousetrap';
 
 import styles from './EditTodo.css';
@@ -35,6 +36,7 @@ export default function EditTodo({
     });
   }, []);
 
+  const [caretPos, setCaretPos] = useState({ start: 0, end: 0 });
   const [todo, setTodo] = useState(defaultTodo);
   const [tagsHTML, setTagsHTML] = useState(
     defaultTodo.tags && defaultTodo.tags.length
@@ -45,6 +47,11 @@ export default function EditTodo({
   useEffect(() => {
     titleRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    if (tagsRef.current !== document.activeElement) return;
+    CaretPositioning.restoreSelection(tagsRef.current, caretPos);
+  }, [tagsHTML]);
 
   const updateData = (field, value) => {
     const newTodo = {
@@ -79,6 +86,9 @@ export default function EditTodo({
     } else if (tags.length > 0) {
       html += (tags.length > 1 ? ' ' : '') + tags[tags.length - 1];
     }
+
+    let savedCaretPosition = CaretPositioning.saveSelection(tagsRef.current);
+    setCaretPos(savedCaretPosition);
 
     setTagsHTML(html + endWhiteSpace);
     updateData('tags', tags);

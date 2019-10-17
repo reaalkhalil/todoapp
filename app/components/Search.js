@@ -6,9 +6,8 @@ import styles from './Search.css';
 
 import * as filter from '../filter';
 
-function filterToHTML(f) {
-  return f ? '<b>' + f.replace('<', '&lt;').replace('>', '&gt;') + '</b>' : '';
-}
+const filterToHTML = f =>
+  f ? '<b>' + f.replace('<', '&lt;').replace('>', '&gt;') + '</b>' : '';
 
 export default function Search({
   onUpdate,
