@@ -296,19 +296,8 @@ export const initialSettings = {
       title: 'Today',
       shortcut: 'g',
       position: 0,
-      filters: [
-        {
-          field: 'due_at',
-          op: 'BEFORE_EOD',
-          value: 0
-        },
-        {
-          field: 'done',
-          op: 'EQUAL',
-          value: false
-        }
-      ],
-      sort: ['due_at', 'priority DESC', 'created_at'],
+      filters: 'due_at<eod+1min done=false',
+      sort: 'due_at<eod priority:desc due_at created_at',
       default: {
         due_at: 0
       }
@@ -317,34 +306,18 @@ export const initialSettings = {
       title: 'Reading List',
       shortcut: 'r',
       position: 2,
-      filters: [
-        {
-          field: 'tags',
-          op: 'CONTAINS',
-          value: 'reading'
-        },
-        {
-          field: 'done',
-          op: 'EQUAL',
-          value: false
-        }
-      ],
-      sort: ['priority DESC', 'due_at', 'created_at'],
+      filters: 'tags=reading done=false',
+      sort: 'priority:desc due_at created_at',
       default: {
         tags: ['reading']
       }
     },
     {
       title: 'Backlog',
+      shortcut: 'b',
       position: 1,
-      filters: [
-        {
-          field: 'done',
-          op: 'EQUAL',
-          value: false
-        }
-      ],
-      sort: ['priority DESC', 'due_at', 'created_at'],
+      filters: 'done=false',
+      sort: 'priority:desc due_at created_at',
       default: {}
     }
   ],
@@ -352,14 +325,8 @@ export const initialSettings = {
     {
       title: 'Done',
       shortcut: 'd',
-      filters: [
-        {
-          field: 'done',
-          op: 'EQUAL',
-          value: true
-        }
-      ],
-      sort: ['done_at DESC'],
+      filters: 'done=true',
+      sort: 'done_at:desc',
       default: {
         done: true
       }
@@ -367,24 +334,8 @@ export const initialSettings = {
     {
       title: 'Standup',
       shortcut: 's',
-      filters: [
-        {
-          field: 'done',
-          op: 'EQUAL',
-          value: true
-        },
-        {
-          field: 'done_at',
-          op: 'BEFORE_EOD',
-          value: -86400000
-        },
-        {
-          field: 'done_at',
-          op: 'AFTER_EOD',
-          value: -172800000
-        }
-      ],
-      sort: ['priority DESC', 'due_at', 'created_at'],
+      filters: 'done=true done_at<eod-d done_at>eod-2d',
+      sort: 'priority DESC due_at created_at',
       default: {
         done: true
       }
