@@ -167,9 +167,12 @@ export default function EditTodo({
                   sel.selectAllChildren(tagsRef.current);
                   sel.collapseToEnd();
                 }}
-                onChange={() => {
-                  updateTags(tagsRef.current.innerText);
+                onBlur={() => {
+                  const v = tagsRef.current.innerText;
+                  if (v.length > 0 && v[v.length - 1] !== ' ')
+                    updateTags(v + ' ');
                 }}
+                onChange={() => updateTags(tagsRef.current.innerText)}
               />
             </td>
           </tr>
