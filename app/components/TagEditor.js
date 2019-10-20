@@ -85,7 +85,7 @@ export default function TagEditor({
             setTagQuery(v);
           }}
           onKeyDown={e => {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || e.keyCode === 9) {
               e.preventDefault();
               e.stopPropagation();
               if (selectedTag !== '') {
