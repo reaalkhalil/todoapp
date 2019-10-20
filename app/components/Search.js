@@ -6,8 +6,9 @@ import styles from './Search.css';
 
 import * as filter from '../filter';
 
-const filterToHTML = f =>
-  f ? '<b>' + f.replace('<', '&lt;').replace('>', '&gt;') + '</b>' : '';
+const replaceTags = s => s.replace('<', '&lt;').replace('>', '&gt;');
+
+const filterToHTML = f => (f ? '<b>' + replaceTags(f) + '</b>' : '');
 
 export default function Search({
   onUpdate,
@@ -27,7 +28,7 @@ export default function Search({
       const { queries, filters } = filter.parseSearchQ(defaultQuery);
       return [
         ...filters.map(filterToHTML),
-        ...queries.map(q => q.replace('<', '&lt;').replace('>', '&gt;'))
+        ...queries.map(q => replaceTags(q))
       ].join(' ');
     })()
   );
@@ -47,10 +48,9 @@ export default function Search({
     const htmlQ = all
       .filter(s => s && s.str)
       .map(s =>
-        s.type === 'filter'
-          ? filterToHTML(s.str)
-          : s.str.replace('<', '&lt;').replace('>', '&gt;')
+        s.type === 'filter' ? filterToHTML(s.str) : replaceTags(s.str)
       )
+      .map(s => s.replace('\n', ' ').trim())
       .join(' ');
 
     let savedCaretPosition = CaretPositioning.saveSelection(searchRef.current);
