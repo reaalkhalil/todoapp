@@ -717,8 +717,7 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
         };
 
       // Remove higher order tags from init
-      const tags = filter.higerOrderTags(splits, selectedSplit);
-      init.tags = init.tags.filter(t => tags.indexOf(t) === -1);
+      init.tags = filter.higerOrderTags(init.tags, splits, selectedSplit);
     }
   }
 
