@@ -217,7 +217,10 @@ export function search(tt: Todos[], q: String) {
         : !!t.title
     );
 
-  return sort(res, 'done:desc due_at<eod priority:desc due_at created_at');
+  return sort(
+    res,
+    'done:desc due_at<=eod priority:desc due_at:desc created_at'
+  );
 }
 
 export function match(q, str) {
