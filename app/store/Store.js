@@ -20,14 +20,13 @@ const TodoSchema = {
   }
 };
 
-const filters = {
+const IntegrationsSchema = {
   type: 'array',
   items: {
     type: 'object',
     properties: {
-      field: { type: 'string' },
-      op: { type: 'string' },
-      value: { type: ['string', 'number', 'boolean'] }
+      name: { type: 'string' },
+      value: { type: 'string' }
     }
   }
 };
@@ -43,8 +42,8 @@ export const SettingsSchema = {
           position: { type: 'number' },
           title: { type: 'string' },
           shortcut: { type: 'string' },
-          sort: { type: 'array', items: { type: 'string' } },
-          filters: filters
+          sort: { type: 'string' },
+          filters: { type: 'string' }
         }
       }
     },
@@ -56,8 +55,8 @@ export const SettingsSchema = {
           position: { type: 'number' },
           title: { type: 'string' },
           shortcut: { type: 'string' },
-          sort: { type: 'array', items: { type: 'string' } },
-          filters: filters
+          sort: { type: 'string' },
+          filters: { type: 'string' }
         }
       }
     }
@@ -68,35 +67,34 @@ const schema = {
   user_id: {
     type: 'string'
   },
-  integrations: {
-    type: 'array',
-    items: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        value: { type: 'string' }
-      }
-    }
-  },
+  integrations: IntegrationsSchema,
   todos: {
     type: 'array',
     items: TodoSchema
   },
-  settings: SettingsSchema
+  settings: SettingsSchema,
+  __migration: { type: 'string' }
 };
+
+const migrationStore = new eStore();
+const m = migrationStore.get('__migration');
+if (!m || m !== '0.2.0') {
+  migrationStore.delete('settings');
+  migrationStore.set('__migration', '0.2.0');
+}
 
 export default class Store {
   constructor() {
     this.store = new eStore({ schema });
 
-    if (!this.store.get('integrations')) {
-      this.store.set('integrations', []);
-    }
+    if (!this.store.get('integrations')) this.store.set('integrations', []);
+
+    if (!this.store.get('settings'))
+      this.store.set('settings', initialSettings);
 
     let uid = this.store.get('user_id');
     if (uid && uid.length === 36) return;
 
-    this.store.set('settings', initialSettings);
     this.store.set('todos', initialTodos);
     this.store.set('user_id', uuid());
   }
