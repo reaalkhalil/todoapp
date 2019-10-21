@@ -1,6 +1,6 @@
-const ua = require('universal-analytics');
 import Store from './store/Store';
 
+const ua = require('universal-analytics');
 const isDev = require('electron-is-dev');
 
 const code = 'UA-148911079-1';
@@ -46,7 +46,7 @@ window.onerror = function(msg, src, line, col, err) {
 
 window.onunhandledrejection = function(e) {
   const error = `${e.reason.message}: ${e.reason.stack}`;
-  if (isDev) usr.exception({ exDescription: error, exFatal: false }).send();
+  if (!isDev) usr.exception({ exDescription: error, exFatal: false }).send();
   return false;
 };
 
