@@ -79,12 +79,14 @@ class TodoPuller {
 
     fetch('https://todoapp.cc/server/pull/' + this.userId)
       .then(r => {
-        r.json().then(d => {
-          console.info('checkForTodos()', d);
+        r.json()
+          .then(d => {
+            console.info('checkForTodos()', d);
 
-          this.clearBackOff();
-          if (d.todos && d.todos.length > 0) this.addTodos(d.todos);
-        });
+            this.clearBackOff();
+            if (d.todos && d.todos.length > 0) this.addTodos(d.todos);
+          })
+          .catch(e => this.backOff());
       })
       .catch(e => this.backOff());
   }
