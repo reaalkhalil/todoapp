@@ -15,11 +15,11 @@ function todos(state: Todo[] = [], action: Action) {
       return state.filter(t => t.id !== action.data.id);
 
     case EDIT_TODO:
-      trackEvent(Categories.USER_INTERACTION, Actions.TODO_EDIT);
       const idx = state.findIndex(t => t.id === action.data.todo.id);
       if (idx === -1) return state;
       const newState = [...state];
       newState[idx] = action.data.todo;
+      trackEvent(Categories.USER_INTERACTION, Actions.TODO_EDIT);
       return newState;
 
     default:
