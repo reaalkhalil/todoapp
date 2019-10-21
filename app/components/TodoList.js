@@ -457,6 +457,8 @@ export default function TodoList({
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
+        // TODO: if todo goes into a new slice, select the next one
+        //       make generalised way to select the next todo if curr disappears
         editTodo({ todo: { ...t, priority: ((t.priority || 0) + 1) % 3 } });
         setLastAction('Changed Priority: ' + previewText(t.title));
       },
@@ -658,6 +660,15 @@ export default function TodoList({
 
             if (remove) tags = tags.filter(t => t !== tag);
             else tags.push(tag);
+
+            if (todos.length > 1) {
+              let idx = todos.findIndex(t => t.id === selectedId) + 1;
+              if (idx >= todos.length)
+                idx = todos.length - (searchModal ? 1 : 2);
+              setSelectedId(todos[idx].id);
+            } else {
+              setSelectedId(null);
+            }
 
             editTodo({
               todo: {
