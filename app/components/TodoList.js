@@ -209,6 +209,18 @@ export default function TodoList({
     };
   }, []);
 
+  if (!pasteModal) {
+    if (selectedId !== null && (!todos || todos.length == 0))
+      setSelectedId(null);
+    if (
+      todos &&
+      todos.length > 0 &&
+      (selectedId === null ||
+        todos.filter(t => t.id === selectedId).length === 0)
+    )
+      setSelectedId(todos[0].id);
+  }
+
   useEffect(() => {
     if (pasteModal && pasteModal.length > 0 && pasteModal[0]) {
       setSelectedId(pasteModal[0].id);
