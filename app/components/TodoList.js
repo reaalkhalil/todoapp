@@ -171,14 +171,9 @@ export default function TodoList({
   const tags = filter.getTags(todos);
 
   if (searchQuery === null) {
-    if (!selectedPage) {
-      todos = filter.applySplits(todos, splits, selectedSplit);
-    } else {
-      todos = filter.applyPage(todos, pages, selectedPage);
-    }
-  } else {
-    todos = filter.search(todos, searchQuery);
-  }
+    if (!selectedPage) todos = filter.applySplits(todos, splits, selectedSplit);
+    else todos = filter.applyPage(todos, pages, selectedPage);
+  } else todos = filter.search(todos, searchQuery);
 
   const [selectedId, setSelectedId] = useState(
     todos && todos[0] ? todos[0].id : null
@@ -214,13 +209,22 @@ export default function TodoList({
     };
   }, []);
 
-  if (selectedId !== null && (!todos || todos.length == 0)) setSelectedId(null);
-  if (
-    todos &&
-    todos.length > 0 &&
-    (selectedId === null || todos.filter(t => t.id === selectedId).length === 0)
-  )
-    setSelectedId(todos[0].id);
+  useEffect(() => {
+    if (pasteModal && pasteModal.length > 0 && pasteModal[0]) {
+      setSelectedId(pasteModal[0].id);
+      return;
+    }
+
+    if (selectedId !== null && (!todos || todos.length == 0))
+      setSelectedId(null);
+    if (
+      todos &&
+      todos.length > 0 &&
+      (selectedId === null ||
+        todos.filter(t => t.id === selectedId).length === 0)
+    )
+      setSelectedId(todos[0].id);
+  }, [pasteModal]);
 
   const onExitSearch = () => {
     if (viewTodo) {
@@ -289,7 +293,21 @@ export default function TodoList({
       enter: () => setSearchFocus(false)
     });
   } else if (pasteModal) {
+    todos = pasteModal;
     KeyBoard.bind({
+      space: e => {
+        e.preventDefault();
+        if (selectedId !== 0 && !selectedId && !viewTodo) return;
+        if (selectedId || selectedId === 0) setViewTodo(!viewTodo);
+      },
+      'k|up': e => {
+        onMoveSelectUp(todos, selectedId, setSelectedId);
+        e.preventDefault();
+      },
+      'j|down': e => {
+        onMoveSelectDown(todos, selectedId, setSelectedId);
+        e.preventDefault();
+      },
       esc: () => setPasteModal(null),
       enter: () => {
         if (!pasteModal || pasteModal.length === 0) return;
@@ -369,17 +387,17 @@ export default function TodoList({
         const pasted = clipboard.readText();
         if (!pasted || pasted === '') return;
 
-        const tt = textToTodos(pasted);
+        const tt = textToTodos(pasted).map((t, i) => ({ id: i, ...t }));
 
         if (tt.length === 0) return;
 
         if (tt.length === 1) {
           setInitTodo(tt[0]);
           setAddModal(true);
-          setLastAction('Pasted 1 Todo');
+          setLastAction('Importing 1 Todo');
         } else {
           setPasteModal(tt);
-          setLastAction(`Pasted ${tt.length} Todos`);
+          setLastAction(`Importing ${tt.length} Todos`);
         }
 
         e.preventDefault();
@@ -451,7 +469,7 @@ export default function TodoList({
       space: e => {
         e.preventDefault();
         if (selectedId !== 0 && !selectedId && !viewTodo) return;
-        if (selectedId) setViewTodo(!viewTodo);
+        if (selectedId || selectedId === 0) setViewTodo(!viewTodo);
       },
       s: () => {
         if (selectedId !== 0 && !selectedId) return;
@@ -490,18 +508,16 @@ export default function TodoList({
           deleteTodo,
           setLastAction
         ),
-      k: () => onMoveSelectUp(todos, selectedId, setSelectedId),
-      j: () => onMoveSelectDown(todos, selectedId, setSelectedId),
       '?': () => {
         const h = !helpModal;
         setHelpModal(h);
         onHelp(h);
       },
-      up: e => {
+      'k|up': e => {
         onMoveSelectUp(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
-      down: e => {
+      'j|down': e => {
         onMoveSelectDown(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
@@ -606,11 +622,23 @@ export default function TodoList({
       <>
         <span className={styles.Header}>Confirm Import Todos</span>
 
+        <ViewTodo
+          todo={pasteModal.find(t => t.id === selectedId)}
+          helpOpen={helpOpen}
+          show={viewTodo}
+          onClick={() => setViewTodo(false)}
+        />
+
         <List
           showImage={false}
           helpOpen={helpModal}
           todos={pasteModal}
-          selectedId={null}
+          selectedId={selectedId}
+          onHover={id => setSelectedId(id)}
+          onClick={id => {
+            if (id !== selectedId) setSelectedId(id);
+            setViewTodo(true);
+          }}
         />
       </>
     );
@@ -698,11 +726,9 @@ export default function TodoList({
         onHover={a => {
           setSelectedId(a);
         }}
-        onClick={(id, meta) => {
-          if (id !== selectedId) {
-            setSelectedId(id);
-          }
-          if (!meta) setViewTodo(true);
+        onClick={id => {
+          if (id !== selectedId) setSelectedId(id);
+          setViewTodo(true);
         }}
       />
     </div>
