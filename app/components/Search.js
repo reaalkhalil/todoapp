@@ -58,7 +58,7 @@ export default function Search({
     setCaretPos(savedCaretPosition);
     setSearchHTML(htmlQ + endWhiteSpace);
 
-    onUpdate(q);
+    onUpdate(q.replace('\n', ' ').trim());
   };
 
   const classes = [styles.Search];
