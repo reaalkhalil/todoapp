@@ -51,7 +51,6 @@ export default function List({
   startIndex,
   selectedId,
   onHover,
-  onClick,
   helpOpen,
   showImage
 }) {
@@ -99,7 +98,7 @@ export default function List({
               }
             }}
             onClick={e => {
-              if (!!onClick) onClick(t.id, e.metaKey);
+              if (e.metaKey && isLink) shell.openExternal(t.title);
             }}
           >
             {t.id === selectedId ? (
@@ -143,14 +142,7 @@ export default function List({
               </span>
             ) : null}
 
-            <span
-              className={titleClasses.join(' ')}
-              onClick={e => {
-                if (e.metaKey && isLink) shell.openExternal(t.title);
-              }}
-            >
-              {t.title}
-            </span>
+            <span className={titleClasses.join(' ')}>{t.title}</span>
 
             {t.tags ? (
               <div className={styles.TodoItem__Tags}>
