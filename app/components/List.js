@@ -52,7 +52,8 @@ export default function List({
   selectedId,
   onHover,
   helpOpen,
-  showImage
+  showImage,
+  onClick
 }) {
   const listRef = useRef();
   const todoRef = useRef();
@@ -67,10 +68,7 @@ export default function List({
       return;
     }
 
-    if (t.top + 10 < l.top) {
-      listRef.current.scrollTop -= l.height / 2;
-      return;
-    }
+    if (t.top + 10 < l.top) listRef.current.scrollTop -= l.height / 2;
   }, [selectedId]);
 
   const [hoverId, setHoverId] = useState(null);
@@ -82,9 +80,35 @@ export default function List({
         if (!!t.due_at && t.due_at < now() && !t.done)
           classes.push(styles['TodoItem--overdue']);
 
+        const dueToday =
+          !t.done &&
+          !!t.due_at &&
+          (t.due_at < now() || t.due_at === endOfDay());
+
+        const hasTags = t.tags && t.tags.length > 0;
+
+        const tagsClasses = [styles.TodoItem__Tags];
+
         const titleClasses = [styles.TodoItem__Title];
         const isLink = validURL(t.title);
         if (isLink) titleClasses.push(styles['TodoItem__Title--link']);
+        if (!hasTags) titleClasses.push(styles['TodoItem__Title--no-tags']);
+
+        if (!dueToday) {
+          if (hasTags)
+            tagsClasses.push(styles['TodoItem__Tags--no-duetoday-icon']);
+          else titleClasses.push(styles['TodoItem__Title--no-duetoday-icon']);
+          if (!t.content || t.content === '') {
+            if (hasTags)
+              tagsClasses.push(styles['TodoItem__Tags--no-content-icon']);
+            else titleClasses.push(styles['TodoItem__Title--no-content-icon']);
+            if (!t.done) {
+              if (hasTags)
+                tagsClasses.push(styles['TodoItem__Tags--no-done-icon']);
+              else titleClasses.push(styles['TodoItem__Title--no-done-icon']);
+            }
+          }
+        }
 
         return (
           <div
@@ -99,6 +123,7 @@ export default function List({
             }}
             onClick={e => {
               if (e.metaKey && isLink) shell.openExternal(t.title);
+              else if (onClick) onClick(t.id);
             }}
           >
             {t.id === selectedId ? (
@@ -127,9 +152,7 @@ export default function List({
               </span>
             ) : null}
 
-            {!t.done &&
-            !!t.due_at &&
-            (t.due_at < now() || t.due_at === endOfDay()) ? (
+            {dueToday ? (
               <span className={styles.TodoItem__DueToday}>
                 <i
                   className={
@@ -144,8 +167,8 @@ export default function List({
 
             <span className={titleClasses.join(' ')}>{t.title}</span>
 
-            {t.tags ? (
-              <div className={styles.TodoItem__Tags}>
+            {t.tags && t.tags.length > 0 ? (
+              <div className={tagsClasses.join(' ')}>
                 {t.tags.map(g => (
                   <span key={g}>{g}</span>
                 ))}

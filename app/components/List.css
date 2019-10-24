@@ -28,6 +28,7 @@
 .TodoItem i {
   font-size: 14px;
 }
+
 .TodoItem__Done {
   position: absolute;
   right: 15px;
@@ -60,6 +61,21 @@
   white-space: pre;
   color: black;
 }
+.TodoItem__Title--no-tags {
+  max-width: calc(100% - 110px);
+}
+.TodoItem__Title--no-duetoday-icon {
+  max-width: calc(100% - 90px);
+  /* right: 52px; */
+}
+.TodoItem__Title--no-content-icon {
+  max-width: calc(100% - 72px);
+  /* right: 32px; */
+}
+.TodoItem__Title--no-done-icon {
+  max-width: calc(100% - 42px);
+  /* right: 0; */
+}
 
 .TodoItem__Title--link {
   color: #006eff;
@@ -72,10 +88,26 @@
   overflow: hidden;
   height: 28px;
   z-index: 100;
-  width: calc(100px + 20%);
-  max-width: calc(20px + 20%);
-  right: 75px;
+  width: calc(103px + 20%);
+  max-width: calc(23px + 20%);
+  right: 72px;
   font-size: 0;
+}
+
+.TodoItem__Tags--no-duetoday-icon {
+  width: calc(123px + 20%);
+  max-width: calc(43px + 20%);
+  right: 52px;
+}
+.TodoItem__Tags--no-content-icon {
+  width: calc(143px + 20%);
+  max-width: calc(63px + 20%);
+  right: 32px;
+}
+.TodoItem__Tags--no-done-icon {
+  width: calc(175px + 20%);
+  max-width: calc(95px + 20%);
+  right: 0;
 }
 
 .TodoItem__Tags span {
