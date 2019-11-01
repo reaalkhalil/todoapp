@@ -80,7 +80,7 @@ export default function TagEditor({
           ref={inputRef}
           className={styles.Tag__Input}
           onChange={() => {
-            const v = inputRef.current.value.trim().split(' ')[0];
+            const v = inputRef.current.value.trim().split(/\s+/)[0];
             inputRef.current.value = v;
             setTagQuery(v);
           }}
