@@ -35,10 +35,6 @@
   color: #00b8ffee;
 }
 
-.Search--help-open {
-  width: calc(100% - 330px);
-}
-
 .Search__Input:focus {
   border: 2px solid #00b8ffee;
   color: black;

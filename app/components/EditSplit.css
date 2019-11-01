@@ -42,11 +42,6 @@
   height: calc(100vh - 460px);
 }
 
-.EditTodo--help-open .TextInput,
-.EditTodo--help-open .TextArea.Content {
-  width: calc(100% - 330px);
-}
-
 .Number {
   margin: 10px 30px;
   line-height: 20px;

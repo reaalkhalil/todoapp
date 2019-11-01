@@ -3,7 +3,7 @@ import useWindowDimensions from '../window';
 
 import styles from './Splits.css';
 
-export function Splits({ splits, selectedSplit, helpOpen, onClick }) {
+export function Splits({ splits, selectedSplit, onClick }) {
   const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
 
   return (
@@ -27,15 +27,12 @@ export function Splits({ splits, selectedSplit, helpOpen, onClick }) {
   );
 }
 
-export function Page({ pages, selectedPage, helpOpen, onClick }) {
-  const classes = [styles.Splits];
-  if (helpOpen) classes.push(styles['Splits--helpOpen']);
-
+export function Page({ pages, selectedPage, onClick }) {
   const page = pages.find(p => p.shortcut === selectedPage);
   const title = (page ? page.title : '') || '[Page Not Found]';
 
   return (
-    <div className={classes.join(' ')}>
+    <div className={styles.Splits}>
       <span
         className={[styles.Split, styles['Split--selected']].join(' ')}
         onClick={onClick}

@@ -13,8 +13,7 @@ export default function Search({
   onUpdate,
   onUpdateFocus,
   hasFocus,
-  defaultQuery,
-  helpOpen
+  defaultQuery
 }) {
   const searchRef = useRef();
   const priorityRef = useRef();
@@ -62,7 +61,6 @@ export default function Search({
 
   const classes = [styles.Search];
   if (hasFocus) classes.push(styles['Search--focus']);
-  if (helpOpen) classes.push(styles['Search--help-open']);
 
   return (
     <div className={classes.join(' ')}>

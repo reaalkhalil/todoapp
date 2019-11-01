@@ -13,7 +13,6 @@ function tagsToHTML(tags) {
 export default function EditTodo({
   defaultTodo = {},
   onUpdate,
-  helpOpen,
   create,
   trigger,
   cancel
@@ -92,11 +91,8 @@ export default function EditTodo({
     updateData('tags', tags);
   };
 
-  const classes = [styles.EditTodo];
-  if (helpOpen) classes.push(styles['EditTodo--help-open']);
-
   return (
-    <div className={classes.join(' ')}>
+    <div className={styles.EditTodo}>
       <div className={styles.Header}>
         <span>{create ? 'Create Todo' : 'Edit Todo'}</span>
       </div>

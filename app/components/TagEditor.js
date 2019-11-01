@@ -78,7 +78,10 @@ export default function TagEditor({
         <input
           autoFocus={true}
           ref={inputRef}
-          className={styles.Tag__Input}
+          className={[
+            styles.Tag__Input,
+            'mousetrap' /* TODO: idk if this is ok like this */
+          ].join(' ')}
           onChange={() => {
             const v = inputRef.current.value.trim().split(/\s+/)[0];
             inputRef.current.value = v;

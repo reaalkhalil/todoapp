@@ -13,8 +13,8 @@ import { Splits } from './Splits';
 
 function AdvancedSettings({
   save,
+  onToggleHelp,
   onCancel,
-  helpOpen,
   defaultValue,
   nextPage,
   prevPage,
@@ -53,7 +53,8 @@ function AdvancedSettings({
         setLastAction('Settings Saved');
         settingsRef.current.value = JSON.stringify(validSettings, '\n', '\t');
       }
-    }
+    },
+    'command+/__ctrl+/': onToggleHelp
   });
 
   const updateSettings = q => {
@@ -84,11 +85,8 @@ function AdvancedSettings({
     }
   };
 
-  const classes = ['mousetrap', styles.Settings];
-  if (helpOpen) classes.push(styles['Settings--help-open']);
-
   return (
-    <div className={classes.join(' ')}>
+    <div className={['mousetrap', styles.Settings].join(' ')}>
       <div style={{ float: 'right' }}>
         {error ? (
           <div className={styles.Settings__Error}>
@@ -202,7 +200,7 @@ function AdvancedSettings({
 
 function IntegrationSettings({
   onCancel,
-  helpOpen,
+  onToggleHelp,
   nextPage,
   prevPage,
   userId,
@@ -213,11 +211,9 @@ function IntegrationSettings({
     esc: onCancel,
     tab: nextPage,
     'shift+tab': prevPage,
-    'command+,|ctrl+,': onCancel
+    'command+,|ctrl+,': onCancel,
+    'command+/__ctrl+/': onToggleHelp
   });
-
-  const classes = [styles.Settings];
-  if (helpOpen) classes.push(styles['Settings--help-open']);
 
   const int = {
     telegram: '<not yet verified>',
@@ -232,7 +228,7 @@ function IntegrationSettings({
   }
 
   return (
-    <div className={classes.join(' ')}>
+    <div className={styles.Settings}>
       <Splits
         splits={[
           { title: 'Integrations', position: 0 },
@@ -344,7 +340,7 @@ function IntegrationSettings({
 function Settings({
   save,
   onCancel,
-  helpOpen,
+  onToggleHelp,
   defaultValue,
   userId,
   integrations,
@@ -359,8 +355,8 @@ function Settings({
 
   return currentPage === 0 ? (
     <IntegrationSettings
+      onToggleHelp={onToggleHelp}
       onCancel={onCancel}
-      helpOpen={helpOpen}
       nextPage={changePage}
       prevPage={changePage}
       userId={userId}
@@ -370,8 +366,8 @@ function Settings({
   ) : (
     <AdvancedSettings
       save={save}
+      onToggleHelp={onToggleHelp}
       onCancel={onCancel}
-      helpOpen={helpOpen}
       defaultValue={defaultValue}
       nextPage={changePage}
       prevPage={changePage}

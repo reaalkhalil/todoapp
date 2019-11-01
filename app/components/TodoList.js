@@ -155,12 +155,11 @@ export default function TodoList({
   todos,
   splits,
   pages,
-  onHelp,
+  onToggleHelp,
   onSettings,
   settings,
   addSplit,
   editSplit,
-  helpOpen,
   deselectNewlyCreated,
   newlyCreatedId,
   canUndo,
@@ -200,7 +199,6 @@ export default function TodoList({
   const [searchModal, setSearchModal] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
   const [viewTodo, setViewTodo] = useState(false);
-  const [helpModal, setHelpModal] = useState(helpOpen);
   const [pasteModal, setPasteModal] = useState(null);
 
   useEffect(() => {
@@ -323,7 +321,8 @@ export default function TodoList({
         addTodo({ todo: todoToAdd });
         setAddModal(false);
         setLastAction('Created: ' + previewText(todoToAdd.title));
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (editModal) {
     KeyBoard.bind({
@@ -332,7 +331,8 @@ export default function TodoList({
         editTodo({ todo: todoToEdit });
         setEditModal(false);
         setLastAction('Edited: ' + previewText(todoToEdit.title));
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (addSplitModal) {
     KeyBoard.bind({
@@ -344,7 +344,8 @@ export default function TodoList({
         triggerAddorEditSplit();
         setAddSplitModal(false);
         setLastAction('Added Split: ' + previewText(splitToAdd.title));
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (editSplitModal) {
     KeyBoard.bind({
@@ -353,13 +354,15 @@ export default function TodoList({
         triggerAddorEditSplit();
         setEditSplitModal(false);
         setLastAction('Edited Split: ' + previewText(splitToEdit.title));
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (tagModal) {
     KeyBoard.bind({
       esc: () => {
         setTagModal(false);
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (searchModal && searchFocus) {
     KeyBoard.bind({
@@ -383,7 +386,8 @@ export default function TodoList({
           filters: searchQuery
         });
         setAddSplitModal(true);
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else if (pasteModal) {
     todos = pasteModal;
@@ -412,7 +416,8 @@ export default function TodoList({
         });
 
         setPasteModal(null);
-      }
+      },
+      'command+/__ctrl+/': onToggleHelp
     });
   } else {
     const shortcuts = {};
@@ -651,11 +656,7 @@ export default function TodoList({
           deleteTodo,
           setLastAction
         ),
-      '?': () => {
-        const h = !helpModal;
-        setHelpModal(h);
-        onHelp(h);
-      },
+      'command+/__ctrl+/': onToggleHelp,
       k__up: e => {
         onMoveSelectUp(todos, selectedId, setSelectedId);
         e.preventDefault();
@@ -733,7 +734,6 @@ export default function TodoList({
 
     return (
       <EditTodo
-        helpOpen={helpModal}
         create={true}
         defaultTodo={init}
         onUpdate={a => {
@@ -755,7 +755,6 @@ export default function TodoList({
   if (editModal)
     return (
       <EditTodo
-        helpOpen={helpModal}
         onUpdate={setTodoToEdit}
         defaultTodo={todos.find(t => t.id === selectedId)}
         trigger={triggerAddorEdit}
@@ -767,7 +766,6 @@ export default function TodoList({
     return (
       <EditSplit
         splits={splits}
-        helpOpen={helpModal}
         onUpdate={s => setSplitToEdit(s)}
         defaultSplit={splits.find(t => t.position === selectedSplit)}
         defaultIndex={splits.findIndex(t => t.position === selectedSplit)}
@@ -781,7 +779,6 @@ export default function TodoList({
       <EditSplit
         create={true}
         splits={splits}
-        helpOpen={helpModal}
         onUpdate={s => setSplitToAdd(s)}
         defaultSplit={splitToAdd}
         trigger={triggerAddorEditSplit}
@@ -799,14 +796,12 @@ export default function TodoList({
 
         <ViewTodo
           todo={pasteModal.find(t => t.id === selectedId)}
-          helpOpen={helpOpen}
           show={viewTodo}
           onClick={() => setViewTodo(false)}
         />
 
         <List
           showImage={false}
-          helpOpen={helpModal}
           todos={pasteModal}
           selectedId={selectedId}
           onHover={id => setSelectedId(id)}
@@ -818,16 +813,10 @@ export default function TodoList({
       </>
     );
 
-  const listStyles = [styles.TodoList];
-  if (helpModal) {
-    listStyles.push(styles['TodoList--help-open']);
-  }
-
   return (
-    <div className={listStyles.join(' ')}>
+    <div className={styles.TodoList}>
       {searchModal ? (
         <Search
-          helpOpen={helpModal}
           defaultQuery={searchQuery}
           onUpdate={setSearchQuery}
           onUpdateFocus={f => setSearchFocus(f)}
@@ -841,7 +830,6 @@ export default function TodoList({
         />
       ) : (
         <Splits
-          helpOpen={helpModal}
           splits={splits}
           selectedSplit={selectedSplit}
           onClick={setSelectedSplit}
@@ -888,14 +876,12 @@ export default function TodoList({
 
       <ViewTodo
         todo={todos.find(t => t.id === selectedId)}
-        helpOpen={helpOpen}
         show={viewTodo}
         onClick={() => setViewTodo(false)}
       />
 
       <List
         showImage={!searchModal && !selectedPage}
-        helpOpen={helpModal}
         todos={todos}
         selectedId={searchFocus ? null : selectedId}
         onHover={a => {

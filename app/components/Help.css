@@ -1,6 +1,7 @@
 .Help {
+  z-index: 100000;
   position: absolute;
-  width: 220px;
+  width: 400px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -10,16 +11,17 @@
   overflow-x: hidden;
   opacity: 0;
   transition: 0ms;
-  background-color: #f8f8fa;
+  background-color: #f8f8f8;
   border-left: 1px solid #ddd;
   pointer-events: none;
   user-select: none;
 }
 
 .Help--show {
-  pointer-events: auto;
-  transition: 100ms;
+  transition: 200ms;
   opacity: 1;
+  background-color: #f8f8f8ef;
+  box-shadow: 0 0 50px #0002;
 }
 
 .Header {

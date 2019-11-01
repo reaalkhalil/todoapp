@@ -51,7 +51,6 @@ export default function List({
   startIndex,
   selectedId,
   onHover,
-  helpOpen,
   showImage,
   onClick
 }) {
@@ -184,11 +183,8 @@ export default function List({
       })
     : null;
 
-  const classes = [styles.List];
-  if (helpOpen) classes.push(styles['List--help-open']);
-
   return (
-    <div className={classes.join(' ')} ref={listRef}>
+    <div className={styles.List} ref={listRef}>
       <div
         style={{
           backgroundImage: `url(${imageURL()})`

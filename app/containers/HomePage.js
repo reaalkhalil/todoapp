@@ -30,7 +30,8 @@ class HomePage extends Component<Props> {
     pull.setIntegrations(this.props.integrations);
     pull.setAddFunc(todo => {
       console.log('ADD_TODO_FROM_PULL', todo);
-      this.props.addTodo({ todo }); // TODO: shouldn't be undo-able
+      // TODO: shouldn't be undo-able
+      this.props.addTodo({ todo });
     });
     pull.setLastActionFunc(n =>
       this.props.setLastAction(`Downloaded ${n} Todo` + (n > 1 ? 's' : ''))
@@ -40,14 +41,17 @@ class HomePage extends Component<Props> {
       <>
         {this.state.settingsOpen ? (
           <SettingsPage
+            onToggleHelp={() =>
+              this.setState({ helpOpen: !this.state.helpOpen })
+            }
             defaultValue={{ ...this.props.settings }}
-            helpOpen={this.state.helpOpen}
             onCancel={() => this.setState({ settingsOpen: false })}
           />
         ) : (
           <TodoPage
-            helpOpen={this.state.helpOpen}
-            onHelp={h => this.setState({ helpOpen: h })}
+            onToggleHelp={() =>
+              this.setState({ helpOpen: !this.state.helpOpen })
+            }
             onSettings={s => this.setState({ settingsOpen: s })}
             splits={this.props.settings.splits}
             pages={this.props.settings.pages}

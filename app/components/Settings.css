@@ -26,10 +26,6 @@
   color: black;
 }
 
-.Settings--help-open .Settings__TextArea {
-  width: calc(100% - 330px);
-}
-
 .Title {
   color: rgb(34, 26, 85, 0.3);
   font-weight: 400;
@@ -77,10 +73,6 @@
   color: #0c0;
 }
 
-.Settings--help-open .Settings__Error {
-  right: 280px;
-}
-
 .IntegrationSettings {
   tab-size: 3;
   margin: 10px 30px;
@@ -91,10 +83,6 @@
   min-height: calc(100vh - 125px);
   color: black;
   font-weight: 400;
-}
-
-.Settings--help-open .IntegrationSettings {
-  width: calc(100% - 330px);
 }
 
 .Label {

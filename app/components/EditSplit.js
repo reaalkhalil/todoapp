@@ -15,7 +15,6 @@ export default function EditSplit({
   defaultSplit = {},
   defaultIndex,
   onUpdate,
-  helpOpen,
   create,
   trigger,
   cancel
@@ -92,9 +91,6 @@ export default function EditSplit({
     defaultIndex === parseInt(defaultIndex) ? defaultIndex : maxIndex
   );
 
-  const classes = [styles.EditSplit];
-  if (helpOpen) classes.push(styles['EditSplit--help-open']);
-
   const updateData = (field, value) => {
     const newSplit = {
       ...split,
@@ -168,7 +164,7 @@ export default function EditSplit({
   }, []);
 
   return (
-    <div className={classes.join(' ')}>
+    <div className={styles.EditSplit}>
       <div className={styles.Header}>
         <span>{create ? 'Create Split' : 'Edit Split'}</span>
       </div>

@@ -7,7 +7,7 @@ const sections = [
   {
     header: 'Todo List',
     keys: [
-      [['shift', '?'], 'Toggle Help'],
+      [['cmd', '/'], 'Toggle Help'],
       [['tab'], 'Next Split'],
       [['shift', 'tab'], 'Prev Split'],
       [['space'], 'View Todo'],
@@ -22,10 +22,10 @@ const sections = [
       [['j'], 'Down'],
       [['/'], 'Search'],
       [['cmd', 'c'], 'Copy Todo'],
-      [['cmd shift', 'c'], 'Copy List'],
+      [['cmd', 'shift', 'c'], 'Copy List'],
       [['cmd', 'x'], 'Cut Todo'],
       [['cmd', 'v'], 'Import Todo(s)'],
-      [['cmd shift', 'v'], 'Paste Todo(s)'],
+      [['cmd', 'shift', 'v'], 'Paste Todo(s)'],
       [['cmd', 'z'], 'Undo'],
       [['cmd', 'shift', 'z'], 'Redo'],
       [['cmd', ','], 'Preferences']
@@ -45,7 +45,7 @@ const sections = [
       [['tab'], 'Next Field'],
       [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Create'],
-      [['cmd', 'enter'], 'or (in Notes)'],
+      [['cmd', 'enter'], 'Confirm Create (in Notes)'],
       [['esc'], 'Cancel Create']
     ]
   },
@@ -55,7 +55,7 @@ const sections = [
       [['tab'], 'Next Field'],
       [['shift', 'tab'], 'Prev Field'],
       [['enter'], 'Confirm Edit'],
-      [['cmd', 'enter'], 'or (in Notes)'],
+      [['cmd', 'enter'], 'Confirm Edit (in Notes)'],
       [['esc'], 'Cancel Edit']
     ]
   },

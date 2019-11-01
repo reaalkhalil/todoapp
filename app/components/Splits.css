@@ -12,11 +12,6 @@
   z-index: 0;
 }
 
-.Splits--helpOpen {
-  right: 250px;
-  width: calc(100% - 330px);
-}
-
 .Split {
   color: rgb(34, 26, 85, 0.3);
   font-weight: 400;
