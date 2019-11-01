@@ -6,6 +6,7 @@ import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
 import * as settingsActions from '../actions/settings';
 import * as todosActions from '../actions/todos';
+import { formatSplits } from '../utils/settings';
 
 import Store from './Store';
 
@@ -21,8 +22,12 @@ function configureStore() {
       const state = getState();
 
       if (action.type in settingsActions) {
-        if (action.type === settingsActions.SAVE_SETTINGS) {
-          s.saveSettings(state.settings);
+        if (
+          action.type === settingsActions.SAVE_SETTINGS ||
+          action.type === settingsActions.ADD_SPLIT ||
+          action.type === settingsActions.EDIT_SPLIT
+        ) {
+          s.saveSettings(settings);
         } else if (action.type === settingsActions.ADD_INTEGRATIONS) {
           s.setIntegrations(state.integrations);
         }
