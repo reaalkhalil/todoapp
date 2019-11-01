@@ -83,7 +83,8 @@ const allowedFilterNames = [
   'created_at',
   'updated_at',
   'title',
-  'content'
+  'content',
+  'notes'
 ];
 
 function matchFilter(todo, filter) {
@@ -428,6 +429,7 @@ function parseFilter(str) {
       };
     }
 
+    case 'notes':
     case 'content':
     case 'title': {
       if (
@@ -438,7 +440,7 @@ function parseFilter(str) {
         return null;
 
       return {
-        field: filterName,
+        field: filterName === 'notes' ? 'content' : filterName,
         op: op === '=' ? MATCHES_SOME : MATCHES_ALL,
         value: vals
       };
