@@ -21,7 +21,8 @@ export const BEFORE_NOW = 'BEFORE_NOW';
 export const AFTER_NOW = 'AFTER_NOW';
 
 const FILTERS = {
-  [EQUAL]: (tt, f, v) => tt.filter(t => t[f] === v),
+  [EQUAL]: (tt, f, v) =>
+    tt.filter(t => (Array.isArray(v) ? v.some(x => t[f] === x) : t[f] === v)),
 
   [NOT_EQUAL]: (tt, f, v) => tt.filter(t => t[f] !== v),
 
@@ -73,6 +74,18 @@ export type Filter = {
   value: any
 };
 
+const allowedFilterNames = [
+  'done',
+  'priority',
+  'tags',
+  'due_at',
+  'done_at',
+  'created_at',
+  'updated_at',
+  'title',
+  'content'
+];
+
 function matchFilter(todo, filter) {
   const fn = FILTERS[filter.op];
   return fn ? fn([todo], filter.field, filter.value).length > 0 : false;
@@ -80,7 +93,7 @@ function matchFilter(todo, filter) {
 
 function apply(tt: Todo[], filterStr: String) {
   const filters = filterStr
-    .split(' ')
+    .split(/\s+/)
     .filter(i => !!i)
     .map(parseFilter)
     .filter(i => !!i);
@@ -111,7 +124,7 @@ export function applySplits(
 
   for (let i = 0; i <= currentSplitIndex; i++) {
     if (splits[i].position < 0) continue;
-    filteredOut = apply(ts, splits[i].filters);
+    filteredOut = search(ts, splits[i].filters);
     ts = minus(ts, filteredOut);
   }
 
@@ -123,21 +136,50 @@ export function applyPage(tt: Todo[], pages: Pages[], currentPage: string) {
   const page = pages.find(p => p.shortcut === currentPage);
   if (!page) return [];
 
-  const res = apply(tt, page.filters);
+  const res = search(tt, page.filters);
 
   return page.sort ? sort(res, page.sort) : res;
+}
+
+function parseSortOrder(o) {
+  if (!o) return null;
+  const or = o.toLowerCase();
+  if (['desc', 'descending', '-'].indexOf(or) !== -1) return 1;
+  if (['asc', 'ascending', '+'].indexOf(or) !== -1) return -1;
+  return null;
+}
+
+export function parseSort(by: string) {
+  return by
+    .split(/\s+/)
+    .filter(s => !!s)
+    .map(s => {
+      let [field, order] = s.split(':');
+      const filter = parseFilter(field);
+      const asc = parseSortOrder(order);
+
+      return (!filter && allowedFilterNames.indexOf(field) === -1) ||
+        (order && order.length > 0 ? asc === null : false)
+        ? { type: 'str', str: s }
+        : {
+            field,
+            filter,
+            type: filter ? 'filter' : 'field',
+            asc: asc ? asc : -1,
+            str: s
+          };
+    });
 }
 
 function sort(tt: Todo[], by: string) {
   if (!by || by.length === 0) return tt;
 
-  const bys = by.split(' ');
+  const bys = parseSort(by).filter(s => s.type !== 'str');
   let ts = [...tt];
 
   ts = ts.sort((t1, t2) => {
     for (let i = 0; i < bys.length; i++) {
-      let [field, order] = bys[i].split(':');
-      const filter = parseFilter(field);
+      let { field, filter, asc } = bys[i];
 
       let a = t1[field];
       let b = t2[field];
@@ -146,12 +188,6 @@ function sort(tt: Todo[], by: string) {
         a = matchFilter(t1, filter);
         b = matchFilter(t2, filter);
       }
-
-      const asc = order
-        ? order.toLowerCase().startsWith('desc')
-          ? 1
-          : -1
-        : -1;
 
       if (!filter) {
         if (a === undefined && b !== undefined) return asc;
@@ -185,20 +221,20 @@ function sort(tt: Todo[], by: string) {
 
 export function parseSearchQ(q) {
   const queries = q
-    .split(' ')
+    .split(/\s+/)
     .filter(s => !!s)
     .filter(s => !parseFilter(s))
     .filter(s => !!s);
 
   const filters = q
-    .split(' ')
+    .split(/\s+/)
     .filter(s => !!s)
     .filter(parseFilter)
     .filter(s => !!s);
 
   const all = q
-    .split(' ')
-    .filter(s => s !== '\n')
+    .split(/\s+/)
+    .filter(s => !!s)
     .map(s => ({ type: parseFilter(s) ? 'filter' : 'query', str: s }));
 
   return { queries, filters, all };
@@ -217,10 +253,7 @@ export function search(tt: Todos[], q: String) {
         : !!t.title
     );
 
-  return sort(
-    res,
-    'done:desc due_at<=eod priority:desc due_at:desc created_at'
-  );
+  return sort(res, 'done:desc due_at<eod priority:desc due_at:desc created_at');
 }
 
 export function match(q, str) {
@@ -282,17 +315,6 @@ export function getTags(tt) {
 */
 
 function parseFilter(str) {
-  const allowedFilterNames = [
-    'done',
-    'priority',
-    'tags',
-    'due_at',
-    'done_at',
-    'created_at',
-    'updated_at',
-    'title',
-    'content'
-  ];
   const allowedOps = ['=', '<', '<=', '>', '>=']; // must be only occurrence of that string in the filter
 
   let opIdx = -1;
@@ -340,7 +362,8 @@ function parseFilter(str) {
       if (op === '<') f.op = LESS_THAN;
       if (op === '>') f.op = GREATER_THAN;
 
-      f.value = parseInt(vals[0]);
+      f.value =
+        vals.length === 1 ? parseInt(vals[0]) : vals.map(x => parseInt(x));
       if (Number.isNaN(f.value)) return null;
 
       return f;
@@ -495,7 +518,7 @@ export function higerOrderTags(tags, splits, selectedSplit) {
   higherOrderSplits.forEach(s => {
     if (s.filters && s.filters.length > 0) {
       s.filters
-        .split(' ')
+        .split(/\s+/)
         .filter(s => !!s)
         .map(parseFilter)
         .filter(f => !!f)

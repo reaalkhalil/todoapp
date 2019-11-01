@@ -297,7 +297,7 @@ export const initialSettings = {
       shortcut: 'g',
       position: 0,
       filters: 'due_at<=eod done=false',
-      sort: 'due_at<eod priority:desc due_at created_at',
+      sort: 'due_at<eod priority:desc due_at:desc created_at',
       default: {
         due_at: 0
       }
