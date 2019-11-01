@@ -1,11 +1,25 @@
 // @flow
-import { SAVE_SETTINGS, ADD_INTEGRATIONS } from '../actions/settings';
+import {
+  SAVE_SETTINGS,
+  ADD_INTEGRATIONS,
+  EDIT_SPLIT,
+  ADD_SPLIT
+} from '../actions/settings';
 import type { Action } from './types';
+import { formatSplits } from '../utils/settings';
 
 export function settings(state: Settings = {}, action: Action) {
-  if (action.type === SAVE_SETTINGS && action.data.settings) {
-    return action.data.settings;
-  }
+  if (
+    (action.type === EDIT_SPLIT || action.type === ADD_SPLIT) &&
+    action.data.splits
+  )
+    return { ...state, splits: formatSplits(action.data.splits) };
+
+  if (action.type === SAVE_SETTINGS && action.data.settings)
+    return {
+      ...action.data.settings,
+      splits: formatSplits(action.data.settings.splits)
+    };
 
   return state;
 }

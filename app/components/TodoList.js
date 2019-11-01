@@ -1,9 +1,10 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import { ipcRenderer, clipboard, webFrame } from 'electron';
-
+import addSplit from '../utils/settings';
 import Search from './Search';
 import EditTodo from './EditTodo';
+import EditSplit from './EditSplit';
 import { Splits, Page } from './Splits';
 import TagEditor from './TagEditor';
 import List from './List';
@@ -156,6 +157,9 @@ export default function TodoList({
   pages,
   onHelp,
   onSettings,
+  settings,
+  addSplit,
+  editSplit,
   helpOpen,
   deselectNewlyCreated,
   newlyCreatedId,
@@ -164,7 +168,7 @@ export default function TodoList({
   canRedo,
   redo
 }) {
-  const [selectedSplit, setSelectedSplit] = useState(0);
+  const [selectedSplit, setSelectedSplit] = useState(splits[0].position);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
 
@@ -190,6 +194,8 @@ export default function TodoList({
 
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [addSplitModal, setAddSplitModal] = useState(false);
+  const [editSplitModal, setEditSplitModal] = useState(false);
   const [tagModal, setTagModal] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
   const [searchFocus, setSearchFocus] = useState(false);
@@ -208,6 +214,12 @@ export default function TodoList({
       ipcRenderer.removeListener('createTodo', f);
     };
   }, []);
+
+  if (
+    (selectedSplit !== 0 && !selectedSplit) ||
+    splits.filter(s => s.position === selectedSplit).length === 0
+  )
+    setSelectedSplit(splits[0].position);
 
   if (!pasteModal) {
     if (selectedId !== null && (!todos || todos.length == 0))
@@ -252,6 +264,9 @@ export default function TodoList({
   const [todoToAdd, setTodoToAdd] = useState(null);
   const [todoToEdit, setTodoToEdit] = useState(null);
 
+  const [splitToAdd, setSplitToAdd] = useState(null);
+  const [splitToEdit, setSplitToEdit] = useState(null);
+
   const triggerAddorEdit = () => {
     if (addModal) {
       addTodo({ todo: todoToAdd });
@@ -261,6 +276,35 @@ export default function TodoList({
       editTodo({ todo: todoToEdit });
       setEditModal(false);
       setLastAction('Edited: ' + previewText(todoToEdit.title));
+    }
+  };
+
+  const triggerAddorEditSplit = () => {
+    if (addSplitModal) {
+      addSplit({
+        index: splitToAdd.index,
+        split: (function() {
+          let d = { ...splitToAdd };
+          delete d.index;
+          return d;
+        })()
+      });
+      setSplitToAdd(null);
+      setAddSplitModal(false);
+      setLastAction('Created Split: ' + previewText(splitToAdd.title));
+    } else if (editSplitModal) {
+      editSplit({
+        index: splitToEdit.index,
+        oldIndex: splitToEdit.oldIndex,
+        split: (function() {
+          let d = { ...splitToEdit };
+          delete d.index;
+          delete d.oldIndex;
+          return d;
+        })()
+      });
+      setEditSplitModal(false);
+      setLastAction('Edited Split: ' + previewText(splitToEdit.title));
     }
   };
 
@@ -290,6 +334,27 @@ export default function TodoList({
         setLastAction('Edited: ' + previewText(todoToEdit.title));
       }
     });
+  } else if (addSplitModal) {
+    KeyBoard.bind({
+      esc: () => {
+        setSplitToAdd(null);
+        setAddSplitModal(false);
+      },
+      enter: () => {
+        triggerAddorEditSplit();
+        setAddSplitModal(false);
+        setLastAction('Added Split: ' + previewText(splitToAdd.title));
+      }
+    });
+  } else if (editSplitModal) {
+    KeyBoard.bind({
+      esc: () => setEditSplitModal(false),
+      enter: () => {
+        triggerAddorEditSplit();
+        setEditSplitModal(false);
+        setLastAction('Edited Split: ' + previewText(splitToEdit.title));
+      }
+    });
   } else if (tagModal) {
     KeyBoard.bind({
       esc: () => {
@@ -300,9 +365,25 @@ export default function TodoList({
     KeyBoard.bind({
       '/': onExitSearch,
       esc: onExitSearch,
-      'tab|`': onExitSearch,
-      'shift+tab|shift+`': onExitSearch,
-      enter: () => setSearchFocus(false)
+      'tab__`': onExitSearch,
+      'shift+tab__shift+`': onExitSearch,
+      enter: () => setSearchFocus(false),
+      'command+\\__ctrl+\\': e => {
+        if (
+          editSplitModal ||
+          editModal ||
+          addModal ||
+          tagModal ||
+          pasteModal ||
+          (!selectedSplit && selectedSplit !== 0)
+        )
+          return;
+        setSplitToAdd({
+          title: searchQuery.length <= 12 ? searchQuery : 'New Split',
+          filters: searchQuery
+        });
+        setAddSplitModal(true);
+      }
     });
   } else if (pasteModal) {
     todos = pasteModal;
@@ -312,11 +393,11 @@ export default function TodoList({
         if (selectedId !== 0 && !selectedId && !viewTodo) return;
         if (selectedId || selectedId === 0) setViewTodo(!viewTodo);
       },
-      'k|up': e => {
+      k__up: e => {
         onMoveSelectUp(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
-      'j|down': e => {
+      j__down: e => {
         onMoveSelectDown(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
@@ -334,8 +415,6 @@ export default function TodoList({
       }
     });
   } else {
-    // TODO: if user enters "|" in shortcut it'll mess this up
-
     const shortcuts = {};
     splits.forEach(s => {
       if (s.shortcut)
@@ -353,7 +432,7 @@ export default function TodoList({
     KeyBoard.bind({
       ...shortcuts,
       // UNDO / REDO
-      'command+z|ctrl+z': e => {
+      'command+z__ctrl+z': e => {
         if (canUndo) {
           undo();
           setLastAction('Undo');
@@ -361,7 +440,7 @@ export default function TodoList({
 
         e.preventDefault();
       },
-      'command+shift+z|ctrl+shift+z': e => {
+      'command+shift+z__ctrl+shift+z': e => {
         if (canRedo) {
           redo();
           setLastAction('Redo');
@@ -371,12 +450,14 @@ export default function TodoList({
       },
 
       // ZOOM IN / OUT
-      'command+=': () => webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1),
-      'command+-': () => webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1),
-      'command+0': () => webFrame.setZoomFactor(1),
+      'command+=__ctrl+=': () =>
+        webFrame.setZoomFactor(webFrame.getZoomFactor() + 0.1),
+      'command+-__ctrl+-': () =>
+        webFrame.setZoomFactor(webFrame.getZoomFactor() - 0.1),
+      'command+0__ctrl+0': () => webFrame.setZoomFactor(1),
 
       // COPY
-      'command+c': e => {
+      'command+c__ctrl+c': e => {
         if (viewTodo && !window.getSelection().isCollapsed) return;
         copyTodoToClipboard(
           todos.find(t => t.id === selectedId),
@@ -384,7 +465,7 @@ export default function TodoList({
         );
         e.preventDefault();
       },
-      'command+x': e => {
+      'command+x__ctrl+x': e => {
         copyTodoToClipboard(todos.find(t => t.id === selectedId), () => {});
         onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo, () => {});
 
@@ -392,10 +473,11 @@ export default function TodoList({
 
         e.preventDefault();
       },
-      'command+shift+c': () => copyTodosToClipboard(todos, setLastAction),
+      'command+shift+c__ctrl+shift+c': () =>
+        copyTodosToClipboard(todos, setLastAction),
 
       // PASTE
-      'command+v': e => {
+      'command+v__ctrl+v': e => {
         const pasted = clipboard.readText();
         if (!pasted || pasted === '') return;
 
@@ -414,7 +496,7 @@ export default function TodoList({
 
         e.preventDefault();
       },
-      'command+shift+v': e => {
+      'command+shift+v__ctrl+shift+v': e => {
         const pasted = clipboard.readText();
         if (!pasted || pasted === '') return;
 
@@ -436,11 +518,41 @@ export default function TodoList({
         e.preventDefault();
       },
 
+      'command+shift+\\__ctrl+shift+\\': e => {
+        if (
+          addSplitModal ||
+          searchModal ||
+          editModal ||
+          addModal ||
+          tagModal ||
+          searchFocus ||
+          pasteModal ||
+          (!selectedSplit && selectedSplit !== 0)
+        )
+          return;
+        setEditSplitModal(true);
+      },
+
+      'command+\\__ctrl+\\': e => {
+        if (
+          editSplitModal ||
+          searchModal ||
+          editModal ||
+          addModal ||
+          tagModal ||
+          searchFocus ||
+          pasteModal ||
+          (!selectedSplit && selectedSplit !== 0)
+        )
+          return;
+        setAddSplitModal(true);
+      },
+
       // NAV SPLITS
-      'shift+tab|shift+`': e => {
+      'shift+tab__shift+`': e => {
         if (searchModal) {
-          setSearchFocus(true);
           e.preventDefault();
+          setSearchFocus(true);
           return;
         }
 
@@ -449,11 +561,18 @@ export default function TodoList({
           return;
         }
         setSelectedSplit(
-          (splits.filter(s => s.position >= 0).length + selectedSplit - 1) %
-            splits.filter(s => s.position >= 0).length
+          selectedSplit <=
+            splits.reduce(
+              (acc, s) => Math.min(s.position, acc),
+              Number.MAX_SAFE_INTEGER
+            )
+            ? splits.reduce((acc, s) => Math.max(s.position, acc), 0)
+            : splits
+                .filter(s => s.position <= selectedSplit - 1)
+                .reduce((acc, s) => Math.max(s.position, acc), 0)
         );
       },
-      'tab|`': e => {
+      'tab__`': e => {
         if (searchModal) {
           setSearchFocus(true);
           e.preventDefault();
@@ -463,8 +582,20 @@ export default function TodoList({
           setSelectedPage('');
           return;
         }
+
         setSelectedSplit(
-          (selectedSplit + 1) % splits.filter(s => s.position >= 0).length
+          selectedSplit >=
+            splits.reduce((acc, s) => Math.max(s.position, acc), 0)
+            ? splits.reduce(
+                (acc, s) => Math.min(s.position, acc),
+                Number.MAX_SAFE_INTEGER
+              )
+            : splits
+                .filter(s => s.position >= selectedSplit + 1)
+                .reduce(
+                  (acc, s) => Math.min(s.position, acc),
+                  Number.MAX_SAFE_INTEGER
+                )
         );
       },
 
@@ -487,7 +618,7 @@ export default function TodoList({
         if (selectedId !== 0 && !selectedId) return;
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
-        // TODO: if todo goes into a new slice, select the next one
+        // TODO: if todo goes into a new split, select the next one
         //       make generalised way to select the next todo if curr disappears
         editTodo({ todo: { ...t, priority: ((t.priority || 0) + 1) % 3 } });
         setLastAction('Changed Priority: ' + previewText(t.title));
@@ -525,11 +656,11 @@ export default function TodoList({
         setHelpModal(h);
         onHelp(h);
       },
-      'k|up': e => {
+      k__up: e => {
         onMoveSelectUp(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
-      'j|down': e => {
+      j__down: e => {
         onMoveSelectDown(todos, selectedId, setSelectedId);
         e.preventDefault();
       },
@@ -556,10 +687,13 @@ export default function TodoList({
         if (selectedSplit !== 0) setSelectedSplit(0);
       },
 
-      'command+,|ctrl+,': () => onSettings(true),
-      '/|command+f|ctrl+f': e => {
+      'command+,__ctrl+,': () => onSettings(true),
+      '/__command+f__ctrl+f': e => {
         setSearchFocus(true);
-        if (searchModal) return;
+        if (searchModal) {
+          e.preventDefault();
+          return;
+        }
 
         if (viewTodo) setViewTodo(false);
 
@@ -626,6 +760,35 @@ export default function TodoList({
         defaultTodo={todos.find(t => t.id === selectedId)}
         trigger={triggerAddorEdit}
         cancel={cancelAddorEdit}
+      />
+    );
+
+  if (editSplitModal)
+    return (
+      <EditSplit
+        splits={splits}
+        helpOpen={helpModal}
+        onUpdate={s => setSplitToEdit(s)}
+        defaultSplit={splits.find(t => t.position === selectedSplit)}
+        defaultIndex={splits.findIndex(t => t.position === selectedSplit)}
+        trigger={triggerAddorEditSplit}
+        cancel={() => setEditSplitModal(false)}
+      />
+    );
+
+  if (addSplitModal)
+    return (
+      <EditSplit
+        create={true}
+        splits={splits}
+        helpOpen={helpModal}
+        onUpdate={s => setSplitToAdd(s)}
+        defaultSplit={splitToAdd}
+        trigger={triggerAddorEditSplit}
+        cancel={() => {
+          setSplitToAdd(null);
+          setAddSplitModal(false);
+        }}
       />
     );
 
@@ -731,7 +894,7 @@ export default function TodoList({
       />
 
       <List
-        showImage={!searchModal}
+        showImage={!searchModal && !selectedPage}
         helpOpen={helpModal}
         todos={todos}
         selectedId={searchFocus ? null : selectedId}
