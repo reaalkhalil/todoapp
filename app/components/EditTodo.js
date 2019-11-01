@@ -129,7 +129,7 @@ export default function EditTodo({
                 type="number"
                 defaultValue={0}
                 step={1}
-                onKeyDown={e => {
+                onKeyPress={e => {
                   const v = priorityRef.current.value;
                   let newV = null;
                   switch (e.key) {
@@ -145,10 +145,7 @@ export default function EditTodo({
                       newV = (v + 1) % 3;
                       break;
                   }
-                  if (newV !== null) {
-                    priorityRef.current.value = newV;
-                    updateData('priority', newV);
-                  }
+                  if (newV !== null) priorityRef.current.value = newV;
                 }}
                 defaultValue={defaultTodo ? defaultTodo.priority : 0}
                 onChange={() => {
