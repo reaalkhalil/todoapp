@@ -15,18 +15,6 @@ export function Splits({ splits, selectedSplit, helpOpen, onClick }) {
 
   const [squeezed, setSqueezed] = useState();
 
-  // TODO: fix this
-  //   const { width } = useWindowDimensions();
-
-  //   useEffect(() => {
-  //     const last = (
-  //       lastSplitRef.current || splitRef.current
-  //     ).getBoundingClientRect();
-
-  //     const w = width - (helpOpen ? 330 : 30);
-  //     setSqueezed(last.x + last.width > w);
-  //   }, [width, selectedSplit]);
-
   let hitSelected = false;
 
   return (
