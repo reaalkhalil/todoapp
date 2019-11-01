@@ -9,19 +9,7 @@ import { shell } from 'electron';
 import { formatSplits } from '../utils/settings';
 
 import { Validator } from 'jsonschema';
-
-function Headers({ selected }) {
-  return ['Integrations', 'Advanced'].map((a, i) => {
-    const classes = [styles.Title];
-    if (i === selected) classes.push(styles['Title--selected']);
-
-    return (
-      <span className={classes.join(' ')} key={i}>
-        {a}
-      </span>
-    );
-  });
-}
+import { Splits } from './Splits';
 
 function AdvancedSettings({
   save,
@@ -101,8 +89,7 @@ function AdvancedSettings({
 
   return (
     <div className={classes.join(' ')}>
-      <div className={styles.Header}>
-        <Headers selected={1} />
+      <div style={{ float: 'right' }}>
         {error ? (
           <div className={styles.Settings__Error}>
             <span className={styles.Settings__ErrorMessage}>{error}</span>
@@ -114,6 +101,17 @@ function AdvancedSettings({
           </div>
         ) : null}
       </div>
+
+      <Splits
+        splits={[
+          { title: 'Integrations', position: 0 },
+          { title: 'Advanced', position: 1 }
+        ]}
+        selectedSplit={1}
+        onClick={p => {
+          if (p === 0) nextPage();
+        }}
+      />
 
       <textarea
         autoFocus={true}
@@ -235,9 +233,17 @@ function IntegrationSettings({
 
   return (
     <div className={classes.join(' ')}>
-      <div className={styles.Header}>
-        <Headers selected={0} />
-      </div>
+      <Splits
+        splits={[
+          { title: 'Integrations', position: 0 },
+          { title: 'Advanced', position: 1 }
+        ]}
+        selectedSplit={0}
+        onClick={p => {
+          if (p === 1) nextPage();
+        }}
+      />
+
       <div className={styles.IntegrationSettings}>
         <br />
         Add todos by simply sending an email or telegram message!

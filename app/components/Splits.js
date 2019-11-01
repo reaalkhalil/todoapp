@@ -6,40 +6,17 @@ import styles from './Splits.css';
 export function Splits({ splits, selectedSplit, helpOpen, onClick }) {
   const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
 
-  const classes = [styles.Splits];
-  if (helpOpen) classes.push(styles['Splits--helpOpen']);
-
-  const splitsRef = useRef();
-  const splitRef = useRef();
-  const lastSplitRef = useRef();
-
-  const [squeezed, setSqueezed] = useState();
-
-  let hitSelected = false;
-
   return (
-    <div className={classes.join(' ')} ref={splitsRef}>
+    <div className={styles.Splits}>
       {sortedSplits.map((s, i) => {
         const classes = [styles.Split];
-        if (s.position === selectedSplit) {
-          hitSelected = true;
+        if (s.position === selectedSplit)
           classes.push(styles['Split--selected']);
-        }
 
-        if (squeezed && !hitSelected) return null;
-
-        const last = i === sortedSplits.length - 1;
         return (
           <span
             className={classes.join(' ')}
             key={s.position}
-            ref={
-              s.position === selectedSplit
-                ? splitRef
-                : last
-                ? lastSplitRef
-                : null
-            }
             onClick={() => onClick(s.position)}
           >
             {s.title}

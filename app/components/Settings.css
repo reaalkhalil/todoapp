@@ -5,7 +5,7 @@
 
 .Settings__TextArea {
   tab-size: 3;
-  margin: 10px 30px;
+  margin: 0 30px;
   line-height: 16px;
   font-size: 14px;
   font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -28,12 +28,6 @@
 
 .Settings--help-open .Settings__TextArea {
   width: calc(100% - 330px);
-}
-
-.Header {
-  display: block;
-  line-height: 50px;
-  padding-left: 30px;
 }
 
 .Title {
@@ -60,7 +54,8 @@
 .Settings__Error {
   float: right;
   margin-right: 40px;
-  height: 50px;
+  margin-top: 15px;
+  height: 35px;
 }
 
 .Settings__Error .Settings__ErrorMessage {
@@ -91,7 +86,7 @@
   margin: 10px 30px;
   margin-top: -10px;
   line-height: 16px;
-  padding: 5px 8px;
+  padding: 0;
   width: calc(100% - 90px);
   min-height: calc(100vh - 125px);
   color: black;
