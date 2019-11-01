@@ -28,7 +28,14 @@ export default function ViewTodo({ todo, show, onClick }) {
               <span
                 className={titleClasses.join(' ')}
                 onClick={() => {
-                  if (isLink) shell.openExternal(todo.title);
+                  let link = todo.title;
+                  if (
+                    !link.startsWith('http://') &&
+                    !link.startsWith('http://')
+                  )
+                    link = 'http://' + link;
+
+                  if (isLink) shell.openExternal(link);
                 }}
               >
                 {todo.title}
