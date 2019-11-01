@@ -98,7 +98,7 @@ function textToTodo(text) {
   const tags = [];
   let title = [''];
 
-  const tt = t.trim().split(' ');
+  const tt = t.trim().split(/\s+/);
   for (let i = tt.length - 1; i >= 0; i--) {
     if (tt[i].startsWith('#')) {
       tags.push(tt[i].slice(1));

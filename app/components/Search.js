@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
 import CaretPositioning from '../caretpos';
+import * as filter from '../filter';
 
 import styles from './Search.css';
-
-import * as filter from '../filter';
 
 const replaceTags = s => s.replace('<', '&lt;').replace('>', '&gt;');
 

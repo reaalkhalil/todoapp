@@ -67,12 +67,10 @@ export default function EditTodo({
   };
 
   const updateTags = v => {
-    const endWhiteSpace = v.length > 0 && v[v.length - 1] === ' ' ? ' ' : '';
+    const endWhiteSpace =
+      v.length > 0 && v[v.length - 1].trim() === '' ? ' ' : '';
 
-    let tags = v
-      .split(' ')
-      .map(t => t.trim())
-      .filter(t => t.length > 0);
+    let tags = v.split(/\s+/).filter(t => !!t);
 
     tags = tags.filter(
       (t, i) =>
@@ -135,13 +133,15 @@ export default function EditTodo({
                   const v = priorityRef.current.value;
                   let newV = null;
                   switch (e.key) {
+                    case 'ArrowDown':
                     case 'j':
                       newV = Math.max(v - 1, 0);
                       break;
+                    case 'ArrowUp':
                     case 'k':
                       newV = Math.min(v + 1, 2);
                       break;
-                    case 'p':
+                    case 's':
                       newV = (v + 1) % 3;
                       break;
                   }

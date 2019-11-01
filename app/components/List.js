@@ -122,8 +122,13 @@ export default function List({
               }
             }}
             onClick={e => {
-              if (e.metaKey && isLink) shell.openExternal(t.title);
-              else if (onClick) onClick(t.id);
+              if (e.metaKey && isLink) {
+                let link = t.title;
+                if (!link.startsWith('http://') && !link.startsWith('http://'))
+                  link = 'http://' + link;
+
+                shell.openExternal(link);
+              } else if (onClick) onClick(t.id);
             }}
           >
             {t.id === selectedId ? (

@@ -6,6 +6,7 @@ import * as filter from '../filter';
 import { SettingsSchema } from '../store/Store';
 import { initialSettings } from '../store/initial';
 import { shell } from 'electron';
+import { formatSplits } from '../utils/settings';
 
 import { Validator } from 'jsonschema';
 
@@ -85,6 +86,8 @@ function AdvancedSettings({
         setError(errors[0]);
       } else {
         setError(null);
+
+        if (res.splits) res.splits = formatSplits(res.splits);
 
         setValidSettings(res);
       }
