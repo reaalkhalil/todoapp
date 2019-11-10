@@ -1,35 +1,48 @@
 .Help {
   z-index: 100000;
-  position: absolute;
-  width: 400px;
+  position: absolute !important;
+  height: 100vh !important;
   right: 0;
   top: 0;
   bottom: 0;
-  padding: 10px;
-  padding-left: 20px;
-  overflow-y: scroll;
-  overflow-x: hidden;
   opacity: 0;
-  transition: 0ms;
+  transition: opacity 0ms, background-color 0ms, box-shadow 0ms;
   background-color: #f8f8f8;
   border-left: 1px solid #ddd;
   pointer-events: none;
-  user-select: none;
+  display: 'flex';
 }
 
 .Help--show {
-  transition: 200ms;
+  transition: opacity 200ms, background-color 200ms, box-shadow 200ms;
   opacity: 1;
   background-color: #f8f8f8ef;
   box-shadow: 0 0 50px #0002;
   pointer-events: all;
 }
 
-.Header {
+.Help__wrapper {
+  color: #000b;
+  font-size: 13px;
+  user-select: none;
+  padding: 10px;
+  padding-left: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 20px);
+}
+
+.Header,
+.Header2 {
   font-weight: 600;
   color: #000b;
   margin-top: 20px;
   line-height: 30px;
+  font-size: 18px;
+}
+
+.Header2 {
+  font-size: 16px;
 }
 
 .Key {
@@ -97,9 +110,4 @@
 
 .Link:hover {
   background-color: #00b8ffcc;
-}
-
-.Version {
-  color: #333;
-  font-size: 12px;
 }

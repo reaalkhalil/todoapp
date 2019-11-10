@@ -264,6 +264,7 @@
     "history": "^4.7.2",
     "jsonschema": "^1.2.4",
     "mousetrap": "^1.6.3",
+    "re-resizable": "^6.1.0",
     "react": "^16.8.3",
     "react-contenteditable": "^3.3.2",
     "react-dom": "^16.8.3",
