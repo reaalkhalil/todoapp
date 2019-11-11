@@ -610,6 +610,7 @@ export default function TodoList({
       },
       l: e => {
         e.preventDefault();
+        if (viewTodo) setViewTodo(false);
         if (selectedId === null) return;
 
         setTagModal(true);
@@ -666,6 +667,7 @@ export default function TodoList({
         e.preventDefault();
       },
       enter: e => {
+        if (viewTodo) setViewTodo(false);
         setEditModal(true);
         e.preventDefault();
       },
