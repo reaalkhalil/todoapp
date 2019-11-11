@@ -311,7 +311,7 @@ export const initialSettings = {
       title: 'Standup',
       shortcut: 's',
       filters: 'done=true done_at<=eod-d done_at>=eod-2d',
-      sort: 'priority DESC due_at created_at',
+      sort: 'priority:desc due_at created_at',
       default: {
         done: true
       }
