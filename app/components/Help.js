@@ -3,85 +3,26 @@ import { Resizable } from 're-resizable';
 import useWindowDimensions from '../window';
 import { app } from 'electron';
 
+import shortcuts from './Help/shortcuts';
+import pages from './Help/pages';
+
 import styles from './Help.css';
 
-const sections = [
-  {
-    header: 'Todo List',
-    keys: [
-      [['cmd', '/'], 'Toggle Help'],
-      [['tab'], 'Next Split'],
-      [['shift', 'tab'], 'Prev Split'],
-      [['space'], 'View Todo'],
-      [['c'], 'Create'],
-      [['t'], '(Un)Set Due Today'],
-      [['e'], '(Un)Mark Done'],
-      [['d', 'd'], 'Delete'],
-      [['s'], 'Toggle Priority'],
-      [['l'], 'Edit Tags'],
-      [['enter'], 'Edit'],
-      [['k'], 'Up'],
-      [['j'], 'Down'],
-      [['/'], 'Search'],
-      [['cmd', 'c'], 'Copy Todo'],
-      [['cmd', 'shift', 'c'], 'Copy List'],
-      [['cmd', 'x'], 'Cut Todo'],
-      [['cmd', 'v'], 'Import Todo(s)'],
-      [['cmd', 'shift', 'v'], 'Paste Todo(s)'],
-      [['cmd', 'z'], 'Undo'],
-      [['cmd', 'shift', 'z'], 'Redo'],
-      [['cmd', ','], 'Preferences']
-    ]
-  },
-  {
-    header: 'Import Multiple',
-    keys: [[['enter'], 'Confirm'], [['esc'], 'Cancel']]
-  },
-  {
-    header: 'Global Shortcuts',
-    keys: [[['ctrl', 'space'], 'Create Todo']]
-  },
-  {
-    header: 'Create Todo',
-    keys: [
-      [['tab'], 'Next Field'],
-      [['shift', 'tab'], 'Prev Field'],
-      [['enter'], 'Confirm Create'],
-      [['cmd', 'enter'], 'Confirm Create (in Notes)'],
-      [['esc'], 'Cancel Create']
-    ]
-  },
-  {
-    header: 'Edit Todo',
-    keys: [
-      [['tab'], 'Next Field'],
-      [['shift', 'tab'], 'Prev Field'],
-      [['enter'], 'Confirm Edit'],
-      [['cmd', 'enter'], 'Confirm Edit (in Notes)'],
-      [['esc'], 'Cancel Edit']
-    ]
-  },
-  {
-    header: 'Search',
-    keys: [
-      [['enter'], 'Focus to Todos'],
-      [['/'], 'Focus to Search'],
-      [['esc'], 'Cancel Search']
-    ]
-  },
-  {
-    header: 'Preferences',
-    keys: [
-      [['esc'], 'Cancel'],
-      [['tab'], 'Next Tab'],
-      [['shift', 'tab'], 'Prev Tab'],
-      [['cmd', 's'], 'Save Preferences']
-    ]
-  }
-];
+/**
+ *  MISSING shortcuts
+ * create edit split
+ * save from search
+ *
+ * keys in caps?
+ *
+ * advanced topics stuff
+ *
+ */
 
 export default function Help({ show, settings }) {
   const { width } = useWindowDimensions();
+
+  const [helpPage, setHelpPage] = useState(2); // TODO: / TODO: / TODO: / TODO: / TODO: / TODO: / TODO:
 
   const classes = [styles.Help];
   if (show) classes.push(styles['Help--show']);
@@ -91,19 +32,19 @@ export default function Help({ show, settings }) {
       header: 'Split Shortcuts',
       keys: settings.splits
         .filter(s => !!s.shortcut)
-        .map(s => [['g', s.shortcut], s.title]) // [[[s.shortcut], s.title]]
+        .map(s => [['g', s.shortcut], s.title])
     },
     {
       header: 'Page Shortcuts',
       keys: settings.pages
         .filter(p => !!p.shortcut)
-        .map(p => [['g', p.shortcut], p.title]) // [[[p.shortcut], p.title]]
+        .map(p => [['g', p.shortcut], p.title])
     }
   ];
 
-  if (sections.length >= 1) {
-    ss = [sections[0], ...ss, ...sections.filter((_, i) => i > 0)];
-  }
+  if (shortcuts.length >= 1)
+    ss = [shortcuts[0], ...ss, ...shortcuts.filter((_, i) => i > 0)];
+
   return (
     <Resizable
       className={classes.join(' ')}
@@ -151,15 +92,32 @@ export default function Help({ show, settings }) {
             ))}
           </div>
         ))}
+        <div className={styles.Header}>Advanced Topics</div>
         <br />
-        <div className={styles.Header}>Advanced</div>
-        <div className={styles.Header2}>Search</div>
-        <br />
-        Filters
-        <br />
-        <div className={styles.Header2}>Splits</div>
-        <br />
-        Default
+        {pages.map((h, i) => {
+          return (
+            <div
+              key={i}
+              className={styles.AdvancedTopic}
+              onClick={() => {
+                setHelpPage(i);
+              }}
+            >
+              <span className={styles.Key__Label}>{h.title}</span>
+              <i
+                className="fas fa-arrow-right"
+                style={{
+                  display: 'block',
+                  float: 'right',
+                  marginRight: '40px',
+                  lineHeight: '36px'
+                }}
+              ></i>
+              <br clear="both" style={{ fontSize: 0 }} />
+            </div>
+          );
+        })}
+
         <br />
         <br />
         <br />
@@ -178,6 +136,23 @@ export default function Help({ show, settings }) {
           Submit Feedback
         </a>
       </div>
+
+      {helpPage !== null ? (
+        <div className={styles.HelpPage}>
+          <div className={styles.Header}>{pages[helpPage].title}</div>
+          <br />
+
+          <div
+            className={styles.AdvancedTopic}
+            onClick={() => setHelpPage(null)}
+          >
+            <i className="fas fa-arrow-left"></i>{' '}
+            <span className={styles.Key__Label}>Back</span>
+          </div>
+
+          {pages[helpPage].content}
+        </div>
+      ) : null}
     </Resizable>
   );
 }

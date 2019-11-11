@@ -15,15 +15,15 @@
 
 .Help--show {
   transition: opacity 200ms, background-color 200ms, box-shadow 200ms;
-  opacity: 1;
-  background-color: #f8f8f8ef;
+  opacity: 0.92;
+  background-color: #f8f8f8;
   box-shadow: 0 0 50px #0002;
   pointer-events: all;
 }
 
 .Help__wrapper {
   color: #000b;
-  font-size: 13px;
+  font-size: 14px;
   user-select: none;
   padding: 10px;
   padding-left: 20px;
@@ -110,4 +110,57 @@
 
 .Link:hover {
   background-color: #00b8ffcc;
+}
+
+.TextLink {
+  display: inline-block;
+  color: #006eff;
+  cursor: pointer;
+}
+
+.HelpPage {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100001;
+  padding: 10px;
+  padding-left: 20px;
+  background-color: #f8f8f8;
+  color: #000b;
+  font-size: 14px;
+  user-select: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 20px);
+}
+
+.HelpPage p {
+  font-size: 14px;
+}
+
+.AdvancedTopic {
+  height: 36px;
+  line-height: 36px;
+  display: block;
+  width: calc(100% + 20px);
+  cursor: pointer;
+  margin-left: -20px;
+  padding-left: 20px;
+  margin-right: -20px;
+}
+
+.AdvancedTopic:hover {
+  background: #e1eeff;
+}
+
+.q {
+  display: inline-block;
+  font-family: 'Roboto Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  border: 1px solid #ccc;
+  margin: 0;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: black;
 }
