@@ -24,6 +24,7 @@ export default function TagEditor({
     if (!tagRef) return;
 
     const l = tagListRef.current.getBoundingClientRect();
+    if (!tagRef.current) return;
     const t = tagRef.current.getBoundingClientRect();
 
     if (l.bottom + 20 < t.bottom) {
@@ -156,6 +157,9 @@ export default function TagEditor({
                 );
               })
             : null}
+          {tags.length === 0 ? (
+            <div className={styles.NoTags}>Start typing to add a tag</div>
+          ) : null}
         </div>
       </div>
     </>

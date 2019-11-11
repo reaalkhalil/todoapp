@@ -53,7 +53,8 @@
   overflow-y: scroll;
 }
 
-.TagList__Tag {
+.TagList__Tag,
+.NoTags {
   display: block;
   height: 40px;
   user-select: none;
@@ -103,4 +104,10 @@
   position: absolute;
   top: 0;
   right: 15px;
+}
+
+.NoTags {
+  margin-top: 2px;
+  line-height: 40px;
+  cursor: default;
 }
