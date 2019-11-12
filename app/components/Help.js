@@ -22,7 +22,7 @@ import styles from './Help.css';
 export default function Help({ show, settings }) {
   const { width } = useWindowDimensions();
 
-  const [helpPage, setHelpPage] = useState(2); // TODO: / TODO: / TODO: / TODO: / TODO: / TODO: / TODO:
+  const [helpPage, setHelpPage] = useState(null);
 
   const classes = [styles.Help];
   if (show) classes.push(styles['Help--show']);
