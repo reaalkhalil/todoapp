@@ -13,10 +13,8 @@ export default function ViewTodo({ todo, show, onClick }) {
   }
 
   const titleClasses = [styles.Todo__Title];
-  const isLink = todo && todo.title && validURL(todo.title);
-  if (isLink) {
-    titleClasses.push(styles['Todo__Title--link']);
-  }
+  const isLink = todo && todo.title ? validURL(todo.title) : false;
+  if (isLink) titleClasses.push(styles['Todo__Title--link']);
 
   return (
     <>
@@ -28,14 +26,7 @@ export default function ViewTodo({ todo, show, onClick }) {
               <span
                 className={titleClasses.join(' ')}
                 onClick={() => {
-                  let link = todo.title;
-                  if (
-                    !link.startsWith('http://') &&
-                    !link.startsWith('http://')
-                  )
-                    link = 'http://' + link;
-
-                  if (isLink) shell.openExternal(link);
+                  if (isLink) shell.openExternal(isLink);
                 }}
               >
                 {todo.title}

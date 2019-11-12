@@ -8,7 +8,14 @@ export function validURL(str) {
       '(\\#[-a-z\\d_]*)?$',
     'i'
   ); // fragment locator
-  return !!pattern.test(str);
+
+  if (!pattern.test(str)) return false;
+
+  return (
+    (!str.startsWith('http://') && !str.startsWith('https://')
+      ? 'http://'
+      : '') + str
+  );
 }
 
 export function now(offset) {
