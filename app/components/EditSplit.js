@@ -92,11 +92,27 @@ export default function EditSplit({
   );
 
   const updateData = (field, value) => {
+    const d = (function() {
+      if (field !== 'default') return null;
+      try {
+        const res = new Function(`
+         const a = JSON.stringify(${value})
+         if (JSON.stringify(JSON.parse(a).constructor()) === '{}') return JSON.parse(a)
+         return null
+        `)();
+
+        return res;
+      } catch (e) {
+        return value;
+      }
+    })();
+
     const newSplit = {
       ...split,
-      [field]: value
+      [field]: field === 'default' ? d : value
     };
 
+    console.log('newSplit', newSplit, d);
     setSplit(newSplit);
     onUpdate(newSplit);
   };
