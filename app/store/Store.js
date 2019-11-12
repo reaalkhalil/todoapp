@@ -76,12 +76,14 @@ const schema = {
   __migration: { type: 'string' }
 };
 
+/*
 const migrationStore = new eStore();
 const m = migrationStore.get('__migration');
 if (!m || m !== '0.2.0') {
   migrationStore.delete('settings');
   migrationStore.set('__migration', '0.2.0');
 }
+*/
 
 export default class Store {
   constructor() {
