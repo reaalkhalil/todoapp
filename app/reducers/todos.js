@@ -28,7 +28,8 @@ function todos(state: Todo[] = [], action: Action) {
 }
 
 const undoableTodos = undoable(todos, {
-  filter: includeAction([ADD_TODO, DELETE_TODO, EDIT_TODO])
+  filter: includeAction([ADD_TODO, DELETE_TODO, EDIT_TODO]),
+  limit: 15
 });
 
 export default undoableTodos;
