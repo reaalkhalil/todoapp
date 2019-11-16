@@ -410,8 +410,17 @@ export default function TodoList({
         if (!pasteModal || pasteModal.length === 0) return;
 
         pasteModal.forEach(t => {
+          const todo = { ...t };
+          delete todo.id;
+
           addTodo({
-            todo: getDefaultTodo(t, splits, selectedSplit, pages, selectedPage)
+            todo: getDefaultTodo(
+              todo,
+              splits,
+              selectedSplit,
+              pages,
+              selectedPage
+            )
           });
         });
 
