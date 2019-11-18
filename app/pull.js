@@ -11,21 +11,23 @@ class TodoPuller {
     this.interval = setInterval(() => this.checkForTodos(), delay);
   }
 
-  setUserId(id) {
-    this.userId = id;
-  }
+  init(initData) {
+    const { userId, addFunc, lastActionFunc, integrations } = initData;
 
-  setIntegrations(integrations) {
-    if (integrations.length > this.integrations.length) this.clearBackOff();
-    this.integrations = integrations;
-  }
+    if (this.userId === '') {
+      this.userId = userId;
+      this.addFunc = addFunc;
+      this.lastActionFunc = lastActionFunc;
+    }
 
-  setAddFunc(addFunc) {
-    this.addFunc = addFunc;
-  }
-
-  setLastActionFunc(lastActionFunc) {
-    this.lastActionFunc = lastActionFunc;
+    if (
+      this.integrations.length !== integrations.length ||
+      (this.integrations.length > 0 &&
+        JSON.stringify(this.integrations) !== JSON.stringify(integrations))
+    ) {
+      this.clearBackOff();
+      this.integrations = integrations;
+    }
   }
 
   addTodos(tt) {

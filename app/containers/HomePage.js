@@ -10,6 +10,8 @@ import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
 import * as TodoActions from '../actions/todos';
 
+const uuid = require('uuid/v4');
+
 import pull from '../pull';
 
 function mapDispatchToProps(dispatch) {
@@ -27,12 +29,17 @@ class HomePage extends Component<Props> {
   }
 
   render() {
-    pull.setUserId(this.props.userId);
-    pull.setIntegrations(this.props.integrations);
-    pull.setAddFunc(todo => store.todoStore._addTodo({ todo }));
-    pull.setLastActionFunc(n =>
-      this.props.setLastAction(`Downloaded ${n} todo` + (n > 1 ? 's' : ''))
-    );
+    pull.init({
+      userId: this.props.userId,
+      integrations: this.props.integrations,
+      addFunc: async todo => {
+        let id = uuid();
+        while (await store.todoExists(id)) id = uuid();
+        await store.todoStore._addTodo({ ...todo, id });
+      },
+      lastActionFunc: n =>
+        this.props.setLastAction(`Downloaded ${n} todo` + (n > 1 ? 's' : ''))
+    });
 
     return (
       <>

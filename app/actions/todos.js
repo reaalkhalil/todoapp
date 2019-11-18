@@ -7,7 +7,6 @@ export const SET_RECENT_EDIT = 'SET_RECENT_EDIT';
 export const LAST_ACTION = 'LAST_ACTION';
 
 import store from '../store/Store';
-import { dispatch } from 'rxjs/internal/observable/pairs';
 
 export function addTodo(data) {
   return async (dispatch: Dispatch, getState: GetState) => {
