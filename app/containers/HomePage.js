@@ -3,6 +3,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import store from '../store/Store';
 import Help from '../components/Help';
 import LastAction from '../components/LastAction';
 import SettingsPage from './SettingsPage';
@@ -28,13 +29,9 @@ class HomePage extends Component<Props> {
   render() {
     pull.setUserId(this.props.userId);
     pull.setIntegrations(this.props.integrations);
-    pull.setAddFunc(todo => {
-      console.log('ADD_TODO_FROM_PULL', todo);
-      // TODO: shouldn't be undo-able
-      this.props.addTodo({ todo });
-    });
+    pull.setAddFunc(todo => store.todoStore._addTodo({ todo }));
     pull.setLastActionFunc(n =>
-      this.props.setLastAction(`Downloaded ${n} Todo` + (n > 1 ? 's' : ''))
+      this.props.setLastAction(`Downloaded ${n} todo` + (n > 1 ? 's' : ''))
     );
 
     return (

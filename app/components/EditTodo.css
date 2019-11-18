@@ -31,7 +31,7 @@
   font-weight: 300;
 }
 
-.TextArea.Content {
+.TextArea.Notes {
   width: calc(100% - 90px);
   height: calc(100vh - 420px);
 }

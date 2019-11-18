@@ -184,10 +184,10 @@ export default function EditTodo({
               <span className={styles.Label}>Notes:</span>
               <textarea
                 ref={descRef}
-                className={[styles.TextArea, styles.Content].join(' ')}
-                defaultValue={defaultTodo.content || ''}
+                className={[styles.TextArea, styles.Notes].join(' ')}
+                defaultValue={defaultTodo.notes || ''}
                 onChange={() => {
-                  updateData('content', descRef.current.value);
+                  updateData('notes', descRef.current.value);
                 }}
                 onKeyDown={e => {
                   if (e.keyCode === 9 && !event.shiftKey) {

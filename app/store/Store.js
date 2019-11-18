@@ -1,131 +1,77 @@
-const eStore = require('electron-store');
-const uuid = require('uuid/v4');
+import SettingsStore from './SettingsStore';
+import TodoStore from './TodoStore';
 
-import { initialTodos, initialSettings } from './initial';
-
-// ADDFIELDS:
-const TodoSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-    title: { type: 'string' },
-    content: { type: 'string' },
-    priority: { type: 'number' },
-    done: { type: 'boolean' },
-    created_at: { type: 'number' },
-    updated_at: { type: 'number' },
-    done_at: { type: ['number', 'null'] },
-    due_at: { type: ['number', 'null'] },
-    tags: { type: 'array', items: { type: 'string' } }
-  }
-};
-
-const IntegrationsSchema = {
-  type: 'array',
-  items: {
-    type: 'object',
-    properties: {
-      name: { type: 'string' },
-      value: { type: 'string' }
-    }
-  }
-};
-
-export const SettingsSchema = {
-  type: 'object',
-  properties: {
-    splits: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          position: { type: 'number' },
-          title: { type: 'string' },
-          shortcut: { type: 'string' },
-          sort: { type: 'string' },
-          filters: { type: 'string' }
-        }
-      }
-    },
-    pages: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          position: { type: 'number' },
-          title: { type: 'string' },
-          shortcut: { type: 'string' },
-          sort: { type: 'string' },
-          filters: { type: 'string' }
-        }
-      }
-    }
-  }
-};
-
-const schema = {
-  user_id: {
-    type: 'string'
-  },
-  integrations: IntegrationsSchema,
-  todos: {
-    type: 'array',
-    items: TodoSchema
-  },
-  settings: SettingsSchema,
-  __migration: { type: 'string' }
-};
-
-/*
-const migrationStore = new eStore();
-const m = migrationStore.get('__migration');
-if (!m || m !== '0.2.0') {
-  migrationStore.delete('settings');
-  migrationStore.set('__migration', '0.2.0');
-}
-*/
-
-export default class Store {
+class Store {
   constructor() {
-    this.store = new eStore({ schema });
-
-    if (!this.store.get('integrations')) this.store.set('integrations', []);
-
-    if (!this.store.get('settings'))
-      this.store.set('settings', initialSettings);
-
-    let uid = this.store.get('user_id');
-    if (uid && uid.length === 36) return;
-
-    this.store.set('todos', initialTodos);
-    this.store.set('user_id', uuid());
+    this.settingsStore = new SettingsStore();
+    this.todoStore = new TodoStore();
+    this.todoStore.init();
   }
 
-  saveTodos(todos) {
-    this.store.set('todos', todos);
+  /*           [ todo methods ]             */
+
+  async countTodos() {
+    return await this.todoStore.count();
   }
 
-  getTodos() {
-    return this.store.get('todos', []);
+  async subscribeToTodos(fn) {
+    return await this.todoStore.subscribeToTodos(fn);
   }
+
+  async todoExists(id) {
+    return await this.todoStore.exists(id);
+  }
+
+  async removeTodo(id) {
+    await this.todoStore.removeTodo(id);
+  }
+
+  async addTodo(t) {
+    await this.todoStore.addTodo(t);
+  }
+
+  async editTodo(t) {
+    await this.todoStore.editTodo(t);
+  }
+
+  canUndo() {
+    return this.todoStore.canUndo();
+  }
+
+  canRedo() {
+    return this.todoStore.canRedo();
+  }
+
+  async undo() {
+    return await this.todoStore.undo();
+  }
+
+  async redo() {
+    return await this.todoStore.redo();
+  }
+
+  /*          [ settings methods ]           */
 
   saveSettings(settings) {
-    this.store.set('settings', settings);
+    this.settingsStore.saveSettings(settings);
   }
 
   getSettings() {
-    return this.store.get('settings', {});
+    return this.settingsStore.getSettings();
   }
 
   getUserId() {
-    return this.store.get('user_id');
+    return this.settingsStore.getUserId();
   }
 
   getIntegrations() {
-    return this.store.get('integrations');
+    return this.settingsStore.getIntegrations();
   }
 
   setIntegrations(integrations) {
-    return this.store.set('integrations', integrations);
+    this.settingsStore.setIntegrations(integrations);
   }
 }
+
+const store = new Store();
+export default store;

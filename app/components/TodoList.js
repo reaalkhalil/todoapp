@@ -1,19 +1,20 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import { ipcRenderer, clipboard, webFrame } from 'electron';
-import addSplit from '../utils/settings';
+
+import ViewTodo from './ViewTodo';
 import Search from './Search';
 import EditTodo from './EditTodo';
 import EditSplit from './EditSplit';
-import { Splits, Page } from './Splits';
-import TagEditor from './TagEditor';
 import List from './List';
-import * as filter from '../filter';
+import TagEditor from './TagEditor';
+import { Splits, Page } from './Splits';
 
+import addSplit from '../utils/settings';
+import * as filter from '../filter';
+import store from '../store/Store';
 import KeyBoard from '../keyboard';
 import { previewText, endOfDay, todoToText, textToTodos } from '../utils';
-
-import ViewTodo from './ViewTodo';
 
 import styles from './TodoList.css';
 
@@ -26,14 +27,14 @@ const copyTodosToClipboard = (todos, setLastAction) => {
   );
   const text = todos.map(t => todoToText(t, maxlen)).join('\n');
   clipboard.writeText(text);
-  if (todos.length === 1) setLastAction(`Copied 1 Todo to Clipboard`);
-  else setLastAction(`Copied ${todos.length} Todos to Clipboard`);
+  if (todos.length === 1) setLastAction(`Copied 1 todo to clipboard`);
+  else setLastAction(`Copied ${todos.length} todos to clipboard`);
 };
 
 const copyTodoToClipboard = (todo, setLastAction) => {
   if (!todo) return;
   clipboard.writeText(todoToText(todo));
-  setLastAction(`Copied 1 Todo to Clipboard`);
+  setLastAction(`Copied 1 todo to clipboard`);
 };
 
 const onMarkDoneTodo = (
@@ -51,14 +52,6 @@ const onMarkDoneTodo = (
 
   const toDoneStatus = !t.done;
 
-  if (todos.length > 1) {
-    let idx = todos.findIndex(t => t.id === selectedId) + 1;
-    if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
-    setSelectedId(todos[idx].id);
-  } else {
-    setSelectedId(null);
-  }
-
   editTodo({
     todo: {
       ...t,
@@ -68,7 +61,7 @@ const onMarkDoneTodo = (
   });
 
   setLastAction(
-    (toDoneStatus ? 'Done: ' : 'Not Done: ') + previewText(t.title)
+    (toDoneStatus ? 'Done: ' : 'Not done: ') + previewText(t.title)
   );
 };
 
@@ -89,14 +82,6 @@ const onDueTodayTodo = (
 
   const dueToday = t.due_at !== endOfDay;
 
-  if (todos.length > 1) {
-    let idx = todos.findIndex(t => t.id === selectedId) + 1;
-    if (idx >= todos.length) idx = todos.length - (searchModal ? 1 : 2);
-    setSelectedId(todos[idx].id);
-  } else {
-    setSelectedId(null);
-  }
-
   editTodo({
     todo: {
       ...t,
@@ -104,10 +89,7 @@ const onDueTodayTodo = (
     }
   });
 
-  setLastAction(
-    (dueToday ? 'Moved to Today: ' : 'Moved out of Today: ') +
-      previewText(t.title)
-  );
+  setLastAction(`Due ${dueToday ? 'today' : 'later'}: ` + previewText(t.title));
 };
 
 const onDeleteTodo = (
@@ -119,14 +101,6 @@ const onDeleteTodo = (
 ) => {
   if (todos.length == 0) return;
   const i = todos.findIndex(t => t.id === selectedId);
-  if (todos.length > 1) {
-    let idx = i + 1;
-    if (idx >= todos.length) idx = todos.length - 2;
-    setSelectedId(todos[idx].id);
-  } else {
-    setSelectedId(null);
-  }
-
   deleteTodo({ id: selectedId });
   setLastAction('Deleted: ' + previewText(todos[i].title));
 };
@@ -152,7 +126,6 @@ export default function TodoList({
   deleteTodo,
   editTodo,
   setLastAction,
-  todos,
   splits,
   pages,
   onToggleHelp,
@@ -160,17 +133,34 @@ export default function TodoList({
   settings,
   addSplit,
   editSplit,
-  deselectNewlyCreated,
-  newlyCreatedId,
-  canUndo,
-  undo,
-  canRedo,
-  redo
+  recentlyEditedId
 }) {
   const [selectedSplit, setSelectedSplit] = useState(splits[0].position);
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
 
+  const [allTodos, setAllTodos] = useState([]);
+
+  useEffect(() => {
+    if (
+      recentlyEditedId &&
+      todos.find(t => t.id === recentlyEditedId) &&
+      selectedId !== recentlyEditedId
+    )
+      setSelectedId(recentlyEditedId);
+  }, [allTodos]);
+
+  useEffect(() => {
+    const unsubscribe = store.subscribeToTodos(tt => {
+      if (!tt) return;
+      KeyBoard.activate();
+      setAllTodos(tt);
+    });
+
+    return async () => (await unsubscribe)();
+  }, []);
+
+  let todos = allTodos;
   const tags = filter.getTags(todos);
 
   if (searchQuery === null) {
@@ -182,15 +172,6 @@ export default function TodoList({
     todos && todos[0] ? todos[0].id : null
   );
 
-  useEffect(() => {
-    if (
-      (newlyCreatedId === 0 || newlyCreatedId) &&
-      todos.find(t => t.id === newlyCreatedId)
-    ) {
-      setSelectedId(newlyCreatedId);
-    }
-  }, [newlyCreatedId]);
-
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addSplitModal, setAddSplitModal] = useState(false);
@@ -200,6 +181,19 @@ export default function TodoList({
   const [searchFocus, setSearchFocus] = useState(false);
   const [viewTodo, setViewTodo] = useState(false);
   const [pasteModal, setPasteModal] = useState(null);
+
+  const [nextTodoToSelect, setNextTodoToSelect] = useState(null);
+
+  useEffect(() => {
+    let idx = todos.findIndex(t => t.id === selectedId);
+    if (idx === -1) setSelectedId(nextTodoToSelect);
+    else {
+      if (todos.length - 1 === idx && idx > 0) {
+        setNextTodoToSelect(todos[todos.length - 2].id);
+      } else if (todos.length > idx + 1) setNextTodoToSelect(todos[idx + 1].id);
+      else setNextTodoToSelect(null);
+    }
+  }, [selectedId]);
 
   useEffect(() => {
     const f = () => {
@@ -219,6 +213,7 @@ export default function TodoList({
   )
     setSelectedSplit(splits[0].position);
 
+  // TODO: whats the deal here, how does nextTodoToSelect affect this?
   if (!pasteModal) {
     if (selectedId !== null && (!todos || todos.length == 0))
       setSelectedId(null);
@@ -227,10 +222,16 @@ export default function TodoList({
       todos.length > 0 &&
       (selectedId === null ||
         todos.filter(t => t.id === selectedId).length === 0)
-    )
-      setSelectedId(todos[0].id);
+    ) {
+      if (todos.filter(t => t.id === nextTodoToSelect).length > 0) {
+        setSelectedId(nextTodoToSelect);
+      } else {
+        setSelectedId(todos[0].id);
+      }
+    }
   }
 
+  // TODO: whats the deal here, how does nextTodoToSelect affect this?
   useEffect(() => {
     if (pasteModal && pasteModal.length > 0 && pasteModal[0]) {
       setSelectedId(pasteModal[0].id);
@@ -267,10 +268,14 @@ export default function TodoList({
 
   const triggerAddorEdit = () => {
     if (addModal) {
+      if (!todoToAdd.title) return;
+
       addTodo({ todo: todoToAdd });
       setAddModal(false);
       setLastAction('Created: ' + previewText(todoToAdd.title));
     } else if (editModal) {
+      if (!todoToEdit.title) return;
+
       editTodo({ todo: todoToEdit });
       setEditModal(false);
       setLastAction('Edited: ' + previewText(todoToEdit.title));
@@ -289,7 +294,7 @@ export default function TodoList({
       });
       setSplitToAdd(null);
       setAddSplitModal(false);
-      setLastAction('Created Split: ' + previewText(splitToAdd.title));
+      setLastAction('Created split: ' + previewText(splitToAdd.title));
     } else if (editSplitModal) {
       editSplit({
         index: splitToEdit.index,
@@ -302,7 +307,7 @@ export default function TodoList({
         })()
       });
       setEditSplitModal(false);
-      setLastAction('Edited Split: ' + previewText(splitToEdit.title));
+      setLastAction('Edited split: ' + previewText(splitToEdit.title));
     }
   };
 
@@ -318,6 +323,8 @@ export default function TodoList({
     KeyBoard.bind({
       esc: () => setAddModal(false),
       enter: () => {
+        if (!todoToAdd.title) return;
+
         addTodo({ todo: todoToAdd });
         setAddModal(false);
         setLastAction('Created: ' + previewText(todoToAdd.title));
@@ -328,6 +335,8 @@ export default function TodoList({
     KeyBoard.bind({
       esc: () => setEditModal(false),
       enter: () => {
+        if (!todoToEdit.title) return;
+
         editTodo({ todo: todoToEdit });
         setEditModal(false);
         setLastAction('Edited: ' + previewText(todoToEdit.title));
@@ -343,7 +352,7 @@ export default function TodoList({
       enter: () => {
         triggerAddorEditSplit();
         setAddSplitModal(false);
-        setLastAction('Added Split: ' + previewText(splitToAdd.title));
+        setLastAction('Added split: ' + previewText(splitToAdd.title));
       },
       'command+/__ctrl+/': onToggleHelp
     });
@@ -353,7 +362,7 @@ export default function TodoList({
       enter: () => {
         triggerAddorEditSplit();
         setEditSplitModal(false);
-        setLastAction('Edited Split: ' + previewText(splitToEdit.title));
+        setLastAction('Edited split: ' + previewText(splitToEdit.title));
       },
       'command+/__ctrl+/': onToggleHelp
     });
@@ -394,7 +403,7 @@ export default function TodoList({
     KeyBoard.bind({
       space: e => {
         e.preventDefault();
-        if (selectedId !== 0 && !selectedId && !viewTodo) return;
+        if (!selectedId && !viewTodo) return;
         if (selectedId || selectedId === 0) setViewTodo(!viewTodo);
       },
       k__up: e => {
@@ -410,6 +419,8 @@ export default function TodoList({
         if (!pasteModal || pasteModal.length === 0) return;
 
         pasteModal.forEach(t => {
+          if (!t.title) return;
+
           const todo = { ...t };
           delete todo.id;
 
@@ -447,18 +458,22 @@ export default function TodoList({
       ...shortcuts,
       // UNDO / REDO
       'command+z__ctrl+z': e => {
-        if (canUndo) {
-          undo();
-          setLastAction('Undo');
-        } else setLastAction('Nothing to Undo');
+        if (store.canUndo())
+          (async function() {
+            const d = await store.undo();
+            setLastAction(`Undo: ${d}`);
+          })();
+        else setLastAction('Nothing to undo');
 
         e.preventDefault();
       },
       'command+shift+z__ctrl+shift+z': e => {
-        if (canRedo) {
-          redo();
-          setLastAction('Redo');
-        } else setLastAction('Nothing to Redo');
+        if (store.canRedo())
+          (async function() {
+            const d = await store.redo();
+            setLastAction(`Redo: ${d}`);
+          })();
+        else setLastAction('Nothing to redo');
 
         e.preventDefault();
       },
@@ -483,7 +498,7 @@ export default function TodoList({
         copyTodoToClipboard(todos.find(t => t.id === selectedId), () => {});
         onDeleteTodo(todos, selectedId, setSelectedId, deleteTodo, () => {});
 
-        setLastAction('Cut 1 Todo');
+        setLastAction('Cut 1 todo');
 
         e.preventDefault();
       },
@@ -502,10 +517,10 @@ export default function TodoList({
         if (tt.length === 1) {
           setInitTodo(tt[0]);
           setAddModal(true);
-          setLastAction('Importing 1 Todo');
+          setLastAction('Importing 1 todo');
         } else {
           setPasteModal(tt);
-          setLastAction(`Importing ${tt.length} Todos`);
+          setLastAction(`Importing ${tt.length} todos`);
         }
 
         e.preventDefault();
@@ -519,14 +534,14 @@ export default function TodoList({
         if (tt.length === 0) return;
 
         e.preventDefault();
-        tt.forEach(t => {
+        tt.forEach(t =>
           addTodo({
             todo: getDefaultTodo(t, splits, selectedSplit, pages, selectedPage)
-          });
-        });
+          })
+        );
 
         setLastAction(
-          tt.length === 1 ? 'Pasted 1 Todo' : `Pasted ${tt.length} Todos`
+          tt.length === 1 ? 'Pasted 1 todo' : `Pasted ${tt.length} todos`
         );
 
         e.preventDefault();
@@ -626,17 +641,16 @@ export default function TodoList({
       },
       space: e => {
         e.preventDefault();
-        if (selectedId !== 0 && !selectedId && !viewTodo) return;
-        if (selectedId || selectedId === 0) setViewTodo(!viewTodo);
+        if (!selectedId && !viewTodo) return;
+        if (selectedId) setViewTodo(!viewTodo);
       },
       s: () => {
-        if (selectedId !== 0 && !selectedId) return;
+        if (!selectedId) return;
         const t = todos.find(t => t.id === selectedId);
         if (!t) return;
-        // TODO: if todo goes into a new split, select the next one
-        //       make generalised way to select the next todo if curr disappears
+
         editTodo({ todo: { ...t, priority: ((t.priority || 0) + 1) % 3 } });
-        setLastAction('Changed Priority: ' + previewText(t.title));
+        setLastAction('Changed priority: ' + previewText(t.title));
       },
       t: () => {
         onDueTodayTodo(
@@ -732,7 +746,7 @@ export default function TodoList({
     });
   }
 
-  if (viewTodo && selectedId !== 0 && !selectedId) setViewTodo(false);
+  if (viewTodo && !selectedId) setViewTodo(false);
 
   if (addModal) {
     const init = getDefaultTodo(
@@ -863,15 +877,6 @@ export default function TodoList({
             if (remove) tags = tags.filter(t => t !== tag);
             else tags.push(tag);
 
-            if (todos.length > 1) {
-              let idx = todos.findIndex(t => t.id === selectedId) + 1;
-              if (idx >= todos.length)
-                idx = todos.length - (searchModal ? 1 : 2);
-              setSelectedId(todos[idx].id);
-            } else {
-              setSelectedId(null);
-            }
-
             editTodo({
               todo: {
                 ...t,
@@ -946,7 +951,7 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
 
   let defaultTodo = {
     title: '',
-    content: '',
+    notes: '',
     priority: 0,
     done: false,
     created_at: 0,

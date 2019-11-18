@@ -97,10 +97,10 @@ export default function List({
           if (hasTags)
             tagsClasses.push(styles['TodoItem__Tags--no-duetoday-icon']);
           else titleClasses.push(styles['TodoItem__Title--no-duetoday-icon']);
-          if (!t.content || t.content === '') {
+          if (!t.notes || t.notes === '') {
             if (hasTags)
-              tagsClasses.push(styles['TodoItem__Tags--no-content-icon']);
-            else titleClasses.push(styles['TodoItem__Title--no-content-icon']);
+              tagsClasses.push(styles['TodoItem__Tags--no-notes-icon']);
+            else titleClasses.push(styles['TodoItem__Title--no-notes-icon']);
             if (!t.done) {
               if (hasTags)
                 tagsClasses.push(styles['TodoItem__Tags--no-done-icon']);
@@ -146,7 +146,7 @@ export default function List({
               </span>
             ) : null}
 
-            {!!t.content && t.content !== '' ? (
+            {!!t.notes && t.notes !== '' ? (
               <span className={styles.TodoItem__HasContent}>
                 <i className="fas fa-file-alt" />
               </span>

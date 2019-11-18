@@ -1,6 +1,5 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-// ADDFIELDS:
 export type Todo = {
   +id: number,
   +title: string,

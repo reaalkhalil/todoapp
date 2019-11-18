@@ -18,6 +18,10 @@ export default function LastAction({ lastAction }) {
         setLastTimeout(null);
       }, 5000)
     );
+
+    return () => {
+      if (lastTimeout !== null) clearTimeout(lastTimeout);
+    };
   }, [lastAction]);
 
   const classes = [styles.LastAction];

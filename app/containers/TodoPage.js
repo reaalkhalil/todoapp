@@ -10,10 +10,7 @@ import { initialTodos } from '../store/initial';
 
 const mapStateToProps = state => ({
   settings: state.settings,
-  todos: state.todos.present,
-  newlyCreatedId: state.newlyCreatedId,
-  canUndo: state.todos.past.length > 0,
-  canRedo: state.todos.future.length > 0
+  recentlyEditedId: state.recentlyEditedId
 });
 
 const mapDispatchToProps = dispatch =>

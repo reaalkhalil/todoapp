@@ -1,18 +1,24 @@
 import * as Mousetrap from 'mousetrap';
 
 class KB {
+  constructor() {
+    this._activated = false;
+  }
+
+  activate() {
+    this._activated = true;
+  }
+
   bind(handlers) {
     Mousetrap.reset();
 
     for (let k of Object.keys(handlers))
       if (typeof k === 'string' && typeof handlers[k] === 'function') {
+        const h = e => this._activated && handlers[k](e);
         const split = k.split('__');
-        if (split.length > 1) {
-          Mousetrap.bind(split, handlers[k]);
-          continue;
-        }
 
-        Mousetrap.bind(k, handlers[k]);
+        if (split.length > 1) Mousetrap.bind(split, h);
+        else Mousetrap.bind(k, h);
       }
   }
 

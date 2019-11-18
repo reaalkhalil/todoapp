@@ -34,7 +34,7 @@ class TodoPuller {
     tt.forEach(t => {
       this.addFunc({
         title: t.title || t.Title,
-        content: t.content || t.Content,
+        notes: t.content || t.Content,
         priority: 0,
         done: false,
         created_at: new Date().getTime(),

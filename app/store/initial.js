@@ -3,9 +3,9 @@ import { now, endOfDay } from '../utils';
 
 export const initialTodos = [
   {
-    id: 1,
+    id: '1',
     title: `1. Press [${cmdOrCtrl()}] + [?] to open the Help tab`,
-    content: '',
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
@@ -15,9 +15,9 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: 2,
+    id: '2',
     title: '2. Press [tab] and [shift] + [tab] to navigate splits',
-    content: '',
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
@@ -27,9 +27,9 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: 3,
+    id: '3',
     title: "3. Press [tab] to go to the 'Backlog' -->",
-    content: '',
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
@@ -39,9 +39,9 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: 4,
+    id: '4',
     title: '4. Highlight this then press [space]',
-    content: `Pressing [space] allows you to quickly view a todo and its notes.
+    notes: `Pressing [space] allows you to quickly view a todo and its notes.
 
 You will notice that this todo has a document icon on the far right, this means it has notes attached.
 
@@ -63,9 +63,9 @@ You can press [space] again or [esc] to exit this view.`,
     tags: []
   },
   {
-    id: 5,
+    id: '5',
     title: '5. Press [j] / [k] to move down / up in todos.',
-    content: ``,
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
@@ -75,9 +75,9 @@ You can press [space] again or [esc] to exit this view.`,
     tags: []
   },
   {
-    id: 6,
+    id: '6',
     title: '6. Highlight this then press [enter]',
-    content: `# Editing todos:
+    notes: `# Editing todos:
 
 Edit the selected todo by pressing [enter].
 
@@ -107,9 +107,9 @@ To delete a todo, press [d] twice.
     tags: []
   },
   {
-    id: 7,
+    id: '7',
     title: '7. Read this after creating your first todo',
-    content: `# Editing tags:
+    notes: `# Editing tags:
 
 To edit a todo's tags you can either:
 - Edit it by hitting [enter], and editing tags there.
@@ -135,9 +135,9 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: 8,
+    id: '8',
     title: '8. Highlight your new todo and press [e] to mark it done',
-    content: '',
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
@@ -147,9 +147,9 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: 9,
+    id: '9',
     title: '9. Press [g] then [d] to view your done todos',
-    content: `You can press [e] on done todos to unmark them as done`,
+    notes: `You can press [e] on done todos to unmark them as done`,
     priority: 0,
     done: false,
     created_at: now(),
@@ -159,9 +159,9 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: 10,
+    id: '10',
     title: '10. This is the done page',
-    content: `The 'Done' page is an archive, so you won't spend too much time here.
+    notes: `The 'Done' page is an archive, so you won't spend too much time here.
 
 A more useful page is the 'Standup' page, it shows your done todos from the past day.
 
@@ -170,20 +170,20 @@ Press [g] then [s] to go to there. Try it now!`,
     done: true,
     created_at: now(),
     updated_at: now(),
-    done_at: now(-3600 * 1000),
+    done_at: now(-1000),
     due_at: endOfDay(),
     tags: []
   },
   {
-    id: 11,
+    id: '11',
     title: '11. This todo was marked done at noon yesterday',
-    content: `# Standup page
+    notes: `# Standup page
     
 The todos you marked as done between midnight today and midnight yesterday will appear here.
 
 This page is very useful if you have standup meetings [https://en.wikipedia.org/wiki/Stand-up_meeting].
 
-You can also configure your pages to change this duration!
+You could also configure a page to, for example, display your done todos from the past 7 days.
 
 Now hit [esc] twice to go back to 'Today'`,
     priority: 0,
@@ -195,9 +195,9 @@ Now hit [esc] twice to go back to 'Today'`,
     tags: []
   },
   {
-    id: 12,
+    id: '12',
     title: "12. Press [s] to edit a todo's priority",
-    content: `High priority todos are displayed at the top of the list!`,
+    notes: `High priority todos are displayed at the top of the list!`,
     priority: 0,
     done: false,
     created_at: now(),
@@ -206,22 +206,21 @@ Now hit [esc] twice to go back to 'Today'`,
     tags: []
   },
   {
-    id: 13,
+    id: '13',
     title: '13. Press [/] to search; [esc] to close search',
-    content: ``,
+    notes: '',
     priority: 0,
     done: false,
     created_at: now(),
     updated_at: now(),
-    done_at: endOfDay(-3600 * 24 * 1000),
     due_at: endOfDay(),
     tags: []
   },
 
   {
-    id: 14,
+    id: '14',
     title: '14. Press [cmd] + [,] to set up integrations!',
-    content: `You can add new todos by sending a telegram message or an email.
+    notes: `You can add new todos by sending a telegram message or an email.
 
 To get started you need to verify your Telegram account / email address.
 
@@ -248,9 +247,9 @@ The email subject will be the todo title and the email body will be the todo not
   },
 
   {
-    id: 15,
+    id: '15',
     title: '15. Thank you!',
-    content: `Thank you for trying out TodoApp!
+    notes: `Thank you for trying out TodoApp!
 
 There are too many features to go through in this short tutorial, for more information read the Advanced Topics at bottom of the Help tab
 

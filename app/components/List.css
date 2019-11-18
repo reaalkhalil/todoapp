@@ -64,7 +64,7 @@
   max-width: calc(100% - 90px);
   /* right: 52px; */
 }
-.TodoItem__Title--no-content-icon {
+.TodoItem__Title--no-notes-icon {
   max-width: calc(100% - 72px);
   /* right: 32px; */
 }
@@ -95,7 +95,7 @@
   max-width: calc(43px + 20%);
   right: 52px;
 }
-.TodoItem__Tags--no-content-icon {
+.TodoItem__Tags--no-notes-icon {
   width: calc(143px + 20%);
   max-width: calc(63px + 20%);
   right: 32px;
