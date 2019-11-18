@@ -26,7 +26,6 @@ export default class TodoStore {
 
     const tt = await this._db.todos.find().exec();
 
-    console.log('_______++++____', tt, tt.length);
     if (!tt || !tt.length) await this._db.todos.bulkInsert(initialTodos);
 
     _doneLoading();
@@ -122,7 +121,7 @@ export default class TodoStore {
     await this._removeTodo(id);
 
     this._past.push({
-      description: `Delete todo: ${previewText(t.title)}`,
+      description: `Delete: ${previewText(t.title)}`,
       re: async () => await this._removeTodo(id),
       un: async () => await this._addTodo(t)
     });
@@ -134,7 +133,7 @@ export default class TodoStore {
     await this._addTodo(t);
 
     this._past.push({
-      description: `Add todo: ${previewText(t.title)}`,
+      description: `Create: ${previewText(t.title)}`,
       re: async () => await this._addTodo(t),
       un: async () => await this._removeTodo(t.id)
     });
@@ -149,7 +148,7 @@ export default class TodoStore {
     await this._editTodo({ ...t });
 
     this._past.push({
-      description: `Edit todo: ${previewText(t.title)}`,
+      description: `Edit: ${previewText(t.title)}`,
       re: async () => await this._editTodo({ ...t }),
       un: async () => await this._editTodo({ ...oldT, id: t.id })
     });

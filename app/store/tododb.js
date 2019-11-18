@@ -46,7 +46,6 @@ async function createDatabase(name, adapter) {
     adapter
   });
 
-  console.log('creating todo-collection..');
   await db.collection({
     name: 'todos',
     schema: todosSchema

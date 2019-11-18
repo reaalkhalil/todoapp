@@ -112,7 +112,6 @@ export default function EditSplit({
       [field]: field === 'default' ? d : value
     };
 
-    console.log('newSplit', newSplit, d);
     setSplit(newSplit);
     onUpdate(newSplit);
   };
