@@ -10,10 +10,6 @@ class Store {
 
   /*           [ todo methods ]             */
 
-  async countTodos() {
-    return await this.todoStore.count();
-  }
-
   async subscribeToTodos(fn) {
     return await this.todoStore.subscribeToTodos(fn);
   }

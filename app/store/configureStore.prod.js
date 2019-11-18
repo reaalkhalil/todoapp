@@ -5,7 +5,6 @@ import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
 import * as settingsActions from '../actions/settings';
-import * as todosActions from '../actions/todos';
 import { formatSplits } from '../utils/settings';
 
 import store from './Store';
@@ -29,16 +28,12 @@ function configureStore() {
         } else if (action.type === settingsActions.ADD_INTEGRATIONS) {
           store.setIntegrations(state.integrations);
         }
-      } else if (action.type in todosActions) {
-        //   s.saveTodos(state.todos.present);
-        // TODO handle todo actions
       }
 
       return returnValue;
     };
   };
 
-  //   const todos = store.getTodos();
   const settings = store.getSettings();
   const userId = store.getUserId();
   const integrations = store.getIntegrations();
@@ -46,7 +41,6 @@ function configureStore() {
   return createStore(
     rootReducer,
     {
-      // todos: { past: [], future: [], present: todos },
       settings,
       userId,
       integrations

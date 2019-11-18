@@ -1,7 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-// import todos from './todos';
 import recentlyEdited from './recentlyEdited';
 import lastAction from './lastAction';
 import { settings, integrations, userId } from './settings';

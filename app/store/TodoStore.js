@@ -3,7 +3,6 @@ import RxDB from 'rxdb';
 RxDB.plugin(require('pouchdb-adapter-idb'));
 
 import { previewText } from '../utils';
-
 import { initialTodos } from './initial';
 
 const newError = str => ({

@@ -8,10 +8,10 @@ import Help from '../components/Help';
 import LastAction from '../components/LastAction';
 import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
+
 import * as TodoActions from '../actions/todos';
 
 const uuid = require('uuid/v4');
-
 import pull from '../pull';
 
 function mapDispatchToProps(dispatch) {
