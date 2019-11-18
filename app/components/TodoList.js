@@ -139,7 +139,7 @@ export default function TodoList({
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
 
-  const [allTodos, setAllTodos] = useState([]);
+  const [allTodos, setAllTodos] = useState(null);
 
   useEffect(() => {
     if (
@@ -160,7 +160,7 @@ export default function TodoList({
     return async () => (await unsubscribe)();
   }, []);
 
-  let todos = allTodos;
+  let todos = allTodos || [];
   const tags = filter.getTags(todos);
 
   if (searchQuery === null) {
@@ -897,7 +897,7 @@ export default function TodoList({
       />
 
       <List
-        showImage={!searchModal && !selectedPage}
+        showImage={!searchModal && !selectedPage && Array.isArray(allTodos)}
         todos={todos}
         selectedId={searchFocus ? null : selectedId}
         onHover={a => {
