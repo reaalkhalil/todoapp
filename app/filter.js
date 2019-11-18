@@ -1,4 +1,3 @@
-import todos from './reducers/todos';
 import type { Todo } from './reducers/types';
 import { now, endOfDay } from './utils';
 
@@ -83,7 +82,6 @@ const allowedFilterNames = [
   'created_at',
   'updated_at',
   'title',
-  'content',
   'notes'
 ];
 
@@ -430,7 +428,6 @@ function parseFilter(str) {
     }
 
     case 'notes':
-    case 'content':
     case 'title': {
       if (
         (op !== '=' && op !== '>') ||
@@ -440,7 +437,7 @@ function parseFilter(str) {
         return null;
 
       return {
-        field: filterName === 'notes' ? 'content' : filterName,
+        field: filterName,
         op: op === '=' ? MATCHES_SOME : MATCHES_ALL,
         value: vals
       };

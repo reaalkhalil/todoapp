@@ -48,10 +48,10 @@ export function todoToText(todo, maxLength = 0) {
       new Array(spaces).fill(' ').join('') +
       todo.tags.map(t => '#' + t).join(' ');
 
-  if (todo.content && todo.content.length > 0)
+  if (todo.notes && todo.notes.length > 0)
     res +=
       '\n' +
-      todo.content
+      todo.notes
         .split('\n')
         .map(c => '\t' + c)
         .join('\n');
@@ -64,19 +64,21 @@ export function textToTodos(text) {
   const tt = text.split('\n');
   tt.forEach(t => {
     if ((t.startsWith(' ') || t.startsWith('\t')) && todos.length > 0) {
-      todos[todos.length - 1].content.push(t);
+      todos[todos.length - 1].notes.push(t);
       return;
     }
 
     if (t.trim() === '') return;
-    todos.push({ title: t, content: [] });
+    todos.push({ title: t, notes: [] });
   });
 
-  return todos.map(t => {
-    const todo = textToTodo(t.title);
-    todo.content = removeCommonWhitespace(t.content);
-    return todo;
-  });
+  return todos
+    .map(t => {
+      const todo = textToTodo(t.title);
+      todo.notes = removeCommonWhitespace(t.notes);
+      return todo;
+    })
+    .filter(t => !!t.title);
 }
 
 function textToTodo(text) {

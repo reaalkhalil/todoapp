@@ -31,7 +31,7 @@ export default function ViewTodo({ todo, show, onClick }) {
               >
                 {todo.title}
               </span>
-              {todo.content}
+              {todo.notes}
             </span>
             <div className={styles.Times}>
               <table>

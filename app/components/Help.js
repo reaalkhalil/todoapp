@@ -8,17 +8,6 @@ import pages from './Help/pages';
 
 import styles from './Help.css';
 
-/**
- *  MISSING shortcuts
- * create edit split
- * save from search
- *
- * keys in caps?
- *
- * advanced topics stuff
- *
- */
-
 export default function Help({ show, settings }) {
   const { width } = useWindowDimensions();
 
@@ -59,7 +48,7 @@ export default function Help({ show, settings }) {
         topLeft: false
       }}
       minWidth={350}
-      maxWidth={width - 10}
+      maxWidth={width - 180}
       defaultSize={{
         width: 400,
         height: '100vh'

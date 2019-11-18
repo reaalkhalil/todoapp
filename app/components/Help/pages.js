@@ -79,18 +79,18 @@ const pages = [
           )}
           <br />
           <br />
-          Pasting the following will produce 2 todos with content:
+          Pasting the following will produce 2 todos with notes:
           <br />
           <br />
           {c(
             <>
               todo1
               <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;content1
+              &nbsp;&nbsp;&nbsp;&nbsp;notes1
               <br />
               todo2
               <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;content2
+              &nbsp;&nbsp;&nbsp;&nbsp;notes2
             </>
           )}
           <br />

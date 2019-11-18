@@ -1,40 +1,44 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
-// ADDFIELDS:
 export type Todo = {
-  +id: number,
-  +title: string,
-  +content: string,
-  +priority: number,
-  +created_at: number,
-  +done_at: number | null,
-  +due_at: number | null,
-  +done: Boolean
-};
-
-type Filter = {
-  field: string,
-  op: string,
-  value: any
+  id: string,
+  title: string,
+  notes: string,
+  priority: number,
+  tags: string[],
+  created_at: number,
+  updated_at: number,
+  done_at: number | null,
+  due_at: number | null,
+  done: Boolean
 };
 
 export type Settings = {
-  +splits: {
-    +title: string,
-    +shortcut: string,
-    +position: number,
-    +filters: Filter[]
+  splits: {
+    title: string,
+    shortcut: string,
+    position: number,
+    index: number,
+    filters: string,
+    sort: string,
+    default: any
+  }[],
+  pages: {
+    title: string,
+    shortcut: string,
+    filters: string,
+    sort: string,
+    default: any
   }[]
 };
 
 export type StateType = {
-  +todos: Todo[],
-  +settings: Settings
+  settings: Settings
 };
 
 export type Action = {
-  +type: string,
-  +data: any
+  type: string,
+  data: any
 };
 
 export type GetState = () => StateType;

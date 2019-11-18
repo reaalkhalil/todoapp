@@ -3,12 +3,15 @@ import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import store from '../store/Store';
 import Help from '../components/Help';
 import LastAction from '../components/LastAction';
 import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
+
 import * as TodoActions from '../actions/todos';
 
+const uuid = require('uuid/v4');
 import pull from '../pull';
 
 function mapDispatchToProps(dispatch) {
@@ -26,16 +29,17 @@ class HomePage extends Component<Props> {
   }
 
   render() {
-    pull.setUserId(this.props.userId);
-    pull.setIntegrations(this.props.integrations);
-    pull.setAddFunc(todo => {
-      console.log('ADD_TODO_FROM_PULL', todo);
-      // TODO: shouldn't be undo-able
-      this.props.addTodo({ todo });
+    pull.init({
+      userId: this.props.userId,
+      integrations: this.props.integrations,
+      addFunc: async todo => {
+        let id = uuid();
+        while (await store.todoExists(id)) id = uuid();
+        await store.todoStore._addTodo({ ...todo, id });
+      },
+      lastActionFunc: n =>
+        this.props.setLastAction(`Downloaded ${n} todo` + (n > 1 ? 's' : ''))
     });
-    pull.setLastActionFunc(n =>
-      this.props.setLastAction(`Downloaded ${n} Todo` + (n > 1 ? 's' : ''))
-    );
 
     return (
       <>

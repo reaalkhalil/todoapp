@@ -71,21 +71,11 @@ export function verifyIntegrations() {
           .then(d => {
             const ii = [];
 
-            if (
-              d &&
-              d.telegram &&
-              d.telegram.length > 0 &&
-              !integrations.find(i => i.name === 'telegram')
-            ) {
+            if (d && d.telegram && d.telegram.length > 0) {
               ii.push({ name: 'telegram', value: d.telegram });
             }
 
-            if (
-              d &&
-              d.email &&
-              d.email.length > 0 &&
-              !integrations.find(i => i.name === 'email')
-            ) {
+            if (d && d.email && d.email.length > 0) {
               ii.push({ name: 'email', value: d.email });
             }
 

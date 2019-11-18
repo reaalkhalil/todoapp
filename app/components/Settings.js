@@ -3,7 +3,7 @@ import styles from './Settings.css';
 import KeyBoard from '../keyboard';
 import { connect } from 'react-redux';
 import * as filter from '../filter';
-import { SettingsSchema } from '../store/Store';
+import { SettingsSchema } from '../store/SettingsStore';
 import { initialSettings } from '../store/initial';
 import { shell } from 'electron';
 import { formatSplits } from '../utils/settings';
