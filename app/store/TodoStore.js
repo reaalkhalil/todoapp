@@ -12,6 +12,8 @@ const newError = str => ({
 
 const ok = val => val && !(val.type && val.type === 'error');
 
+const maxHistory = 50;
+
 let _doneLoading;
 let _loading = new Promise(r => {
   _doneLoading = r;
@@ -28,6 +30,14 @@ export default class TodoStore {
     if (!tt || !tt.length) await this._db.todos.bulkInsert(initialTodos);
 
     _doneLoading();
+  }
+
+  _pruneHistory() {
+    if (this._past.length > maxHistory)
+      this._past = this._past.slice(-maxHistory);
+
+    if (this._future.length > maxHistory)
+      this._future = this._future.slice(-maxHistory);
   }
 
   async subscribeToTodos(fn) {
@@ -126,6 +136,8 @@ export default class TodoStore {
     });
 
     this._future = [];
+
+    this._pruneHistory();
   }
 
   async addTodo(t) {
@@ -138,6 +150,8 @@ export default class TodoStore {
     });
 
     this._future = [];
+
+    this._pruneHistory();
   }
 
   async editTodo(t) {
@@ -153,6 +167,8 @@ export default class TodoStore {
     });
 
     this._future = [];
+
+    this._pruneHistory();
   }
 
   canUndo() {
