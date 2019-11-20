@@ -123,6 +123,15 @@ app.on('ready', async () => {
     }
   });
 
+  mainWindow.webContents.on(
+    'console-message',
+    (event, level, message, line, sourceId) => {
+      console.log(
+        ['LOG', 'WAR', 'ERR'][level] + `\t[${message} ${sourceId}] (${line})`
+      );
+    }
+  );
+
   mainWindow.on('close', event => {
     if (app.quitting) {
       mainWindow = null;

@@ -66,7 +66,7 @@ if (!m || m !== '0.2.0') {
 
 export default class SettingsStore {
   constructor() {
-    this.store = new ElectronStore({ schema });
+    this.store = new ElectronStore({ schema, clearInvalidConfig: true });
 
     if (!this.store.get('integrations')) this.store.set('integrations', []);
 
@@ -74,10 +74,7 @@ export default class SettingsStore {
       this.store.set('settings', initialSettings);
 
     const uid = this.store.get('user_id');
-    if (uid && uid.length === 36) return;
-
-    this.store.set('todos', initialTodos); // TODO remove
-    this.store.set('user_id', uuid());
+    if (!uid || !uid.length === 36) this.store.set('user_id', uuid());
   }
 
   saveSettings(settings) {

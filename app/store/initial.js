@@ -92,7 +92,7 @@ To cancel editing hit [esc].
 When in list view, hit [c] to create a new todo.
 
 Go ahead and exit the edit screen to create your first todo!
-Try something like "Read 2 articles today.
+Try something like "Read 2 articles today".
 
 # Delete todos:
 
@@ -123,7 +123,7 @@ Your todo has now gone to the 'Reading List' split.
 
 Splits can be configured to filter todos by various criteria; the 'Today' split, for example, only shows todos due by the end of today.
 
-You can move todos in and out of 'Today' by hitting [t]. Try it out, move your new todo to 'Today'!
+You can move todos in and out of 'Today' by hitting [t]. Try it out, go to 'Reading List' move your new todo to 'Today'!
 
 By the way, when a todo is overdue it turns red!`,
     priority: 0,
