@@ -2,49 +2,9 @@ import React, { Component, useState, useRef, useEffect } from 'react';
 import { shell } from 'electron';
 
 import { validURL, now, endOfDay } from '../utils';
+import { getBackgroundPath } from '../utils/background';
 
 import styles from './List.css';
-
-const imageIds = [
-  104,
-  106,
-  112,
-  121,
-  118,
-  127,
-  128,
-  129,
-  134,
-  136,
-  139,
-  140,
-  142,
-  146,
-  151,
-  152,
-  153,
-  154,
-  155,
-  162,
-  164,
-  165,
-  166,
-  167,
-  170,
-  173,
-  177,
-  179,
-  184,
-  185,
-  186,
-  188,
-  190,
-  200,
-  217,
-  235,
-  236,
-  253
-];
 
 export default function List({
   todos,
@@ -183,7 +143,7 @@ export default function List({
     <div className={styles.List} ref={listRef}>
       <div
         style={{
-          backgroundImage: `url(${imageURL()})`
+          backgroundImage: `url(${getBackgroundPath()})`
         }}
         className={[
           styles.ListBGImage,
@@ -196,19 +156,4 @@ export default function List({
       {todoList && todoList.length > 0 ? todoList : null}
     </div>
   );
-}
-
-function imageURL() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff =
-    now -
-    start +
-    (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const day = Math.floor(diff / oneDay);
-
-  const id = imageIds[day % imageIds.length];
-
-  return `https://picsum.photos/id/${id}/2000/2000`;
 }

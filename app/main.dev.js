@@ -23,6 +23,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
+import { getBackgrounds } from './utils/background';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -160,17 +162,30 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  let retry = 0;
-
+  let updateRetry = 0;
   function createUpdater() {
     try {
       new AppUpdater();
-    } catch (e) {
-      if (retry++ > 100) return;
-      setTimeout(createUpdater, Math.pow(2, retry) * 10000);
+    } catch (ex) {
+      console.log(ex);
+      if (updateRetry++ > 100) return;
+      setTimeout(createUpdater, Math.pow(2, updateRetry) * 10000);
     }
   }
-  createUpdater();
+
+  let backgroundRetry = 0;
+  function downloadBackgrounds() {
+    try {
+      getBackgrounds();
+    } catch (ex) {
+      console.log(ex);
+      if (backgroundRetry++ > 100) return;
+      setTimeout(downloadBackgrounds, Math.pow(2, backgroundRetry) * 10000);
+    }
+  }
+
+  setTimeout(() => downloadBackgrounds(), 0);
+  setTimeout(() => createUpdater(), 0);
 });
 
 app.on('before-quit', () => {
