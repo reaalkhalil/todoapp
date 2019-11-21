@@ -1,9 +1,10 @@
-import getDatabase from './tododb';
 import RxDB from 'rxdb';
-RxDB.plugin(require('pouchdb-adapter-idb'));
 
+import getDatabase from './tododb';
 import { previewText } from '../utils';
 import { initialTodos } from './initial';
+
+RxDB.plugin(require('pouchdb-adapter-idb'));
 
 const newError = str => ({
   type: 'error',

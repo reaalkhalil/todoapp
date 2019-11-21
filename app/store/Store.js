@@ -1,9 +1,13 @@
 import SettingsStore from './SettingsStore';
 import TodoStore from './TodoStore';
 
+import { analytics, Categories, Actions } from '../utils/analytics';
+
 class Store {
   constructor() {
     this.settingsStore = new SettingsStore();
+    analytics.init(this.settingsStore.getUserId());
+
     this.todoStore = new TodoStore();
     this.todoStore.init();
   }
@@ -19,14 +23,20 @@ class Store {
   }
 
   async removeTodo(id) {
+    analytics.event(Categories.USER_INTERACTION, Actions.TODO_DELETE);
+
     await this.todoStore.removeTodo(id);
   }
 
   async addTodo(t) {
+    analytics.event(Categories.USER_INTERACTION, Actions.TODO_CREATE);
+
     await this.todoStore.addTodo(t);
   }
 
   async editTodo(t) {
+    analytics.event(Categories.USER_INTERACTION, Actions.TODO_EDIT);
+
     await this.todoStore.editTodo(t);
   }
 

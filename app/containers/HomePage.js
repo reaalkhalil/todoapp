@@ -9,6 +9,7 @@ import LastAction from '../components/LastAction';
 import SettingsPage from './SettingsPage';
 import TodoPage from './TodoPage';
 
+import { analytics, Categories, Actions } from '../utils/analytics';
 import * as TodoActions from '../actions/todos';
 
 const uuid = require('uuid/v4');
@@ -36,6 +37,7 @@ class HomePage extends Component<Props> {
         let id = uuid();
         while (await store.todoExists(id)) id = uuid();
         await store.todoStore._addTodo({ ...todo, id });
+        analytics.event(Categories.USER_INTERACTION, Actions.TODO_DOWNLOAD);
       },
       lastActionFunc: n =>
         this.props.setLastAction(`Downloaded ${n} todo` + (n > 1 ? 's' : ''))

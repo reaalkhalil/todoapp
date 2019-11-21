@@ -46,7 +46,12 @@ const ids = [
   253
 ];
 
+let downloading = false;
+
 export function getBackgrounds() {
+  if (downloading) return;
+
+  downloading = true;
   const path = p.join((app || remote.app).getPath('userData'), 'backgrounds');
   if (!fs.existsSync(path)) fs.mkdirSync(path);
   else if (!fs.statSync(path).isDirectory()) {
@@ -70,14 +75,21 @@ export function getBackgrounds() {
           } catch (ex) {
             rej(ex);
           }
-        })
+        }),
+      () => {
+        downloading = false;
+      }
     );
 }
 
 export function getBackgroundPath() {
   const path = p.join(remote.app.getPath('userData'), 'backgrounds');
 
-  if (!fs.existsSync(path)) getBackgrounds();
+  try {
+    if (fs.readdirSync(path).length !== ids.length) getBackgrounds();
+  } catch (ex) {
+    getBackgrounds();
+  }
 
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
@@ -88,5 +100,7 @@ export function getBackgroundPath() {
   const oneDay = 1000 * 60 * 60 * 24;
   const id = Math.floor(diff / oneDay) % ids.length;
 
-  return `file://${p.join(path, `${id}.jpg`).replace(' ', '%20')}`;
+  return `file://${p
+    .join(path, `${id}.jpg?t=${new Date().getTime()}`)
+    .replace(' ', '%20')}`;
 }
