@@ -920,14 +920,12 @@ function getDefaultTodo(initTodo, splits, selectedSplit, pages, selectedPage) {
   if (splits) {
     const s = splits.find(s => s.position === selectedSplit);
     if (s) {
-      if (s.default)
+      const def = filter.applyTimes(s.default);
+      if (def)
         init = {
           ...init,
-          ...s.default,
-          tags: [
-            ...initTags,
-            ...(s.default && s.default.tags ? s.default.tags : [])
-          ]
+          ...def,
+          tags: [...initTags, ...(def && def.tags ? def.tags : [])]
         };
 
       // Remove higher order tags from init

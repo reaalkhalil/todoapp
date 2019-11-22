@@ -536,3 +536,29 @@ export function higerOrderTags(tags, splits, selectedSplit) {
   });
   return tt;
 }
+
+// TODO: this should be ok, but check
+export function applyTimes(todo) {
+  const applyTime = t => {
+    if (t === 0 || !t) return t;
+
+    if (Number.isInteger(t)) return t;
+
+    let res = new Date().getTime();
+
+    const r = parseTime(t);
+    if (r === null || !r.base) return res;
+
+    res = r.base === 'eod' ? endOfDay() : r.base === 'now' ? now() : 0;
+    if (r.op && r.offset) res += r.offset * (r.op === '-' ? -1 : 1);
+
+    return res;
+  };
+
+  const res = { ...todo };
+  ['created_at', 'updated_at', 'done_at', 'due_at'].forEach(p => {
+    res[p] = applyTime(todo[p]);
+  });
+
+  return res;
+}
