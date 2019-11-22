@@ -271,6 +271,7 @@ export default function TodoList({
       if (!todoToAdd.title) return;
 
       addTodo({ todo: todoToAdd });
+      setAllTodos(null);
       setAddModal(false);
       setLastAction('Created: ' + previewText(todoToAdd.title));
     } else if (editModal) {
@@ -326,6 +327,7 @@ export default function TodoList({
         if (!todoToAdd.title) return;
 
         addTodo({ todo: todoToAdd });
+        setAllTodos(null);
         setAddModal(false);
         setLastAction('Created: ' + previewText(todoToAdd.title));
       },
