@@ -40,11 +40,11 @@ export default class AppUpdater {
     autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
       const dialogOpts = {
         type: 'info',
-        buttons: ['Restart', 'Later'],
+        buttons: ['Restart Now', 'Later'],
         title: 'Application Update',
         message: process.platform === 'win32' ? releaseNotes : releaseName,
         detail:
-          'A new version has been downloaded. Restart the application to apply the updates.'
+          'A new version of TodoApp has been downloaded. Restart the application to apply the updates.'
       };
 
       dialog.showMessageBox(dialogOpts, response => {
