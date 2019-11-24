@@ -22,9 +22,10 @@ function configureStore() {
         if (
           action.type === settingsActions.SAVE_SETTINGS ||
           action.type === settingsActions.ADD_SPLIT ||
-          action.type === settingsActions.EDIT_SPLIT
+          action.type === settingsActions.EDIT_SPLIT ||
+          action.type === settingsActions.REMOVE_SPLIT
         ) {
-          store.saveSettings(settings);
+          store.saveSettings(state.settings);
         } else if (action.type === settingsActions.ADD_INTEGRATIONS) {
           store.setIntegrations(state.integrations);
         }

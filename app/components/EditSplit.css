@@ -92,7 +92,7 @@
   border-bottom: 2px solid rgb(34, 26, 85);
 }
 
-.TagInput {
+.FilterInput {
   height: 24px;
   width: calc(100vw - 210px);
   overflow-x: hidden;
@@ -100,12 +100,12 @@
   white-space: nowrap;
 }
 
-.TagInput b {
+.FilterInput b {
   display: inline-block;
   margin-right: -3px;
   margin-left: -4px;
-  background-color: rgba(205, 212, 252);
-  border: 1px solid rgba(34, 26, 85, 0.315);
+  background-color: rgb(207, 252, 237);
+  border: 1px solid rgba(14, 47, 36, 0.32);
   border-radius: 5px;
   padding: 0 3px;
   margin-top: -4px;
@@ -114,6 +114,6 @@
   vertical-align: middle;
 }
 
-.TagInput b:first-of-type {
+.FilterInput b:first-of-type {
   margin-left: -4px;
 }

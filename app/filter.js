@@ -91,8 +91,7 @@ function matchFilter(todo, filter) {
 }
 
 function apply(tt: Todo[], filterStr: String) {
-  const filters = filterStr
-    .split(/\s+/)
+  const filters = splitWithQ(filterStr, /\s+/)
     .filter(i => !!i)
     .map(parseFilter)
     .filter(i => !!i);
@@ -149,8 +148,7 @@ function parseSortOrder(o) {
 }
 
 export function parseSort(by: string) {
-  return by
-    .split(/\s+/)
+  return splitWithQ(by, /\s+/)
     .filter(s => !!s)
     .map(s => {
       let [field, order] = s.split(':');
@@ -219,20 +217,17 @@ function sort(tt: Todo[], by: string) {
 }
 
 export function parseSearchQ(q) {
-  const queries = q
-    .split(/\s+/)
+  const queries = splitWithQ(q, /\s+/)
     .filter(s => !!s)
     .filter(s => !parseFilter(s))
     .filter(s => !!s);
 
-  const filters = q
-    .split(/\s+/)
+  const filters = splitWithQ(q, /\s+/)
     .filter(s => !!s)
     .filter(parseFilter)
     .filter(s => !!s);
 
-  const all = q
-    .split(/\s+/)
+  const all = splitWithQ(q, /\s+/)
     .filter(s => !!s)
     .map(s => ({ type: parseFilter(s) ? 'filter' : 'query', str: s }));
 
@@ -329,8 +324,18 @@ function parseFilter(str) {
   const filterName = opIdx > -1 ? str.slice(0, opIdx) : str;
   const vals =
     opIdx > -1 && opIdx + op.length < str.length
-      ? str.slice(opIdx + op.length).split(',')
+      ? splitWithQ(str.slice(opIdx + op.length), /,/g)
       : [];
+
+  if (
+    vals.some(
+      v =>
+        v.length > 0 &&
+        (v[0] === '"' || v[0] === "'") &&
+        (v.length < 2 || v[v.length - 1] !== v[0])
+    )
+  )
+    return;
 
   if (!allowedFilterNames.includes(filterName)) return;
 
@@ -516,8 +521,7 @@ export function higerOrderTags(tags, splits, selectedSplit) {
 
   higherOrderSplits.forEach(s => {
     if (s.filters && s.filters.length > 0) {
-      s.filters
-        .split(/\s+/)
+      splitWithQ(s.filters, /\s+/)
         .filter(s => !!s)
         .map(parseFilter)
         .filter(f => !!f)
@@ -537,7 +541,6 @@ export function higerOrderTags(tags, splits, selectedSplit) {
   return tt;
 }
 
-// TODO: this should be ok, but check
 export function applyTimes(todo) {
   const applyTime = t => {
     if (t === 0 || !t) return t;
@@ -561,4 +564,55 @@ export function applyTimes(todo) {
   });
 
   return res;
+}
+
+export function quoteSplit(str) {
+  let inQuote = '';
+  let res = [''];
+
+  str.split('').forEach(s => {
+    if (inQuote && s === inQuote) {
+      res[res.length - 1] += s;
+      res.push('');
+      inQuote = '';
+    } else if (!inQuote && (s === '"' || s === "'")) {
+      res.push(s);
+      inQuote = s;
+    } else {
+      res[res.length - 1] += s;
+    }
+  });
+  if (res[res.length - 1] === '') res.pop();
+  return res;
+}
+
+function splitWithQ(str, by) {
+  let res = [''];
+  quoteSplit(str).forEach(s => {
+    if (s[0] === '"' || s[0] === "'") {
+      res[res.length - 1] += s;
+      return;
+    }
+
+    if (res[res.length - 1] === '' && res.length > 1) res.pop();
+    const ss = s.split(by);
+    const s1 = ss[0];
+    res[res.length - 1] += s1;
+    if (ss.length > 1) res.push(...ss.slice(1));
+  });
+  return res;
+}
+
+// use for sort + filter
+
+//
+
+// const ss = pullQuotes(`due_at=eod+1d tag="reaal khalil" title="i am here"`);
+// console.log(
+//   '_______\va\va\v\v\va_______________________________\n\n\n\n\n\n',
+//   ss
+// );
+
+export function countOccurences(str, s) {
+  return Math.max(0, str.split(s).length - 1);
 }

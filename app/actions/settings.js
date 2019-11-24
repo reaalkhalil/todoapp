@@ -6,6 +6,7 @@ export const SAVE_SETTINGS = 'SAVE_SETTINGS';
 export const ADD_INTEGRATIONS = 'ADD_INTEGRATIONS';
 export const ADD_SPLIT = 'ADD_SPLIT';
 export const EDIT_SPLIT = 'EDIT_SPLIT';
+export const REMOVE_SPLIT = 'REMOVE_SPLIT';
 
 function addSplitAction(data) {
   return {
@@ -18,6 +19,25 @@ function editSplitAction(data) {
   return {
     type: EDIT_SPLIT,
     data
+  };
+}
+
+function removeSplitAction(data) {
+  return {
+    type: REMOVE_SPLIT,
+    data
+  };
+}
+
+export function removeSplit(data) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { settings } = getState();
+    let splits = [];
+    if (settings && settings.splits && settings.splits.length > 0)
+      splits.push(...settings.splits);
+
+    data.splits = splits.filter((s, i) => i !== data.index);
+    dispatch(removeSplitAction(data));
   };
 }
 

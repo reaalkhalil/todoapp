@@ -59,7 +59,7 @@ You can press [space] again or [esc] to exit this view.`,
     created_at: now(),
     updated_at: now(),
     done_at: null,
-    due_at: 0,
+    due_at: null,
     tags: []
   },
   {
@@ -71,7 +71,7 @@ You can press [space] again or [esc] to exit this view.`,
     created_at: now(),
     updated_at: now(),
     done_at: null,
-    due_at: 0,
+    due_at: null,
     tags: []
   },
   {
@@ -103,7 +103,7 @@ To delete a todo, press [d] twice.
     created_at: now(),
     updated_at: now(),
     done_at: null,
-    due_at: 0,
+    due_at: null,
     tags: []
   },
   {
@@ -131,7 +131,7 @@ By the way, when a todo is overdue it turns red!`,
     created_at: now(),
     updated_at: now(),
     done_at: null,
-    due_at: 0,
+    due_at: null,
     tags: []
   },
   {
@@ -274,7 +274,7 @@ export const initialSettings = {
       filters: 'due_at<=eod done=false',
       sort: 'due_at<eod priority:desc due_at:desc created_at',
       default: {
-        due_at: 0
+        due_at: 'eod'
       }
     },
     {

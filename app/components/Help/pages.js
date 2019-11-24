@@ -338,13 +338,19 @@ const pages = [
           Position is a much simpler property, it just determines the order the
           splits are displayed in.
         </p>
-        <div className={styles.Header2}>Splits: Create & Edit</div>
+        <div className={styles.Header2}>Splits: Create, Edit, Remove</div>
         <p>
-          To create a new split use {c('cmd')} + {c('\\')}, to edit the current
-          split use {c('cmd')} + {c('shift')} + {c('\\')}
+          To create a new split use {c('cmd')} + {c('\\')}.
+          <br />
+          <br />
+          To edit the current split use {c('cmd')} + {c('shift')} + {c('\\')}.
+          <br />
+          <br />
+          To remove the current split use {c('cmd')} + {c('shift')} +{' '}
+          {c('backspace')}.
         </p>
         <p>
-          If you have a search query opened you can save it to a split using{' '}
+          If you have a search query opened, you can save it to a split using{' '}
           {c('cmd')} + {c('\\')}.
         </p>
         <div className={styles.Header2}>Default Todo</div>
