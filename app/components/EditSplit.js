@@ -263,7 +263,7 @@ export default function EditSplit({
                 className={[
                   'mousetrap',
                   styles.TextInput,
-                  styles.TagInput
+                  styles.FilterInput
                 ].join(' ')}
                 onChange={e =>
                   updateQuery(e, 'filters', filtersRef.current.innerText)
@@ -325,7 +325,7 @@ export default function EditSplit({
                 className={[
                   'mousetrap',
                   styles.TextInput,
-                  styles.TagInput
+                  styles.FilterInput
                 ].join(' ')}
                 onChange={e =>
                   updateQuery(e, 'sort', sortRef.current.innerText)

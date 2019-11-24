@@ -3,14 +3,17 @@ import {
   SAVE_SETTINGS,
   ADD_INTEGRATIONS,
   EDIT_SPLIT,
-  ADD_SPLIT
+  ADD_SPLIT,
+  REMOVE_SPLIT
 } from '../actions/settings';
 import type { Action } from './types';
 import { formatSplits } from '../utils/settings';
 
 export function settings(state: Settings = {}, action: Action) {
   if (
-    (action.type === EDIT_SPLIT || action.type === ADD_SPLIT) &&
+    (action.type === EDIT_SPLIT ||
+      action.type === ADD_SPLIT ||
+      action.type === REMOVE_SPLIT) &&
     action.data.splits
   )
     return { ...state, splits: formatSplits(action.data.splits) };

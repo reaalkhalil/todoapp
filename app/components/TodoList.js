@@ -105,17 +105,17 @@ const onDeleteTodo = (
   setLastAction('Deleted: ' + previewText(todos[i].title));
 };
 
-const onMoveSelectUp = (todos, selectedId, setSelectedId) => {
+const onMoveSelectUp = (todos, selectedId, setSelectedId, steps) => {
   if (todos.length > 1) {
-    let idx = todos.findIndex(t => t.id === selectedId) - 1;
+    let idx = todos.findIndex(t => t.id === selectedId) - 1 * (steps || 1);
     if (idx < 0) idx = 0;
     setSelectedId(todos[idx].id);
   }
 };
 
-const onMoveSelectDown = (todos, selectedId, setSelectedId) => {
+const onMoveSelectDown = (todos, selectedId, setSelectedId, steps) => {
   if (todos.length > 1) {
-    let idx = todos.findIndex(t => t.id === selectedId) + 1;
+    let idx = todos.findIndex(t => t.id === selectedId) + 1 * (steps || 1);
     if (idx >= todos.length) idx = todos.length - 1;
     setSelectedId(todos[idx].id);
   }
@@ -133,9 +133,16 @@ export default function TodoList({
   settings,
   addSplit,
   editSplit,
+  removeSplit,
   recentlyEditedId
 }) {
-  const [selectedSplit, setSelectedSplit] = useState(splits[0].position);
+  const [selectedSplit, setSelectedSplit] = useState(
+    splits.length > 0
+      ? splits.find(s => s.position === 0)
+        ? 0
+        : splits[0].position
+      : null
+  );
   const [searchQuery, setSearchQuery] = useState(null);
   const [selectedPage, setSelectedPage] = useState('');
 
@@ -285,8 +292,10 @@ export default function TodoList({
 
   const triggerAddorEditSplit = () => {
     if (addSplitModal) {
+      if (!splitToAdd.title) return;
+
       addSplit({
-        index: splitToAdd.index,
+        index: splitToAdd.index || 0,
         split: (function() {
           let d = { ...splitToAdd };
           delete d.index;
@@ -297,8 +306,10 @@ export default function TodoList({
       setAddSplitModal(false);
       setLastAction('Created split: ' + previewText(splitToAdd.title));
     } else if (editSplitModal) {
+      if (!splitToEdit.title) return;
+
       editSplit({
-        index: splitToEdit.index,
+        index: splitToEdit.index || 0,
         oldIndex: splitToEdit.oldIndex,
         split: (function() {
           let d = { ...splitToEdit };
@@ -352,6 +363,8 @@ export default function TodoList({
         setAddSplitModal(false);
       },
       enter: () => {
+        if (!splitToAdd.title) return;
+
         triggerAddorEditSplit();
         setAddSplitModal(false);
         setLastAction('Added split: ' + previewText(splitToAdd.title));
@@ -362,6 +375,8 @@ export default function TodoList({
     KeyBoard.bind({
       esc: () => setEditSplitModal(false),
       enter: () => {
+        if (!splitToEdit.title) return;
+
         triggerAddorEditSplit();
         setEditSplitModal(false);
         setLastAction('Edited split: ' + previewText(splitToEdit.title));
@@ -549,6 +564,14 @@ export default function TodoList({
         e.preventDefault();
       },
 
+      'command+shift+backspace__ctrl+shift+backspace': e => {
+        const idx = splits.findIndex(s => s.position === selectedSplit);
+        if (idx < 0) return;
+
+        setSelectedSplit(splits[0].position);
+        removeSplit({ index: idx });
+      },
+
       'command+shift+\\__ctrl+shift+\\': e => {
         if (
           addSplitModal ||
@@ -689,6 +712,14 @@ export default function TodoList({
       },
       j__down: e => {
         onMoveSelectDown(todos, selectedId, setSelectedId);
+        e.preventDefault();
+      },
+      'K__shift+up': e => {
+        onMoveSelectUp(todos, selectedId, setSelectedId, 10);
+        e.preventDefault();
+      },
+      'J__shift+down': e => {
+        onMoveSelectDown(todos, selectedId, setSelectedId, 10);
         e.preventDefault();
       },
       enter: e => {

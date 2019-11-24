@@ -78,6 +78,23 @@ export default function Search({
           if (e.keyCode === 13) {
             searchRef.current.blur();
             e.stopPropagation();
+            return;
+          }
+
+          if (e.keyCode === 222) {
+            const q = e.shiftKey ? '"' : "'";
+
+            setTimeout(() => {
+              const qs = filter.quoteSplit(searchRef.current.innerText);
+              const lastQ = qs[qs.length - 1];
+
+              if (
+                qs.length > 1 &&
+                filter.countOccurences(lastQ, q) === 1 &&
+                lastQ[0] === q
+              )
+                updateQuery(e, searchRef.current.innerText + q);
+            });
           }
         }}
       />
