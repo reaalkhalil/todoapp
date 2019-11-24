@@ -148,6 +148,14 @@ const pages = [
           that have "done=false" in their title, instead of todos that are not
           done.
         </p>
+        <p>
+          Quotes can also help you filter for strings that contain spaces or
+          commas. So {c('"water plants"')} will filter for todos that contain
+          the full string "water plants" in the title. Similarly{' '}
+          {c('tags="a,b,c"')} will filter for todos that have a tag matching
+          "a,b,c", instead of todos that have a tag matching any of "a", "b" or
+          "c".
+        </p>
         <div className={styles.Header2}>Notes</div>
         <p>
           {c('notes=javascript')} matches with todos that have the word

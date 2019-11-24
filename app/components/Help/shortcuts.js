@@ -15,6 +15,8 @@ const shortcuts = [
       [['enter'], 'Edit'],
       [['k'], 'Up'],
       [['j'], 'Down'],
+      [['shift', 'k'], '10 Todos Up'],
+      [['shift', 'j'], '10 Todos Down'],
       [['/'], 'Search'],
       [['cmd', 'c'], 'Copy Todo'],
       [['cmd', 'shift', 'c'], 'Copy List'],
@@ -23,9 +25,10 @@ const shortcuts = [
       [['cmd', 'shift', 'v'], 'Paste Todo(s)'],
       [['cmd', 'z'], 'Undo'],
       [['cmd', 'shift', 'z'], 'Redo'],
-      [['cmd', ','], 'Preferences'],
       [['cmd', '\\'], 'New Split'],
-      [['cmd', 'shift', '\\'], 'Edit Split']
+      [['cmd', 'shift', '\\'], 'Edit Split'],
+      [['cmd', 'shift', 'backspace'], 'Delete Split'],
+      [['cmd', ','], 'Preferences']
     ]
   },
   {
