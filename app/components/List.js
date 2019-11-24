@@ -22,12 +22,23 @@ export default function List({
 
     const l = listRef.current.getBoundingClientRect();
     const t = todoRef.current.getBoundingClientRect();
-    if (l.bottom + 10 < t.bottom) {
-      listRef.current.scrollTop += l.height / 2;
+
+    if (todos[todos.length - 1].id === selectedId) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
       return;
     }
 
-    if (t.top + 10 < l.top) listRef.current.scrollTop -= l.height / 2;
+    const distance = l.height / 2 + 10;
+
+    if (l.bottom + 28 <= t.bottom) {
+      listRef.current.scrollTop += distance;
+    } else if (l.bottom < t.bottom) {
+      listRef.current.scrollTop += t.bottom - l.bottom;
+    } else if (t.top + 28 <= l.top) {
+      listRef.current.scrollTop -= distance;
+    } else if (t.top < l.top) {
+      listRef.current.scrollTop -= l.top - t.top;
+    }
   }, [selectedId]);
 
   const [hoverId, setHoverId] = useState(null);

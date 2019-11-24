@@ -603,16 +603,6 @@ function splitWithQ(str, by) {
   return res;
 }
 
-// use for sort + filter
-
-//
-
-// const ss = pullQuotes(`due_at=eod+1d tag="reaal khalil" title="i am here"`);
-// console.log(
-//   '_______\va\va\v\v\va_______________________________\n\n\n\n\n\n',
-//   ss
-// );
-
 export function countOccurences(str, s) {
   return Math.max(0, str.split(s).length - 1);
 }

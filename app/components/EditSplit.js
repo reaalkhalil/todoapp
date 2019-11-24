@@ -113,7 +113,6 @@ export default function EditSplit({
     };
 
     setSplit(newSplit);
-    console.log(newSplit);
     onUpdate(newSplit);
   };
 
@@ -266,9 +265,9 @@ export default function EditSplit({
                   styles.TextInput,
                   styles.FilterInput
                 ].join(' ')}
-                onChange={e => {
-                  updateQuery(e, 'filters', filtersRef.current.innerText);
-                }}
+                onChange={e =>
+                  updateQuery(e, 'filters', filtersRef.current.innerText)
+                }
                 onFocus={() => {
                   const sel = window.getSelection();
                   sel.selectAllChildren(filtersRef.current);

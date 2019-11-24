@@ -36,6 +36,14 @@ export function removeSplit(data) {
     if (settings && settings.splits && settings.splits.length > 0)
       splits.push(...settings.splits);
 
+    if (
+      !Number.isInteger(data.index) ||
+      data.index < 0 ||
+      data.index >= splits.length ||
+      !splits[data.index]
+    )
+      return;
+
     data.splits = splits.filter((s, i) => i !== data.index);
     dispatch(removeSplitAction(data));
   };
@@ -47,6 +55,15 @@ export function addSplit(data) {
     let splits = [];
     if (settings && settings.splits && settings.splits.length > 0)
       splits.push(...settings.splits);
+
+    if (
+      !data.split ||
+      !data.split.title ||
+      !Number.isInteger(data.index) ||
+      data.index < 0 ||
+      !Number.isInteger(data.split.position)
+    )
+      return;
 
     data.splits = insertSplit(splits, data.split, data.index);
 
@@ -60,6 +77,17 @@ export function editSplit(data) {
     let splits = [];
     if (settings && settings.splits && settings.splits.length > 0)
       splits.push(...settings.splits);
+
+    if (
+      !data.split ||
+      !data.split.title ||
+      !Number.isInteger(data.index) ||
+      data.index < 0 ||
+      !Number.isInteger(data.oldIndex) ||
+      data.oldIndex < 0 ||
+      !Number.isInteger(data.split.position)
+    )
+      return;
 
     data.splits = insertSplit(splits, data.split, data.index, data.oldIndex);
 
