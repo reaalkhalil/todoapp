@@ -106,7 +106,10 @@ app.on('ready', async () => {
     height: 600,
     minHeight: 500,
     minWidth: 500,
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

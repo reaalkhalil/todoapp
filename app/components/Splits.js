@@ -4,8 +4,7 @@ import useWindowDimensions from '../window';
 import styles from './Splits.css';
 
 export function Splits({ splits, selectedSplit, onClick }) {
-  const sortedSplits = [...splits].sort((a, b) => a.position > b.position);
-
+  const sortedSplits = [...splits].sort((a, b) => a.position - b.position);
   return (
     <div className={styles.Splits}>
       {sortedSplits.map((s, i) => {
