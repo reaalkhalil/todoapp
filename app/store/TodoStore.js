@@ -28,7 +28,8 @@ export default class TodoStore {
 
     const tt = await this._db.todos.find().exec();
 
-    if (!tt || !tt.length) await this._db.todos.bulkInsert(initialTodos);
+    if (Array.isArray(tt) && tt.length === 0)
+      await this._db.todos.bulkInsert(initialTodos);
 
     _doneLoading();
   }

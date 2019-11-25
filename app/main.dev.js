@@ -51,8 +51,25 @@ export default class AppUpdater {
         if (response === 0) autoUpdater.quitAndInstall();
       });
     });
+  }
 
-    autoUpdater.checkForUpdatesAndNotify();
+  checkForUpdates(retryCallback) {
+    autoUpdater
+      .checkForUpdatesAndNotify()
+      .then(a => {
+        if (!a.downloadPromise) {
+          retryCallback();
+        }
+      })
+      .catch(e => {
+        retryCallback();
+      });
+  }
+
+  keepCheckingForUpdates() {
+    this.checkForUpdates(() => {
+      setTimeout(() => this.keepCheckingForUpdates(), 6 * 3600 * 1000);
+    });
   }
 }
 
@@ -165,17 +182,6 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  let updateRetry = 0;
-  function createUpdater() {
-    try {
-      new AppUpdater();
-    } catch (ex) {
-      console.log(ex);
-      if (updateRetry++ > 100) return;
-      setTimeout(createUpdater, Math.pow(2, updateRetry) * 10000);
-    }
-  }
-
   let backgroundRetry = 0;
   function downloadBackgrounds() {
     try {
@@ -188,7 +194,9 @@ app.on('ready', async () => {
   }
 
   setTimeout(() => downloadBackgrounds(), 0);
-  setTimeout(() => createUpdater(), 0);
+
+  const updater = new AppUpdater();
+  updater.keepCheckingForUpdates();
 });
 
 app.on('before-quit', () => {

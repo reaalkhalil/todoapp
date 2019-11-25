@@ -3,7 +3,7 @@ import { now, endOfDay } from '../utils';
 
 export const initialTodos = [
   {
-    id: '1',
+    id: 'initial_1',
     title: `1. Press [${cmdOrCtrl()}] + [?] to open the Help tab`,
     notes: '',
     priority: 0,
@@ -15,7 +15,7 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: '2',
+    id: 'initial_2',
     title: '2. Press [tab] and [shift] + [tab] to navigate splits',
     notes: '',
     priority: 0,
@@ -27,7 +27,7 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: '3',
+    id: 'initial_3',
     title: "3. Press [tab] to go to the 'Backlog' -->",
     notes: '',
     priority: 0,
@@ -39,7 +39,7 @@ export const initialTodos = [
     tags: []
   },
   {
-    id: '4',
+    id: 'initial_4',
     title: '4. Highlight this then press [space]',
     notes: `Pressing [space] allows you to quickly view a todo and its notes.
 
@@ -63,7 +63,7 @@ You can press [space] again or [esc] to exit this view.`,
     tags: []
   },
   {
-    id: '5',
+    id: 'initial_5',
     title: '5. Press [j] / [k] to move down / up in todos.',
     notes: '',
     priority: 0,
@@ -75,7 +75,7 @@ You can press [space] again or [esc] to exit this view.`,
     tags: []
   },
   {
-    id: '6',
+    id: 'initial_6',
     title: '6. Highlight this then press [enter]',
     notes: `# Editing todos:
 
@@ -107,7 +107,7 @@ To delete a todo, press [d] twice.
     tags: []
   },
   {
-    id: '7',
+    id: 'initial_7',
     title: '7. Read this after creating your first todo',
     notes: `# Editing tags:
 
@@ -135,7 +135,7 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: '8',
+    id: 'initial_8',
     title: '8. Highlight your new todo and press [e] to mark it done',
     notes: '',
     priority: 0,
@@ -147,7 +147,7 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: '9',
+    id: 'initial_9',
     title: '9. Press [g] then [d] to view your done todos',
     notes: `You can press [e] on done todos to unmark them as done`,
     priority: 0,
@@ -159,7 +159,7 @@ By the way, when a todo is overdue it turns red!`,
     tags: []
   },
   {
-    id: '10',
+    id: 'initial_10',
     title: '10. This is the done page',
     notes: `The 'Done' page is an archive, so you won't spend too much time here.
 
@@ -175,7 +175,7 @@ Press [g] then [s] to go to there. Try it now!`,
     tags: []
   },
   {
-    id: '11',
+    id: 'initial_11',
     title: '11. This todo was marked done at noon yesterday',
     notes: `# Standup page
     
@@ -195,7 +195,7 @@ Now hit [esc] twice to go back to 'Today'`,
     tags: []
   },
   {
-    id: '12',
+    id: 'initial_12',
     title: "12. Press [s] to edit a todo's priority",
     notes: `High priority todos are displayed at the top of the list!`,
     priority: 0,
@@ -206,7 +206,7 @@ Now hit [esc] twice to go back to 'Today'`,
     tags: []
   },
   {
-    id: '13',
+    id: 'initial_13',
     title: '13. Press [/] to search; [esc] to close search',
     notes: '',
     priority: 0,
@@ -218,7 +218,7 @@ Now hit [esc] twice to go back to 'Today'`,
   },
 
   {
-    id: '14',
+    id: 'initial_14',
     title: '14. Press [cmd] + [,] to set up integrations!',
     notes: `You can add new todos by sending a telegram message or an email.
 
@@ -247,7 +247,7 @@ The email subject will be the todo title and the email body will be the todo not
   },
 
   {
-    id: '15',
+    id: 'initial_15',
     title: '15. Thank you!',
     notes: `Thank you for trying out TodoApp!
 
